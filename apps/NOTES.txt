@@ -1,0 +1,8 @@
+1. ccnd on both
+2. proxy server on both pointing to namespace "/"
+3. proxy client on both pointing to "/"
+4. ccndc add "/" namespace to forward router
+5. run client/server 
+
+ant run-trafficgen -DSRC /caw/test1 -DDST /caw/test2 -DBYTES 2048 -DTIME 2000 -DTT 1200000 -DKICKSTART false
+ant run-trafficgen -DSRC /caw/test2 -DDST /caw/test1 -DBYTES 2048 -DTIME 2000 -DTT 1200000 -DKICKSTART true

@@ -1,0 +1,104 @@
+{
+   crypto
+   Memcheck:Cond
+   fun:BN*
+}
+
+{
+   crypto2
+   Memcheck:Cond
+   fun:bn*
+}
+
+{
+   crypto3
+   Memcheck:Value8
+   fun:scan_buckets
+}
+{
+   crypto4
+   Memcheck:Cond
+   fun:scan_buckets
+}
+{
+   crypto5
+   Memcheck:Cond
+   fun:bcmp
+}
+{
+   crypto6
+   Memcheck:Cond
+   fun:hashtb_*
+}
+{
+   crypto7
+   Memcheck:Value8
+   ...
+   fun:hashtb_*
+}
+{
+   crypto8
+   Memcheck:Cond
+   ...
+   fun:hashtb_*
+}
+{
+   crypto9
+   Memcheck:Value8
+   ...
+   fun:ccn_initiate_prefix_reg
+}
+
+{
+   crypto10
+   Memcheck:Value8
+   ...
+   fun:EVP*
+}
+
+{
+   crypto11
+   Memcheck:Param
+   write(buf)
+   ...
+   fun:ccn_initiate_prefix_reg
+}
+{
+   crypto12
+   Memcheck:Param
+   write(buf)
+   ...
+   fun:ccn_express_interest
+}
+{
+   crypto13
+   Memcheck:Value8
+   ...
+   fun:RSA_*
+}
+{
+   crypto14
+   Memcheck:Cond
+   fun:RSA_*
+}
+{
+   crypto15
+   Memcheck:Cond
+   fun:AES_*
+}
+{
+   crypto15
+   Memcheck:Value8
+   fun:RSA_*
+}
+{
+   crypto16
+   Memcheck:Value8
+   fun:AES_*
+}
+{
+   crypto17
+   Memcheck:Cond
+   ...
+   fun:ccn_run
+}

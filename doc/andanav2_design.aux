@@ -1,0 +1,72 @@
+\relax 
+\providecommand\zref@newlabel[2]{}
+\citation{voccn}
+\citation{andana}
+\citation{tor-traffic-analysis}
+\citation{attacking-unlinkability}
+\citation{linkability-attacks}
+\@writefile{toc}{\contentsline {section}{\numberline {1}Overview}{1}}
+\newlabel{sec:overview}{{1}{1}}
+\@writefile{lot}{\contentsline {table}{\numberline {1}{\ignorespaces Notation used in the presentation of this work.}}{2}}
+\newlabel{tab:notation}{{1}{2}}
+\@writefile{toc}{\contentsline {section}{\numberline {2}Motivation}{2}}
+\citation{tor}
+\citation{ndn-tech-report}
+\@writefile{toc}{\contentsline {section}{\numberline {3}Modular Architecture and Configurations}{3}}
+\citation{piggyback}
+\@writefile{toc}{\contentsline {section}{\numberline {4}Handshake-Based Circuit and Session Establishment}{5}}
+\@writefile{loa}{\contentsline {algorithm}{\numberline {1}{\ignorespaces {\sf  ServerInterestHandler}}}{5}}
+\@writefile{loa}{\contentsline {algorithm}{\numberline {2}{\ignorespaces {\sf  ClientEstablishSession}}}{6}}
+\@writefile{loa}{\contentsline {algorithm}{\numberline {3}{\ignorespaces {\sf  EstablishCircuit}}}{6}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.1}Circuit Usage}{6}}
+\@writefile{lof}{\contentsline {figure}{\numberline {1}{\ignorespaces Sample session-based circuit between a consumer $C$ and producer $P$ with ARs $r_1,r_2,r_3,r_4$, where the end routers on the path are run on the same node as $C$ and $P$.}}{7}}
+\newlabel{fig:circuit}{{1}{7}}
+\@writefile{lof}{\contentsline {figure}{\numberline {2}{\ignorespaces The first image depicts a sample bidirectional circuit configuration in which two parties communicate using mutually exclusive ARs in both directions. Note that it is not required for each circuit to be the same length, nor is it required that the intersection of the routers for each direction of the circuit to be empty (i.e., routers may \emph  {unknowingly} support sessions traversing in both directions). The second image depicts the configuration where both parties knowingly share the same circuit.}}{7}}
+\newlabel{fig:pool}{{2}{7}}
+\citation{piggyback}
+\@writefile{loa}{\contentsline {algorithm}{\numberline {4}{\ignorespaces Encrypted Interest Generation}}{8}}
+\newlabel{alg:enc_int_gen}{{4}{8}}
+\@writefile{loa}{\contentsline {algorithm}{\numberline {5}{\ignorespaces AR Encrypted Interest Forwarding}}{8}}
+\newlabel{alg:enc_int_forward}{{5}{8}}
+\@writefile{toc}{\contentsline {section}{\numberline {5}Piggybacked Circuit and Session Establishment}{8}}
+\@writefile{toc}{\contentsline {section}{\numberline {6}Circuit Formation}{8}}
+\@writefile{loa}{\contentsline {algorithm}{\numberline {6}{\ignorespaces AR Content Handling}}{9}}
+\newlabel{alg:ar_content_handler}{{6}{9}}
+\citation{piggyback}
+\@writefile{lof}{\contentsline {figure}{\numberline {3}{\ignorespaces Visual depiction of the interaction between the consumer and the first hop router. The procedure repeats in the same manner for all further upstream routers after each interest is unrolled and resulting content is encrypted.}}{10}}
+\newlabel{fig:circuit_usage}{{3}{10}}
+\@writefile{toc}{\contentsline {section}{\numberline {7}Subtle Technical Details}{10}}
+\newlabel{sec:details}{{7}{10}}
+\@writefile{loa}{\contentsline {algorithm}{\numberline {7}{\ignorespaces Encrypted Interest Generation}}{11}}
+\newlabel{alg:enc_int_gen_piggy}{{7}{11}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {7.1}Uniform-Length Interest Creation}{11}}
+\@writefile{loa}{\contentsline {algorithm}{\numberline {8}{\ignorespaces AR Encrypted Interest Forwarding}}{12}}
+\newlabel{alg:enc_int_forward_piggy}{{8}{12}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {7.2}Interest Flow Control}{12}}
+\citation{andana}
+\@writefile{lof}{\contentsline {figure}{\numberline {4}{\ignorespaces Visual depiction of keystream precomputation during upstream interest traversal and the resulting half of AES-CTR that must be computed for the resulting content flowing downstream. We again emphasize that keystream ``pumping'' for AES-CTR can be done for interests as well.}}{13}}
+\newlabel{fig:circuit}{{4}{13}}
+\citation{andana}
+\citation{andana}
+\citation{andana}
+\citation{andana}
+\citation{andana}
+\@writefile{toc}{\contentsline {section}{\numberline {8}Correctness and Security Analysis}{14}}
+\citation{andana}
+\citation{andana}
+\citation{andana}
+\bibcite{voccn}{1}
+\bibcite{andana}{2}
+\bibcite{tor}{3}
+\@writefile{lot}{\contentsline {table}{\numberline {2}{\ignorespaces Baseline performance metrics gathered from the three scenarios discussed in the text.}}{17}}
+\newlabel{tab:baseline}{{2}{17}}
+\@writefile{toc}{\contentsline {section}{\numberline {9}Preliminary Performance Evaluation}{17}}
+\bibcite{nist-sha3}{4}
+\bibcite{siphash}{5}
+\bibcite{aesgcm-intel}{6}
+\bibcite{attacking-unlinkability}{7}
+\bibcite{linkability-attacks}{8}
+\bibcite{tor-traffic-analysis}{9}
+\bibcite{keccak-files}{10}
+\bibcite{ndn-tech-report}{11}
+\bibcite{piggyback}{12}
