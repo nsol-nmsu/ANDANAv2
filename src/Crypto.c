@@ -513,3 +513,30 @@ int RandomBytes(uint8_t* buffer, uint32_t len)
     return RAND_bytes(buffer, len);
 }
 
+/**
+ * XOR-based encryption/decryption.
+ *
+ * @param key
+ * @param keylen
+ * @param pt
+ * @param ct
+ * @param len
+ */
+int PRGBasedXorPad(uint8_t* key, uint32_t keylen, uint8_t* pt, uint8_t* ct, uint32_t len)
+{
+    // Force a re-seed
+    RAND_seed(key, keylen);
+
+    // Generate the random pad
+    uint8_t* pad = (uint8_t*)malloc(len * sizeof(uint8_t));
+    int res = RandomBytes(pad, len);
+    if (res < 0)
+    {
+        return -1;
+    }
+
+    // Padding for encryption/decryption
+    XOR(pt, pad, ct, len);
+
+    return 0;
+}

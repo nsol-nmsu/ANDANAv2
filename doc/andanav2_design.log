@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-2.5-1.40.14 (TeX Live 2013) (format=pdflatex 2013.5.30)  29 MAR 2014 12:18
+This is pdfTeX, Version 3.1415926-2.5-1.40.14 (TeX Live 2013) (format=pdflatex 2013.5.30)  31 MAR 2014 13:31
 entering extended mode
  \write18 enabled.
  %&-line parsing enabled.
@@ -904,8 +904,11 @@ File: tikzlibrarycalc.code.tex 2009/09/04 v2.10 (rcs-revision 1.6)
 \c@thm=\count174
 \c@cor=\count175
 \c@lemma=\count176
+ (./andanav2_design.aux
 
-No file andanav2_design.aux.
+LaTeX Warning: Label `fig:circuit' multiply defined.
+
+)
 \openout1 = `andanav2_design.aux'.
 
 LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 23.
@@ -920,7 +923,7 @@ LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 23.
 LaTeX Font Info:    ... okay on input line 23.
 LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 23.
 LaTeX Font Info:    ... okay on input line 23.
-(/usr/local/texlive/2013/texmf-dist/tex/context/base/supp-pdf.mkii
+ (/usr/local/texlive/2013/texmf-dist/tex/context/base/supp-pdf.mkii
 [Loading MPS to PDF converter (version 2006.09.02).]
 \scratchcounter=\count177
 \scratchdimen=\dimen199
@@ -984,69 +987,28 @@ e
 * (1in=72.27pt=25.4mm, 1cm=28.453pt)
 
 \AtBeginShipoutBox=\box80
-
-LaTeX Warning: Citation `voccn' on page 1 undefined on input line 40.
-
-
-LaTeX Warning: Citation `andana' on page 1 undefined on input line 42.
-
-
-LaTeX Warning: Reference `tab:notation' on page 1 undefined on input line 44.
-
-
-LaTeX Warning: Citation `tor-traffic-analysis' on page 1 undefined on input lin
-e 76.
-
-
-LaTeX Warning: Citation `attacking-unlinkability' on page 1 undefined on input 
-line 76.
-
-
-LaTeX Warning: Citation `linkability-attacks' on page 1 undefined on input line
- 76.
-
 [1
 
 {/usr/local/texlive/2013/texmf-var/fonts/map/pdftex/updmap/pdftex.map}]
 [2]
-
-LaTeX Warning: Citation `tor' on page 3 undefined on input line 80.
-
 LaTeX Font Info:    Try loading font information for OMS+cmr on input line 102.
 
-(/usr/local/texlive/2013/texmf-dist/tex/latex/base/omscmr.fd
+ (/usr/local/texlive/2013/texmf-dist/tex/latex/base/omscmr.fd
 File: omscmr.fd 1999/05/25 v2.5h Standard LaTeX font definitions
 )
 LaTeX Font Info:    Font shape `OMS/cmr/m/n' in size <10> not available
 (Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 102.
-
-
-LaTeX Warning: Citation `ndn-tech-report' on page 3 undefined on input line 104
-.
-
-[3]
-
-LaTeX Warning: Citation `piggyback' on page 4 undefined on input line 131.
-
-[4]
-
-LaTeX Warning: Reference `fig:circuit' on page 5 undefined on input line 159.
-
+ [3] [4]
 <./images/circuit.pdf, id=40, 704.6325pt x 377.41pt>
 File: ./images/circuit.pdf Graphic file (type pdf)
 
 <use ./images/circuit.pdf>
 Package pdftex.def Info: ./images/circuit.pdf used on input line 331.
 (pdftex.def)             Requested size: 352.3154pt x 188.70453pt.
-
-
-LaTeX Warning: Reference `alg:enc_int_gen' on page 5 undefined on input line 34
-0.
-
-[5] <./images/pool.pdf, id=45, 556.0775pt x 283.0575pt>
+ [5]
+<./images/pool.pdf, id=45, 556.0775pt x 283.0575pt>
 File: ./images/pool.pdf Graphic file (type pdf)
-
-<use ./images/pool.pdf>
+ <use ./images/pool.pdf>
 Package pdftex.def Info: ./images/pool.pdf used on input line 344.
 (pdftex.def)             Requested size: 278.03807pt x 141.5284pt.
 
@@ -1063,23 +1025,12 @@ File: ./images/circuit_usage.pdf Graphic file (type pdf)
 <use ./images/circuit_usage.pdf>
 Package pdftex.def Info: ./images/circuit_usage.pdf used on input line 429.
 (pdftex.def)             Requested size: 409.72589pt x 373.18983pt.
-
-
-LaTeX Warning: Reference `sec:details' on page 6 undefined on input line 436.
-
-[6]
+ [6]
 
 LaTeX Warning: Text page 7 contains only floats.
 
 [7 <./images/circuit.pdf> <./images/pool.pdf> <./images/pool_same.pdf>]
-
-LaTeX Warning: Citation `piggyback' on page 8 undefined on input line 601.
-
-[8] [9]
-
-LaTeX Warning: Citation `piggyback' on page 10 undefined on input line 612.
-
-[10 <./images/circuit_usage.pdf>] [11] [12]
+[8] [9] [10 <./images/circuit_usage.pdf>] [11] [12]
 <./images/ctr_split.pdf, id=323, 1143.27126pt x 608.2725pt>
 File: ./images/ctr_split.pdf Graphic file (type pdf)
 
@@ -1091,52 +1042,15 @@ Overfull \hbox (44.7123pt too wide) in paragraph at lines 648--649
  [] 
  []
 
+[13 <./images/ctr_split.pdf>] [14] [15] [16] [17] [18] (./andanav2_design.aux)
 
-LaTeX Warning: Citation `andana' on page 13 undefined on input line 655.
-
-[13 <./images/ctr_split.pdf>]
-
-LaTeX Warning: Citation `andana' on page 14 undefined on input line 665.
-
-
-LaTeX Warning: Citation `andana' on page 14 undefined on input line 681.
-
-
-LaTeX Warning: Citation `andana' on page 14 undefined on input line 687.
-
-
-LaTeX Warning: Citation `andana' on page 14 undefined on input line 689.
-
-
-LaTeX Warning: Citation `andana' on page 14 undefined on input line 692.
-
-[14]
-
-LaTeX Warning: Citation `andana' on page 15 undefined on input line 698.
-
-
-LaTeX Warning: Citation `andana' on page 15 undefined on input line 711.
-
-
-LaTeX Warning: Citation `andana' on page 15 undefined on input line 718.
-
-[15] [16]
-
-LaTeX Warning: Reference `tab:baseline' on page 17 undefined on input line 783.
-
-
-[17] [18] (./andanav2_design.aux)
-
-LaTeX Warning: There were undefined references.
-
-
-LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
+LaTeX Warning: There were multiply-defined labels.
 
  ) 
 Here is how much of TeX's memory you used:
- 20588 strings out of 493315
- 404336 string characters out of 6137904
- 517396 words of memory out of 5000000
+ 20590 strings out of 493315
+ 404376 string characters out of 6137904
+ 517576 words of memory out of 5000000
  23610 multiletter control sequences out of 15000+600000
  12777 words of font info for 46 fonts, out of 8000000 for 9000
  957 hyphenation exceptions out of 8191
@@ -1167,7 +1081,7 @@ s/type1/public/amsfonts/cm/cmti10.pfb></usr/local/texlive/2013/texmf-dist/fonts
 /type1/public/amsfonts/cm/cmti12.pfb></usr/local/texlive/2013/texmf-dist/fonts/
 type1/public/amsfonts/cm/cmtt10.pfb></usr/local/texlive/2013/texmf-dist/fonts/t
 ype1/public/amsfonts/cm/cmtt12.pfb>
-Output written on andanav2_design.pdf (18 pages, 625365 bytes).
+Output written on andanav2_design.pdf (18 pages, 624802 bytes).
 PDF statistics:
  604 PDF objects out of 1000 (max. 8388607)
  365 compressed objects within 4 object streams

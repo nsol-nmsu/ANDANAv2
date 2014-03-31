@@ -173,12 +173,23 @@ int MACVerify(uint8_t* key, BOB* tag, int tag_len, uint8_t* msg, int len);
  */
 int LoadKeyStore(char* pkFile, char* skFile, RSAKeyPair** keys);
 
-/*
+/**
  * Generate (pseudo)random bytes and store them in the buffer.
  *
  * @param buffer - user buffer to store the bytes.
  * @param len - number of bytes to generate.
  */
 int RandomBytes(uint8_t* buffer, uint32_t len);
+
+/**
+ * XOR-based encryption/decryption.
+ *
+ * @param key
+ * @param keylen
+ * @param pt
+ * @param ct
+ * @param len
+ */
+int PRGBasedXorPad(uint8_t* key, uint32_t keylen, uint8_t* pt, uint8_t* ct, uint32_t len);
 
 #endif /* CRYPTO_H_ */
