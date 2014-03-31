@@ -3,7 +3,6 @@
 #include "Util.h"
 #include "Config.h"
 
-
 /**
  * Create and initialize a new anonymous server proxy.
  * Decrypts and decapsulates incoming Interests and encrypts
@@ -21,6 +20,8 @@
 DownstreamProxy* DownstreamProxyInit(const char *key_uri, const char *filter_uri, const char *prefix_uri)
 {
     DownstreamProxy *server = (DownstreamProxy*)malloc(sizeof(DownstreamProxy));
+    server->stateTable = (ProxyStateTable*)malloc(sizeof(ProxyStateTable));
+    server->sessionTable = (ProxySessionTable*)malloc(sizeof(ProxySessionTable));
 
     DEBUG_PRINT("%d %s DownstreamProxyInit invoked\n", __LINE__, __func__);
 
@@ -147,7 +148,8 @@ enum ccn_upcall_res DownstreamSessionListener(struct ccn_closure *selfp, enum cc
     DEBUG_PRINT("Server received an interest - extracting the session information.\n");
 
     // Allocate space for the state/session tables
-    server->sessionTable->head = (ProxySessionTableEntry*)malloc(sizeof(ProxySessionTableEntry));
+    // sessionEntry = (ProxySessionTableEntry*)malloc(sizeof(ProxySessionTableEntry));
+    ProxySessionTableEntry* sessionEntry = AllocateNewSessionEntry(server->sessionTable);
 
     // Extract the name and components
     res = ccn_util_extract_name(info->interest_ccnb, info->interest_comps, &request_name, &request_comps);
@@ -191,7 +193,8 @@ enum ccn_upcall_res DownstreamSessionListener(struct ccn_closure *selfp, enum cc
         ccn_indexbuf_destroy(&request_comps);
         return CCN_UPCALL_RESULT_ERR;
     }
-    memcpy(encryption_key, compBuffer, KEYLEN);
+    // memcpy(encryption_key, compBuffer, KEYLEN);
+    memcpy(&(sessionEntry->encryption_key), compBuffer, KEYLEN);
 
     res = ccn_name_comp_get(request_name->buf, request_comps, (unsigned int)request_comps->n - 6, &compBuffer, &compSize);
     if (res < 0) 
@@ -201,7 +204,8 @@ enum ccn_upcall_res DownstreamSessionListener(struct ccn_closure *selfp, enum cc
         ccn_indexbuf_destroy(&request_comps);
         return CCN_UPCALL_RESULT_ERR;
     }
-    memcpy(mac_key, compBuffer, KEYLEN);
+    // memcpy(mac_key, compBuffer, KEYLEN);
+    memcpy(&(sessionEntry->mac_key), compBuffer, KEYLEN);
 
     res = ccn_name_comp_get(request_name->buf, request_comps, (unsigned int)request_comps->n - 5, &compBuffer, &compSize);
     if (res < 0) 
@@ -211,7 +215,8 @@ enum ccn_upcall_res DownstreamSessionListener(struct ccn_closure *selfp, enum cc
         ccn_indexbuf_destroy(&request_comps);
         return CCN_UPCALL_RESULT_ERR;
     }
-    memcpy(counter_iv, compBuffer, SHA256_DIGEST_LENGTH);
+    // memcpy(counter_iv, compBuffer, SHA256_DIGEST_LENGTH);
+    memcpy(&(sessionEntry->counter_iv), compBuffer, SHA256_DIGEST_LENGTH);
 
     res = ccn_name_comp_get(request_name->buf, request_comps, (unsigned int)request_comps->n - 4, &compBuffer, &compSize);
     if (res < 0) 
@@ -221,7 +226,8 @@ enum ccn_upcall_res DownstreamSessionListener(struct ccn_closure *selfp, enum cc
         ccn_indexbuf_destroy(&request_comps);
         return CCN_UPCALL_RESULT_ERR;
     }
-    memcpy(session_iv, compBuffer, SHA256_DIGEST_LENGTH);
+    // memcpy(session_iv, compBuffer, SHA256_DIGEST_LENGTH);
+    memcpy(&(sessionEntry->session_iv), compBuffer, SHA256_DIGEST_LENGTH);
 
     res = ccn_name_comp_get(request_name->buf, request_comps, (unsigned int)request_comps->n - 3, &compBuffer, &compSize);
     if (res < 0) 
@@ -231,7 +237,8 @@ enum ccn_upcall_res DownstreamSessionListener(struct ccn_closure *selfp, enum cc
         ccn_indexbuf_destroy(&request_comps);
         return CCN_UPCALL_RESULT_ERR;
     }
-    memcpy(session_id, compBuffer, SHA256_DIGEST_LENGTH);
+    // memcpy(session_id, compBuffer, SHA256_DIGEST_LENGTH);
+    memcpy(&(sessionEntry->session_id), compBuffer, SHA256_DIGEST_LENGTH);
 
     // res = ccn_name_comp_get(request_name->buf, request_comps, (unsigned int)request_comps->n - 3, &compBuffer, &compSize);
     // if (res < 0) 
@@ -255,7 +262,9 @@ enum ccn_upcall_res DownstreamSessionListener(struct ccn_closure *selfp, enum cc
         DEBUG_PRINT("Failed to create the session index\n");
         return CCN_UPCALL_RESULT_ERR;
     }
-    memcpy(session_index, out->blob, bob.len);
+    // memcpy(session_index, out->blob, bob.len);
+    assert(bob.len == SHA256_DIGEST_LENGTH);
+    memcpy(&(sessionEntry->session_index), out->blob, SHA256_DIGEST_LENGTH);
 
     res = ccn_name_comp_get(request_name->buf, request_comps, (unsigned int)request_comps->n - 2, &compBuffer, &compSize);
     if (res < 0) 
@@ -265,22 +274,22 @@ enum ccn_upcall_res DownstreamSessionListener(struct ccn_closure *selfp, enum cc
         ccn_indexbuf_destroy(&request_comps);
         return CCN_UPCALL_RESULT_ERR;
     }
-    memcpy(&(server->sessionTable->head->nonce), compBuffer, sizeof(unsigned int));
+    memcpy(&(sessionEntry->nonce), compBuffer, sizeof(unsigned int));
 
     // Copy the contents of the encrypted payload to the entry
     // caw: remove hardcoded assertion when debugging is complete
-    assert(server->sessionTable->head->nonce == 0xDEADBEEF);
-    DEBUG_PRINT("Nonce = %x\n", server->sessionTable->head->nonce);
+    assert(sessionEntry->nonce == 0xDEADBEEF);
+    DEBUG_PRINT("Nonce = %x\n", sessionEntry->nonce);
 
     // Construct the response message using a ccn name (for convenience).
     // The response just consists of the nonce (signed)
     struct ccn_charbuf *session_response = ccn_charbuf_create();
     ccn_name_init(session_response);
-    ccn_name_append(session_response, &(server->sessionTable->head->nonce), sizeof(unsigned int));
+    ccn_name_append(session_response, &(sessionEntry->nonce), sizeof(unsigned int));
     struct ccn_charbuf *signedResp = ccn_charbuf_create();
     struct ccn_signing_params sp = CCN_SIGNING_PARAMS_INIT;
     sp.type = CCN_CONTENT_DATA;
-    unsigned int nonce = server->sessionTable->head->nonce;
+    unsigned int nonce = sessionEntry->nonce;
 
     // Sign the response
     res = ccn_sign_content(server->baseProxy->handle, signedResp, request_name, &sp, &nonce, sizeof(nonce));
@@ -372,8 +381,22 @@ enum ccn_upcall_res UnwrapInterest(struct ccn_closure *selfp, enum ccn_upcall_ki
         DEBUG_PRINT("Failed to extract session index.\n");
         return CCN_UPCALL_RESULT_ERR;
     }
+    if (sessionIndexCompBufferSize != SHA256_DIGEST_LENGTH)
+    {
+        DEBUG_PRINT("Invalid session index length retreived.\n");
+        return CCN_UPCALL_RESULT_ERR; 
+    }
+
+    // Lookup the session identifier and use the associated key to decrypt the interest
+    ProxySessionTableEntry* sessionEntry = FindEntryByIndex(proxy->sessionTable, sessionIndexCompBuffer, sessionIndexCompBufferSize);
+    if (sessionEntry == NULL)
+    {
+        DEBUG_PRINT("Session index could not be found.\n");
+        return CCN_UPCALL_RESULT_ERR;
+    }
 
     // Extract the encrypted interest
+    // Index 2 will always be the encrypted payload
     res = ccn_name_comp_get(origName->buf, origNameIndexbuf, 2, &payloadCompBuffer, &payloadCompBufferSize);
     if (res < 0)
     {
@@ -381,12 +404,9 @@ enum ccn_upcall_res UnwrapInterest(struct ccn_closure *selfp, enum ccn_upcall_ki
         return CCN_UPCALL_RESULT_ERR;
     }
 
-    // Lookup the session identifier and use the associated key to decrypt the interest
-    // TODO
-
     // Decrypt the interest
     BOB* decryptedPayload;
-    res = SKDecrypt(&decryptedPayload, proxy->sessionTable->head->encryption_key, payloadCompBuffer, payloadCompBufferSize);
+    res = SKDecrypt(&decryptedPayload, sessionEntry->encryption_key, payloadCompBuffer, payloadCompBufferSize);
     if (res < 0)
     {
         DEBUG_PRINT("Failed decrypting interest payload.\n");
@@ -411,6 +431,7 @@ enum ccn_upcall_res UnwrapInterest(struct ccn_closure *selfp, enum ccn_upcall_ki
     // }
 
     // Save the interest name in the state table so it can be recovered later
+
 
     // Shoot out the decrypted/unwrapped interest
     DEBUG_PRINT("%d %s starting to write new interest\n", __LINE__, __func__);

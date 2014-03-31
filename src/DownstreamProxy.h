@@ -17,7 +17,7 @@ typedef struct
     struct ccn_pkey *node_key;
     struct ccn_closure session_handler;
     ProxySessionTable* sessionTable;
-    // ProxyStateTable* stateTable;
+    ProxyStateTable* stateTable;
     Config* config;
     Proxy* baseProxy;
 } DownstreamProxy;

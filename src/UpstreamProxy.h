@@ -20,7 +20,7 @@ typedef struct UpstreamProxy UpstreamProxy;
 struct UpstreamProxy
 {
     ProxySessionTable* sessionTable;
-    // ProxyStateTable* stateTable;
+    ProxyStateTable* stateTable;
     Config* config;
     Proxy* baseProxy;
 

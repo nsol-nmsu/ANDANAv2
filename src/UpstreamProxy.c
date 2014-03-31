@@ -97,7 +97,7 @@ UpstreamProxy* UpstreamProxySessionInit(Config* config, struct ccn_charbuf *uri,
         memcpy(stateEntry->session_id, session_id, SHA256_DIGEST_LENGTH);
         // memcpy(stateEntry->session_index, session_index, SHA256_DIGEST_LENGTH);
         stateEntry->nonce = 0xDEADBEEF; // for debugging purposes
-        // node->sessionTable = (ProxySessionTable*)malloc(sizeof(ProxySessionTable));
+        node->stateTable = (ProxyStateTable*)malloc(sizeof(ProxyStateTable));
         node->sessionTable = (ProxySessionTable*)malloc(sizeof(ProxySessionTable));
 
         DEBUG_PRINT("Appending new state table entry\n");
@@ -146,7 +146,7 @@ UpstreamProxy* UpstreamProxySessionInit(Config* config, struct ccn_charbuf *uri,
         res = ccn_get(sessionh, int_name, NULL, 3000, response, &response_pco, response_comps, 0);
 
         // Make sure the content was retrieved correctly
-        if (res  == -1) 
+        if (res == -1) 
         {
             fprintf(stderr, "%d %s Unable to create new session\n", __LINE__,__func__);
             return NULL;

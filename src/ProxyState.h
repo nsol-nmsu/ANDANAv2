@@ -45,6 +45,16 @@ void AppendSessionEntry(ProxySessionTable* table, ProxySessionTableEntry* entry)
 
 /**
  * TODO
+ */
+ProxySessionTableEntry* AllocateNewSessionEntry(ProxySessionTable* table);
+
+/**
+ * TODO
+ */
+ProxySessionTableEntry* FindEntryByIndex(ProxySessionTable* table, uint8_t* index, int len);
+
+/**
+ * TODO
  */ 
 void AddStateEntry(ProxyStateTable* table, ProxyStateTableEntry* entry);
 
