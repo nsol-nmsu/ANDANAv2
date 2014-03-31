@@ -68,14 +68,16 @@ UpstreamProxy* UpstreamProxySessionInit(Config* config, struct ccn_charbuf *uri,
 
         // Populate everything with some random bytes
         if(!RandomBytes(encryption_key, KEYLEN)) return NULL;
-        if(!RandomBytes(mac_key, MACKLEN))       return NULL;
-        if(!RandomBytes(counter_iv, SHA256_DIGEST_LENGTH))      return NULL;
-        if(!RandomBytes(session_iv, SHA256_DIGEST_LENGTH))      return NULL;
+        if(!RandomBytes(mac_key, MACKLEN)) return NULL;
+        if(!RandomBytes(counter_iv, SHA256_DIGEST_LENGTH)) return NULL;
+        if(!RandomBytes(session_iv, SHA256_DIGEST_LENGTH)) return NULL;
 
         // The session ID is the hash of some fresh randomness
         unsigned char randomness[SESSIONRAND_LENGTH];
         if(!RandomBytes(randomness, SESSIONRAND_LENGTH))
+        {
             return NULL;
+        }
 
         // Generate the session - hash of the randomness
         SHA256(session_id, SHA256_DIGEST_LENGTH, randomness);
@@ -99,6 +101,10 @@ UpstreamProxy* UpstreamProxySessionInit(Config* config, struct ccn_charbuf *uri,
         stateEntry->nonce = 0xDEADBEEF; // for debugging purposes
         node->stateTable = (ProxyStateTable*)malloc(sizeof(ProxyStateTable));
         node->sessionTable = (ProxySessionTable*)malloc(sizeof(ProxySessionTable));
+
+        // Use the session ID to recreate the initial rand_seed for encryption/decryption
+        RandomSeed(session_id, SHA256_DIGEST_LENGTH);
+        RandomBytes(stateEntry->rand_seed, SHA256_DIGEST_LENGTH);
 
         DEBUG_PRINT("Appending new state table entry\n");
         // AppendStateEntry(node->sessionTable, stateEntry);
@@ -144,9 +150,7 @@ UpstreamProxy* UpstreamProxySessionInit(Config* config, struct ccn_charbuf *uri,
         struct ccn_charbuf *response = ccn_charbuf_create();
         struct ccn_indexbuf *response_comps = ccn_indexbuf_create();
         res = ccn_get(sessionh, int_name, NULL, 3000, response, &response_pco, response_comps, 0);
-
-        // Make sure the content was retrieved correctly
-        if (res == -1) 
+        if (res < 0) 
         {
             fprintf(stderr, "%d %s Unable to create new session\n", __LINE__,__func__);
             return NULL;
@@ -190,7 +194,7 @@ UpstreamProxy* UpstreamProxySessionInit(Config* config, struct ccn_charbuf *uri,
     }
     else if (config->circuit_creation == CIRCUIT_CREATION_PIGGYBACK)
     {
-        DEBUG_PRINT("CIRCUIT_CREATION_PIGGYBACK - no interests to be sent.\n");
+        DEBUG_PRINT("CIRCUIT_CREATION_PIGGYBACK - no interests to be sent here.\n");
     }
 
     return node;
@@ -402,6 +406,8 @@ enum ccn_upcall_res UnwrapContent(struct ccn_closure *selfp, enum ccn_upcall_kin
 
     // Recover the proxy     
     UpstreamProxy *proxy = selfp->data;
+    struct ccn_charbuf *new_name = NULL;
+    struct ccn_charbuf *new_content = NULL;
 
     DEBUG_PRINT("Client Content handle called\n");
 
@@ -429,27 +435,48 @@ enum ccn_upcall_res UnwrapContent(struct ccn_closure *selfp, enum ccn_upcall_kin
         return(CCN_UPCALL_RESULT_ERR);
     }
 
-    // Recover the content name after decrypting the content, and then check against the original interest
-    const unsigned char *content_name = info->content_ccnb + info->pco->offset[CCN_PCO_B_Name];
-    const size_t name_length = info->pco->offset[CCN_PCO_E_Name] - info->pco->offset[CCN_PCO_B_Name];
+    // Find name in Content Object
+    new_name = ccn_charbuf_create();
+    ccn_name_init(new_name);
+    ccn_name_append_components(new_name, info->content_ccnb, info->content_comps->buf[0], info->content_comps->buf[info->matched_comps]);
+
+#ifdef PROXYDEBUG
+    DEBUG_PRINT("Name matches %d comps\n", info->matched_comps);
+    ccn_util_print_pc_fmt(info->content_ccnb + info->pco->offset[CCN_PCO_B_Name], info->pco->offset[CCN_PCO_E_Name] - info->pco->offset[CCN_PCO_B_Name]);
+    DEBUG_PRINT("\n");
+#endif
+
+    // Retrieve the original name from the state table
+    // caw
+    struct ccn_charbuf *origName = NULL;
+
+    // Extract the encrypted piece of content
     unsigned char *decrypted_content = NULL;
     size_t decrypted_length;
+    struct ccn_charbuf *content = ccn_charbuf_create();
+    ccn_charbuf_append(content, info->content_ccnb, info->pco->offset[CCN_PCO_E]);
 
-    unsigned char *content_ccnb = calloc(info->pco->offset[CCN_PCO_E], sizeof(unsigned char));
-    memcpy(content_ccnb, info->content_ccnb, info->pco->offset[CCN_PCO_E]);
-
+    // Unwrap each layer of XOR padding, (content->buf and content->length)
     // caw: refactor
-    // res = andana_path_decrypt_decap(*path_ptr, content_ccnb, info->pco->offset[CCN_PCO_E], info->pco, &decrypted_content, &decrypted_length);
-    if (res < 0) 
+    uint8_t* ptContent = (uint8_t*)malloc(content->length * sizeof(uint8_t));
+    memcpy(ptContent, content->buf, content->length);
+    for (int i = proxy->numProxies - 1; i >= 0; i--) // order of unwrapping does't matter - XOR is commutative
     {
-        free(content_ccnb);
-        free(decrypted_content);
-        return CCN_UPCALL_RESULT_ERR;
+        
     }
 
-    // ccn_util_validate_content_object(decrypted_content, decrypted_length);
+    // // Sign the new encrypted content
+    // new_content = ccn_charbuf_create();
+    // sp.type = CCN_CONTENT_DATA;
+    // res = ccn_sign_content(baseProxy->handle, new_content, origName, &sp, encrypted_content, encrypted_length);
+    // if (res != 0) 
+    // {
+    //     DEBUG_PRINT("ABORT %d %s Failed to encode ContentObject (res == %d)\n", __LINE__, __func__, res);
+    //     return CCN_UPCALL_RESULT_ERR;
+    // }
+
     // caw: refactor
-    res = ccn_put(proxy->baseProxy->handle, decrypted_content, decrypted_length);
+    // res = ccn_put(proxy->baseProxy->handle, decrypted_content, decrypted_length);
     if (res < 0) 
     {
         DEBUG_PRINT("Error sending parsed content object\n");

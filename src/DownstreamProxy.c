@@ -266,6 +266,10 @@ enum ccn_upcall_res DownstreamSessionListener(struct ccn_closure *selfp, enum cc
     assert(bob.len == SHA256_DIGEST_LENGTH);
     memcpy(&(sessionEntry->session_index), out->blob, SHA256_DIGEST_LENGTH);
 
+    // Use the encryption key to populate the seed (from the session ID)
+    RandomSeed(sessionEntry->session_id, SHA256_DIGEST_LENGTH);
+    RandomBytes(sessionEntry->rand_seed, SHA256_DIGEST_LENGTH);
+
     res = ccn_name_comp_get(request_name->buf, request_comps, (unsigned int)request_comps->n - 2, &compBuffer, &compSize);
     if (res < 0) 
     {
@@ -340,7 +344,8 @@ enum ccn_upcall_res UnwrapInterest(struct ccn_closure *selfp, enum ccn_upcall_ki
     enum ccn_upcall_res upcall_res = CCN_UPCALL_RESULT_ERR;
     int res = 0;
 
-    DownstreamProxy *proxy = selfp->data;
+    DownstreamProxy* proxy = selfp->data;
+    ProxyStateTable* stateTable = proxy->stateTable;
     struct ccn_charbuf *new_interest = NULL;
     struct ccn_charbuf *origName = NULL;
     struct ccn_indexbuf *origNameIndexbuf = NULL;
@@ -430,8 +435,14 @@ enum ccn_upcall_res UnwrapInterest(struct ccn_closure *selfp, enum ccn_upcall_ki
     //     return CCN_UPCALL_RESULT_ERR;
     // }
 
-    // Save the interest name in the state table so it can be recovered later
-
+    // Save the interest name in the state table so it (and the session entry) can be recovered later
+    ProxyStateTableEntry* stateEntry = AllocateNewStateEntry(stateTable);
+    stateEntry->ink = (uint8_t*)malloc(decryptedName->length * sizeof(uint8_t));
+    stateEntry->inklen = decryptedName->length;
+    memcpy(stateEntry->ink, decryptedName->buf, decryptedName->length);
+    stateEntry->inv = (uint8_t*)malloc(payloadCompBufferSize * sizeof(uint8_t));
+    stateEntry->invlen = payloadCompBufferSize;
+    memcpy(stateEntry->inv, payloadCompBuffer, payloadCompBufferSize);
 
     // Shoot out the decrypted/unwrapped interest
     DEBUG_PRINT("%d %s starting to write new interest\n", __LINE__, __func__);
@@ -463,6 +474,7 @@ enum ccn_upcall_res WrapContent(struct ccn_closure *selfp, enum ccn_upcall_kind 
     int res;
     
     DownstreamProxy* proxy = selfp->data;
+    ProxyStateTable* stateTable = proxy->stateTable;
     Proxy* baseProxy = proxy->baseProxy;
 
     struct ccn_charbuf *new_name = NULL;
@@ -485,7 +497,6 @@ enum ccn_upcall_res WrapContent(struct ccn_closure *selfp, enum ccn_upcall_kind 
     case CCN_UPCALL_INTEREST_TIMED_OUT:/**< interest timed out */
     {
         // TODO
-
         return CCN_UPCALL_RESULT_OK;
     }
     case CCN_UPCALL_FINAL:/**< handler is about to be deregistered */
@@ -519,8 +530,14 @@ enum ccn_upcall_res WrapContent(struct ccn_closure *selfp, enum ccn_upcall_kind 
 #endif
 
     // Retrieve the original name from the state table
-    // caw
-    struct ccn_charbuf *origName = NULL;
+    ProxyStateTableEntry* stateEntry = FindStateEntry(stateTable, new_name->buf, new_name->length);
+    if (stateEntry == NULL)
+    {
+        DEBUG_PRINT("Could not find matching interest name in the state table.\n");
+        return CCN_UPCALL_RESULT_ERR;
+    }
+    struct ccn_charbuf *origName = ccn_charbuf_create();
+    res = ccn_charbuf_append(origName, stateEntry->inv, stateEntry->invlen);
 
     // Created signed info for new content object
     unsigned char *encrypted_content = NULL;

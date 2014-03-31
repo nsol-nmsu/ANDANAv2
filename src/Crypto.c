@@ -502,7 +502,7 @@ int LoadKeyStore(char* pkFile, char* skFile, RSAKeyPair** keys)
     return result;
 }
 
-/*
+/**
  * Generate (pseudo)random bytes and store them in the buffer.
  *
  * @param buffer - user buffer to store the bytes.
@@ -511,6 +511,17 @@ int LoadKeyStore(char* pkFile, char* skFile, RSAKeyPair** keys)
 int RandomBytes(uint8_t* buffer, uint32_t len)
 {
     return RAND_bytes(buffer, len);
+}
+
+/**
+ * Seed the PRG.
+ *
+ * @param seed - buffer seed.
+ * @param len - length of the seed.
+ */
+void RandomSeed(uint8_t* seed, uint32_t len)
+{
+    RAND_seed(seed, len);
 }
 
 /**
