@@ -462,7 +462,7 @@ enum ccn_upcall_res UnwrapContent(struct ccn_closure *selfp, enum ccn_upcall_kin
     memcpy(ptContent, content->buf, content->length);
     for (int i = proxy->numProxies - 1; i >= 0; i--) // order of unwrapping does't matter - XOR is commutative
     {
-        
+        PRGBasedXorPad(proxy->)
     }
 
     // // Sign the new encrypted content
