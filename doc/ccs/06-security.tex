@@ -1,2 +1,119 @@
 \section{Security Analysis} \label{sec:security}
-TODO
+In order to assess the security of {\sf AND\=aNA-v2} it is important to first define an adversarial model and corresponding definition of security. To this end, we define an adversarial model for {\sf AND\=aNA-v2} that has the same capabilities as presented in \cite{andana}:
+\begin{itemize}
+	\item Deploy compromised routers
+	\item Compromise existing routers
+	\item Control content producers
+	\item Deploy compromised caches
+	\item Observe and replay traffic
+\end{itemize}
+Furthermore, any of these actions or capabiltiies can be carried out adaptively (i.e., in response to status updates from the network or based on the adversary's observations). We also note that the time required to carry out an attack is non-negligibly larger than the average RTT for an interest-content exchange in order to make this model realistic. 
+
+We also make use of the same notions of producer and consumer anonymity and unlinkability to define the security of this scheme. Before reintroducing these definitions, we first establish the relevant notation. An adversary $\mathcal{A}$ is defined as a 4-tuple $(\mathsf{P}_{\mathcal{A}}, \mathsf{C}_{\mathcal{A}}, \mathsf{R}_{\mathcal{A}}, \mathsf{IF}_{\mathcal{A}})$, where each individual component denotes the set of producers, consumers, routers, and interfaces compromised by $\mathcal{A}$, respectively. Following \cite{andana}, a router $r$ is deemed compromised (i.e., $r \in \mathcal{R}_{\mathcal{A}}$) if all of its interfaces belong to $\mathsf{IF}_{\mathcal{A}}$. Similarly, if $\mathcal{A}$ controls a producer or consumer then they have complete (and adaptive) control over how they behave in the application session, meaning that $\mathcal{A}$ can control everything from the timing, format, and actual information of each piece of content. We also define the anonmity set with respect to an interface $\mathsf{if}_i^r$ (i.e., interface $i$ of router $r$) to be 
+\begin{align*}
+\mathsf{AS}_{\mathsf{if}_{i}^{r}} = \{d | \Pr[d \to_\mathsf{int} r | \mathsf{int} \to \mathsf{if}_i^r] > 0 \},
+\end{align*}
+and the anonymity set with respect to the adversary $\mathcal{A}$ to be
+\begin{align*}
+\mathsf{AS}_{\mathcal{A}}^{\mathsf{int}} = \bigcap_{\mathsf{path}^{\mathsf{int}} \cap \mathsf{IF}_{\mathcal{A}}} \mathsf{AS}_{\mathsf{if}_{i}^{r}},
+\end{align*}
+where $\mathsf{path}^{\mathsf{int}}$ is the set of interfaces along which the interest $\mathsf{int}$ traversed in the circuit from the consumer to the producer. 
+
+Finally, we denote the ``state'' of a network, or configuration, as a snapshot in time of its current activity. Accordingly, each configuration is a relation that maps parties to their actions (e.g., interest or content creation). For circuits of length $n$, let a configuration $C$ be defined as
+\begin{align*}
+C : \mathsf{C} \to \{(r_1,\dots,r_n,p,\overline{\mathsf{int}}_1^n)\},
+\end{align*}
+where the $(n + 2)$-element tuple $(r_1,\dots,r_n,p,\mathsf{int}_1^n) \in \mathsf{R}^n \times \mathsf{P} \times \{0,1\}^*$. This relation can be viewed as a map from a consumer $c \in \mathsf{C}$ to a set of routers defining the circuit from $c$ to all producers $p \in \mathsf{P}$ along which interests $\overline{\mathsf{int}}_1^n$ traverse. 
+
+Following in the footsteps of \cite{andana}, we define the security of our design in the context of indistinguishable network configurations. Specifically, two configurations $C$ and $C'$ are said to be \emph{indistinguishable with respect to $\mathcal{A}$}, denoted $C \equiv_{\mathcal{A}} C'$, if for all such polynomial-time adversaries $\mathcal{A}$ there exists a negligible function $\epsilon$ such that 
+\begin{align*}
+\left|\Pr[\mathcal{A}(1^n, C) = 1] - \Pr[\mathcal{A}(1^n, C') = 1]\right| \leq \epsilon(\kappa),
+\end{align*}
+for the global security parameter $\kappa$.
+
+We now define security of our design in terms of consumer and producer anonymity and unlinkability. These can be found in \cite{andana}, but we provide them here for completeness. We also provide new definitions that make sense in the context of the bidirectional session case that {\sf AND\=aNA-v2} is intended to support.
+\begin{defn}
+\cite{andana} For $u \in (\mathsf{C} \setminus \mathsf{C}_{\mathcal{A}})$, $u$ is said to have {\sf consumer anonymity} in configuration $C$ with respect to adversary $\mathcal{A}$ if there exists $C' \equiv_{\mathcal{A}} C$ such that $C'(u') = C(u)$ and $u' \not= u$. 
+\end{defn}
+\begin{defn}
+\cite{andana} Given $\overline{\mathsf{int}}_1^n$ and $p \in \mathsf{P}$, $u \in \mathsf{C}$ has {\sf producer anonymity} in configuration $C$ with respect to $p$ and adversary $\mathcal{A}$ if there exists a configuration $C' \equiv_{\mathcal{A}} C$ such that $\overline{\mathsf{int}}_1^n$ is sent by a non-compromised consumer to a producer different from $p$. 
+\end{defn}
+\begin{defn}
+Two entities $u_1$ and $u_2$, both serving as producer and consumer of content in an application session, are said to have {\sf session anonymity} in configuration $C$ with respect to adversary $\mathcal{A}$ if both $u_1$ and $u_2$ enjoy producer and consumer anonymity in $C$ with respect to $\mathcal{A}$.
+\end{defn}
+\begin{defn}
+\cite{andana} We say that $u \in (\mathsf{C} \setminus \mathsf{C}_{\mathcal{A}})$ and $p \in \mathsf{P}$ are {\sf unlinkable} in $C$ with respect to an adversary $\mathcal{A}$ if there exists a configuration $C' \equiv_{\mathcal{A}} C$ where $u$'s interests are sent to a producer $p' \not= p$.
+\end{defn}
+
+We emphasize that the fundamental differences between the design of {\sf AND\=aNA} and {\sf AND\=aNA-v2} are that, in {\sf AND\=aNA-v2}, each adjacent router will share a private MAC key used for efficient content signature generation (and, optionally, verification) and sessions are identified by the output of $H$ (rather than encrypting and decrypting interests using expensive asymmetric procedures). Accordingly, the proofs of anonymity and privacy need to be augmented to take this into account. The remainder of the design is syntactically equivalent to that of {\sf AND\=aNA}, and so we may restate the theoreoms without proof. However, in doing so, we generalize them to circuits of length $n \geq 2$. 
+
+\begin{thm}
+Consumer $u \in (\mathsf{C} \setminus \mathsf{C}_{\mathcal{A}})$ has consumer anonymity in configuration $C$ with respect to adversary $\mathcal{A}$ if there exists $u \not= u'$ such that any of the following conditions hold:
+\begin{enumerate}
+	\item $u, u' \in \mathsf{AS}_{\mathcal{A}}^{C_4(u)}$
+	\item There exists ARs $r_i$ and $r_i'$ such that $r_i,r_i' \notin \mathsf{R}_{\mathcal{A}}$, both $r_i$ and $r_i'$ are on the circuit traversed by $C_4(u) = \overline{\mathsf{int}}_1^n$.
+\end{enumerate}
+\end{thm}
+\begin{proof}
+See \cite{andana}.
+\end{proof}
+
+\begin{thm}
+Consumer $u$ has producer anonymity in configuration $C$ with respect to producer $p \in \mathsf{P}$ and adversary $\mathcal{A}$ if there exists a pair of ARs $r_i$ and $r_i'$ such that $r_i$ and $r_i'$ (for some uncompromised entity $u \notin \mathsf{C}_{\mathcal{A}}$) are on the path traversed by $C_4(u) = \overline{\mathsf{int}}_1^n$, $C_1(u) = C_1(u')$, and $C_3(u) = p \not= C_3(u')$.
+\end{thm}
+\begin{proof}
+See \cite{andana}.
+\end{proof}
+
+\begin{cor}
+Consumer $u \in (\mathsf{C} \setminus \mathsf{C}_{\mathcal{A}})$ and producer $p \in \mathsf{P}$ are unlinkable in configuration $C$ with respect to adversary $\mathcal{A}$ if $p$ has producer anonymity with respect to $u$'s interests or $u$ has consumer anonymity and there exists a configuration $C' \equiv_{\mathcal{A}} C$ where $C'(u') = C(u)$ with $u' \not= u$ and $u'$'s interests have a destination different from $p$. 
+\end{cor}
+
+In addition to security, we must also be concerned about the correct functioning of each AR supporting a session between two parties. In this context, we (informally) define session correctness as the ability of a consumer to correctly decrypt content that is generated \emph{in response to} its original interest. That is, if a consumer issues an interest, it should be able to correctly decrypt the content that it receives. The following factors impact the correctness of the session:
+\begin{enumerate}
+  \item Each AR $r_1,\dots,r_n$ on the consumer-to-producer circuit should correctly recover the session identifier associated with the current session. 
+  \item The session key streams should only be advanced upon the receipt of an interest corresponding to the consumer who initiated the session or content that is generated from the upstream router (potentially the producer) in the circuit.
+\end{enumerate}
+
+The first item is necessary in order for each AR to correctly decrypt interests, encrypt content, and perform content signature generation and verification. The second item is necessary so that all content can be correctly decrypted by the consumer. We claim that, given a CCA-secure public key encryption scheme, the probability that either one of these factors being violated by an adversary $\mathcal{A}$ is negligible. Let $\mathsf{ForgeSession}$ and $\mathsf{KeyJump}$ denote the events corresponding to instances where an adversary creates a ciphertext that maps to a valid session identifier for \emph{some} session currently supported by an AR (i.e., the forged session belongs to the routers session table $\mathsf{ST}$), and the event that an adversary causes the key stream for \emph{some} AR in a consumer-to-producer circuit to fall out of sync with the consumer. By the design of {\sf AND\=aNA-v2}, it should be clear that $\mathsf{KeyJump}$ occurs when $\mathsf{ForgeSession}$ occurs, since the key stream is only advanced upon receipt of an interest, but may also occur when an adversary successfully forges a MAC tag corresponding to the signature of a piece of content from the upstream router (or producer). We denote this latter event as $\mathsf{ContentMacForge}$. With the motivation in place, we now formally analyze the probabilities of these events occuring below. For notational convenience, we assume that each event only occurs as a result of some adversarial action, so we omit this relation in what follows.
+
+\begin{lemma}
+For all probabilistic polynomial-time adversaries $\mathcal{A}$, there exists some negligible function $\mathsf{negl}$ such that
+\begin{align*}
+\Pr[\mathsf{ForgeSession}] \leq \mathsf{negl}(\kappa).
+\end{align*}
+\end{lemma}
+\begin{proof}
+By the design of {\sf AND\=aNA-v2}, we know that session identifiers are computed as the output of a collision resistant hash function $H : \{0,1\}^* \to \{0,1\}^{m}$, where $m = \mathsf{poly}(\kappa)$ (i.e. polynomial in the global security parameter). Consequently, forging a session identifier \emph{without} the input to $H$ implies that a collision was found, thus violating collision resistance of $H$. Thus, forging a session is equally hard as finding a collision in $H$, or more formally, $\Pr[\mathsf{Collision}(H) = 1] = \Pr[\mathsf{ForgeSession}]$. By the properties of collision resistance of $H$ which states that $\Pr[\mathsf{Collision}(H) = 1] \leq \mathsf{negl}(\kappa)$ for some negligible function $\mathsf{negl}$, it follows that $\Pr[\mathsf{ForgeSession}] \leq \mathsf{negl}(\kappa)$. 
+
+% TODO: asusme that some session is forged... session identifiers are created from hashing the session ID as per the above design, so a forgery implies a collision in the hash function. If we assume a CRH hash, then forgery implies contradiction, and we're done.
+\end{proof}
+
+\begin{lemma}
+For all probabilistic polynomial-time adversaries $\mathcal{A}$, there exists some negligible function $\mathsf{negl}$ such that
+\begin{align*}
+\Pr[\mathsf{ContentMacForge}] \leq \mathsf{negl}(\kappa).
+\end{align*}
+\end{lemma}
+\begin{proof}
+By the design of {\sf AND\=aNA-v2}, the MAC scheme $\Pi$ used for content symmetric content signature generation and verification is defined as $\Pi = (\mathsf{Gen}, \mathsf{Mac}, \mathsf{Ver})$, where $\mathsf{Gen}$ generates the secret key $k$ used in the scheme, $\mathsf{Mac}_k(m)$ outputs the MAC tag $t := F_k(m)$ for some pseudorandom function $F$, and $\mathsf{Ver}_k(m, t)$ outputs $1$ if $t = \mathsf{Mac}_k(m)$ and $0$ otherwise. This is known and proven to be a secure MAC scheme [does this warrant citation?], meaning that for all probabilistic polynomial-time adversaries $\mathcal{A}$ there exists a negligible function $\mathsf{negl}$ such that $\Pr[\mathsf{MacForce}_{\mathcal{A},\Pi}(1^{\kappa}) = 1] \leq \mathsf{negl}(\kappa)$, and since $\mathsf{ContentMacForce}$ occurs exactly when the even $\mathsf{MacForce}$ occurs, we have that $\Pr[\mathsf{ContentMacForge}] \leq \mathsf{negl}(\kappa)$.
+
+% TODO: assume secure MAC scheme based on PRF is used, a forgery in the MAC scheme therefore relies on the PRFness of SipHash... If this holds, then ContentMacForge is negligible.
+\end{proof}
+
+\begin{lemma}
+For all probabilistic polynomial-time adversaries $\mathcal{A}$, there exists some negligible function $\mathsf{negl}$ such that
+\begin{align*}
+\Pr[\mathsf{KeyJump}] \leq \mathsf{negl}(\kappa).
+\end{align*}
+\end{lemma}
+\begin{proof}
+By the design of {\sf AND\=aNA-v2}, it follows that $\Pr[\mathsf{KeyJump}] = \Pr[\mathsf{ForgeSession}] + \Pr[\mathsf{ContentMacForce}]$, and since the sum of two negligible functions is also negligible, it follows that there exists some negligible function $\mathsf{negl}$ such that $\Pr[\mathsf{KeyJump}] \leq \mathsf{negl}(\kappa)$.
+\end{proof}
+
+\begin{thm}
+Session correctness of {\sf AND\=aNA-v2} is only violated with negligible probability.
+\end{thm}
+\begin{proof}
+This follows immediately from Lemmas 1, 2, and 3 and the fact that the sum of two negligible functions is also negligible.\footnote{This sum comes from the fact that the probability of the ``failure'' events occurring must be taken into account in both directions of the session.} 
+\end{proof}
