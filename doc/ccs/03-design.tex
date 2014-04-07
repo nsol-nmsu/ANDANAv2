@@ -1,5 +1,5 @@
 \section{ANDANA-v2 Design} \label{sec:design}
-In this section we describe the much improved design of {\sf AND\=aNAv2}. Table \ref{tab:notation} introduces the relevant notation needed to understand the design in its entirety
+In this section we describe the much improved design of {\sf AND\=aNAv2}. Table \ref{tab:notation} introduces the relevant notation needed to understand the design in its entirety. 
 
 \begin{table}
 \centering
@@ -142,25 +142,25 @@ The purpose of each of these session entities will become clear from the circuit
 
 Notice that by this procedure, no two routers will share the same session identifier even though they partake in the same circuit since they generate session identifiers independent and uniformly at random from $\{0,1\}^{\kappa}$. Also, the {\sf ServerEstablishSession} and {\sf ServerRetrieveMACKey} procedures are asynchronous and only invoked in response to the respective interest.
 
-\begin{figure}[ht!]
+\begin{figure*}[ht!]
 \begin{center}
 \includegraphics[scale=0.5]{./images/circuit.pdf}
 \end{center}
 \caption{Sample session-based circuit between a consumer $C$ and producer $P$ with ARs $r_1,r_2,r_3,r_4$, where the end routers on the path are run on the same node as $C$ and $P$.}
 \label{fig:circuit}
-\end{figure}
+\end{figure*}
 
 \subsection{{\sf AND\=aNA-v2} Circuit Usage}
 
 We note that anonymous routers must be chosen in a \emph{mutually excluse} manner, meaning that they do not change share the same name prefix or are from the same organization (see Figure \ref{fig:pool}). This requirement is needed for ensuring anonymity. After a circuit and the corresponding sessions have been created between the consumer and each anonymous router, usage of the circuit proceeds as per the original {\sf AND\=aNAv2} design. Specifically, there are three main operations that need to be defined: encrypted interest generation, AR interest forwarding, and AR content handling. In what we follows we present the details of each of these procedures as needed for {\sf AND\=aNA-v2}. We begin with the encrypted interest generation procedure (shown in Algorithm \ref{alg:enc_int_gen}) in which a consumer $C$ particpating in a particular \emph{application} session with a producer $P$ wraps an interest for the session to be sent into the anonymizing circuit. A wrapped (encrypted) interest from $r_i$ to $r_j$ ($i \leq j$) is denoted as $\overline{\mathsf{int}}_i^j$, meaning that the original plaintext interests $\mathsf{int}$ cannot be retrieve unless encrypted by each router $r_i,r_{i+1},\dots,r_j$, in that order. Thus, the original wrapped interest is denoted as $\overline{\mathsf{int}}_1^n$.
 
-\begin{figure}[ht!]
+\begin{figure*}[ht!]
 \begin{center}
 \includegraphics[scale=0.5]{./images/pool.pdf}
 \end{center}
 \caption{A sample bidirectional circuit configuration in which two parties communicate using mutually exclusive ARs in both directions. Note that it is not required for each circuit to be the same length, nor is it required that the intersection of the routers for each direction of the circuit to be empty (i.e., routers may \emph{unknowingly} support sessions traversing in both directions).}
 \label{fig:pool}
-\end{figure}
+\end{figure*}
 
 \begin{algorithm}[ht!]
   \caption{Encrypted Interest Generation}
@@ -233,10 +233,10 @@ We note that anonymous routers must be chosen in a \emph{mutually excluse} manne
 \label{alg:ar_content_handler}
 \end{algorithm}
 
-\begin{figure}[ht!]
+\begin{figure*}[ht!]
 \begin{center}
 \includegraphics[scale=0.65]{./images/circuit_usage.pdf}
 \end{center}
 \caption{Visual depiction of the interaction between the consumer and the first hop router. The procedure repeats in the same manner for all further upstream routers after each interest is unrolled and resulting content is encrypted.}
 \label{fig:circuit_usage}
-\end{figure}
+\end{figure*}
