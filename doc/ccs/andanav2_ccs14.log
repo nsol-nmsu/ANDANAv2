@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-2.5-1.40.14 (TeX Live 2013) (format=pdflatex 2013.5.30)  7 APR 2014 16:35
+This is pdfTeX, Version 3.1415926-2.5-1.40.14 (TeX Live 2013) (format=pdflatex 2013.5.30)  8 APR 2014 12:34
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -904,35 +904,21 @@ e
 ))
 ABD: EveryShipout initializing macros
 \AtBeginShipoutBox=\box62
-LaTeX Font Info:    Try loading font information for U+msa on input line 51.
+LaTeX Font Info:    Try loading font information for U+msa on input line 47.
 
 (/usr/local/texlive/2013/texmf-dist/tex/latex/amsfonts/umsa.fd
 File: umsa.fd 2013/01/14 v3.01 AMS symbols A
 )
-LaTeX Font Info:    Try loading font information for U+msb on input line 51.
+LaTeX Font Info:    Try loading font information for U+msb on input line 47.
 
 (/usr/local/texlive/2013/texmf-dist/tex/latex/amsfonts/umsb.fd
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 )
-LaTeX Font Info:    Try loading font information for U+lasy on input line 51.
+LaTeX Font Info:    Try loading font information for U+lasy on input line 47.
 
 (/usr/local/texlive/2013/texmf-dist/tex/latex/base/ulasy.fd
 File: ulasy.fd 1998/08/17 v2.2e LaTeX symbol font definitions
-)
-Overfull \hbox (1.26794pt too wide) in paragraph at lines 59--60
-\T1/aer/m/n/9 H.4 [\T1/aer/bx/n/9 Information Sys-tems Ap-pli-ca-tions\T1/aer/m
-/n/9 ]: Mis-cel-la-neous;
- []
-
-(./01-intro.tex
-
-LaTeX Warning: Citation `Netflix' on page \thepage  undefined on input line 2.
-
-
-LaTeX Warning: Citation `ndn-techreport' on page \thepage  undefined on input l
-ine 4.
-
-
+) (./01-intro.tex
 Overfull \hbox (2.49995pt too wide) in paragraph at lines 6--7
 \T1/aer/m/it/9 chi-tec-ture \T1/aer/m/n/9 and pro-motes con-tent ac-cess via pr
 oducer-specified
@@ -942,13 +928,6 @@ LaTeX Font Info:    Try loading font information for T1+aess on input line 8.
 (/usr/local/texlive/2013/texmf-dist/tex/latex/ae/t1aess.fd
 File: t1aess.fd 1997/11/16 Font definitions for T1/aess.
 )
-
-LaTeX Warning: Citation `andana' on page \thepage  undefined on input line 8.
-
-
-LaTeX Warning: Citation `Tor' on page \thepage  undefined on input line 8.
-
-
 Overfull \hbox (10.38393pt too wide) in paragraph at lines 8--9
 \T1/aer/m/n/9 de-crypted and for-warded by par-tic-i-pat-ing anonymiz-ing route
 rs,
@@ -982,102 +961,72 @@ Underfull \vbox (badness 10000) has occurred while \output is active []
 
 
 ]
-Overfull \hbox (4.55789pt too wide) in paragraph at lines 11--11
-[]\secfnt AND[]aNA-v1 De-sign High-lights and Pit-falls 
- []
+<./images/andana_v1_design.pdf, id=17, 726.715pt x 419.5675pt>
+File: ./images/andana_v1_design.pdf Graphic file (type pdf)
 
+<use ./images/andana_v1_design.pdf>
+Package pdftex.def Info: ./images/andana_v1_design.pdf used on input line 19.
+(pdftex.def)             Requested size: 363.3566pt x 209.78323pt.
+ [2]) (./03-design.tex
+Underfull \vbox (badness 10000) has occurred while \output is active []
 
-LaTeX Warning: Citation `tor-traffic-analysis' on page \thepage  undefined on i
-nput line 12.
-
-
-LaTeX Warning: Citation `attacking-unlinkability' on page \thepage  undefined o
-n input line 12.
-
-
-LaTeX Warning: Citation `linkability-attacks' on page \thepage  undefined on in
-put line 12.
-
-) (./03-design.tex
-Overfull \hbox (12.67929pt too wide) in paragraph at lines 14--1
-\T1/aer/m/n/9 avoided in or-der to main-tain con-sumer and pro-ducer anonymity.
-
- []
-
-
-Underfull \vbox (badness 2698) has occurred while \output is active []
-
- [2]
-Overfull \hbox (125.53752pt too wide) in paragraph at lines 8--29
- [][] 
- []
-
-
-LaTeX Warning: Citation `tor' on page \thepage  undefined on input line 32.
-
-
-Overfull \hbox (1.26718pt too wide) in paragraph at lines 44--45
+ [3 <./images/andana_v1_design.pdf>]
+Overfull \hbox (1.26718pt too wide) in paragraph at lines 38--39
 []\T1/aer/m/n/9 With the end of goal of sup-port-ing highly ef-fi-cient and ano
 ny-
  []
 
 
-Overfull \hbox (6.91461pt too wide) in paragraph at lines 47--48
+Overfull \hbox (6.91461pt too wide) in paragraph at lines 41--42
 []\T1/aer/m/n/9 Establish con-tent en-cryp-tion keys $\OML/cmm/m/it/9 E[]$ \T1/
 aer/m/n/9 and ini-tial counter
  []
 
 
-Underfull \hbox (badness 4726) in paragraph at lines 92--93
+Underfull \hbox (badness 4726) in paragraph at lines 86--87
 []\T1/aer/bx/n/9 func-tion \T1/aess/m/n/9 ClientSend-MACKey\T1/aer/m/n/9 ($\OML
 /cmm/m/it/9 r[]$\T1/aer/m/n/9 , $[][]$, $\OML/cmm/m/it/9 M[]$\T1/aer/m/n/9 ) //
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 127--128
+Underfull \hbox (badness 10000) in paragraph at lines 121--122
 [] $\OT1/cmr/m/n/9 (\OML/cmm/m/it/9 E[]; M[]; c[]; [][]; [][]\OT1/cmr/m/n/9 ) :
 =
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 129--130
+Underfull \hbox (badness 10000) in paragraph at lines 123--124
 [] $\OT1/cmr/m/n/9 (\OML/cmm/m/it/9 E[]; M[]; [][]; [][]; [][]\OT1/cmr/m/n/9 ) 
 :=
  []
 
-<./images/circuit.pdf, id=20, 704.6325pt x 377.41pt>
+<./images/circuit.pdf, id=48, 704.6325pt x 377.41pt>
 File: ./images/circuit.pdf Graphic file (type pdf)
 
 <use ./images/circuit.pdf>
-Package pdftex.def Info: ./images/circuit.pdf used on input line 147.
+Package pdftex.def Info: ./images/circuit.pdf used on input line 141.
 (pdftex.def)             Requested size: 352.3154pt x 188.70453pt.
- [3]
-<./images/pool.pdf, id=30, 556.0775pt x 283.0575pt>
+ [4]
+<./images/pool.pdf, id=58, 556.0775pt x 283.0575pt>
 File: ./images/pool.pdf Graphic file (type pdf)
  <use ./images/pool.pdf>
-Package pdftex.def Info: ./images/pool.pdf used on input line 159.
+Package pdftex.def Info: ./images/pool.pdf used on input line 153.
 (pdftex.def)             Requested size: 278.03807pt x 141.5284pt.
 
-Underfull \hbox (badness 1009) in paragraph at lines 210--211
+Underfull \hbox (badness 1009) in paragraph at lines 204--205
 []\T1/aer/m/n/9 Re-cover tu-ple $\OML/cmm/m/it/9 T[] \OT1/cmr/m/n/9 = ([][]\OML
 /cmm/m/it/9 ; [][]; [][]\OT1/cmr/m/n/9 )$ \T1/aer/m/n/9 based on
  []
 
-<./images/circuit_usage.pdf, id=31, 630.355pt x 574.145pt>
+<./images/circuit_usage.pdf, id=59, 630.355pt x 574.145pt>
 File: ./images/circuit_usage.pdf Graphic file (type pdf)
 
 <use ./images/circuit_usage.pdf>
-Package pdftex.def Info: ./images/circuit_usage.pdf used on input line 238.
+Package pdftex.def Info: ./images/circuit_usage.pdf used on input line 232.
 (pdftex.def)             Requested size: 409.72589pt x 373.18983pt.
 ) (./04-implementation.tex) (./06-security.tex
-
-LaTeX Warning: Citation `andana' on page \thepage  undefined on input line 2.
-
-
-LaTeX Warning: Citation `andana' on page \thepage  undefined on input line 12.
-
-[4 <./images/circuit.pdf>]
+[5 <./images/circuit.pdf>]
 
 LaTeX Warning: Text page \thepage  contains only floats.
 
@@ -1092,70 +1041,46 @@ LaTeX Warning: Text page \thepage  contains only floats.
 Overfull \vbox (4.61418pt too high) has occurred while \output is active []
 
 
-[5 <./images/pool.pdf> <./images/circuit_usage.pdf>]
-Underfull \vbox (badness 10000) has occurred while \output is active []
-
-
-
-LaTeX Warning: Citation `andana' on page \thepage  undefined on input line 28.
-
-
-LaTeX Warning: Citation `andana' on page \thepage  undefined on input line 34.
-
+[6 <./images/pool.pdf> <./images/circuit_usage.pdf>]
 
 LaTeX Font Warning: Font shape `T1/aer/bx/sc' undefined
-(Font)              using `T1/aer/bx/n' instead on input line 36.
+(Font)              using `T1/aer/bx/n' instead on input line 28.
 
 
-LaTeX Warning: Citation `andana' on page \thepage  undefined on input line 36.
+Underfull \vbox (badness 10000) has occurred while \output is active []
 
-[6]
-
-LaTeX Warning: Citation `andana' on page \thepage  undefined on input line 39.
-
-
-LaTeX Warning: Citation `andana' on page \thepage  undefined on input line 45.
-
-
-Overfull \hbox (18.96703pt too wide) in paragraph at lines 51--52
+ [7]
+Overfull \hbox (18.96703pt too wide) in paragraph at lines 43--44
 []\T1/aer/m/it/9 Consumer $\OML/cmm/m/it/9 u \OMS/cmsy/m/n/9 2 \OT1/cmr/m/n/9 (
 \OT1/cmss/m/n/9 C \OMS/cmsy/m/n/9 n \OT1/cmss/m/n/9 C[]\OT1/cmr/m/n/9 )$ \T1/ae
 r/m/it/9 has con-sumer anonymity
  []
 
 
-LaTeX Warning: Citation `andana' on page \thepage  undefined on input line 58.
-
-
-Overfull \hbox (3.19724pt too wide) in paragraph at lines 62--63
+Overfull \hbox (3.19724pt too wide) in paragraph at lines 54--55
 []\T1/aer/m/it/9 Consumer $\OML/cmm/m/it/9 u$ \T1/aer/m/it/9 has pro-ducer anon
 ymity in con-
  []
 
 
-LaTeX Warning: Citation `andana' on page \thepage  undefined on input line 65.
-
-[7]
-Overfull \hbox (4.78824pt too wide) in paragraph at lines 87--88
+Overfull \hbox (4.78824pt too wide) in paragraph at lines 79--80
 \T1/aer/m/n/9 of col-li-sion re-sis-tance of $\OML/cmm/m/it/9 H$ \T1/aer/m/n/9 
 which states that $[]\OT1/cmr/m/n/9 [[](\OML/cmm/m/it/9 H\OT1/cmr/m/n/9 ) =
  []
 
-
-Overfull \hbox (41.32893pt too wide) in paragraph at lines 111--112
+[8]
+Overfull \hbox (41.32893pt too wide) in paragraph at lines 103--104
 []\T1/aer/m/n/9 By the de-sign of \T1/aess/m/n/9 AND	aNA-v2\T1/aer/m/n/9 , it f
 ol-lows that $[]\OT1/cmr/m/n/9 [[]] =
  []
 
 
-Overfull \hbox (21.87932pt too wide) in paragraph at lines 111--112
+Overfull \hbox (21.87932pt too wide) in paragraph at lines 103--104
 \T1/aer/m/n/9 there ex-ists some neg-li-gi-ble func-tion $[]$ such that $[]\OT1
 /cmr/m/n/9 [[]] \OMS/cmsy/m/n/9 ^^T
  []
 
-) (./05-performance.tex)
-No file andanav2_ccs14.bbl.
-[8] (./andanav2_ccs14.aux)
+) (./05-performance.tex) (./andanav2_ccs14.bbl) [9] (./andanav2_ccs14.aux)
 
 LaTeX Font Warning: Some font shapes were not available, defaults substituted.
 
@@ -1164,13 +1089,13 @@ LaTeX Warning: There were multiply-defined labels.
 
  ) 
 Here is how much of TeX's memory you used:
- 18641 strings out of 493315
- 342964 string characters out of 6137904
- 412380 words of memory out of 5000000
- 21654 multiletter control sequences out of 15000+600000
+ 18688 strings out of 493315
+ 344177 string characters out of 6137904
+ 412465 words of memory out of 5000000
+ 21698 multiletter control sequences out of 15000+600000
  57188 words of font info for 79 fonts, out of 8000000 for 9000
  957 hyphenation exceptions out of 8191
- 63i,13n,57p,2353b,328s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 63i,13n,80p,1740b,581s stack positions out of 5000i,500n,10000p,200000b,80000s
 {/usr/local/texlive/2013/texmf-dist/fonts/enc/dvips/base/8r.enc}</usr/local/t
 exlive/2013/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx9.pfb></usr/local/tex
 live/2013/texmf-dist/fonts/type1/public/amsfonts/cm/cmbxti10.pfb></usr/local/te
@@ -1191,10 +1116,10 @@ fonts/type1/public/amsfonts/cm/cmti9.pfb></usr/local/texlive/2013/texmf-dist/fo
 nts/type1/urw/helvetic/uhvb8a.pfb></usr/local/texlive/2013/texmf-dist/fonts/typ
 e1/urw/helvetic/uhvr8a.pfb></usr/local/texlive/2013/texmf-dist/fonts/type1/urw/
 times/utmb8a.pfb>
-Output written on andanav2_ccs14.pdf (8 pages, 388919 bytes).
+Output written on andanav2_ccs14.pdf (9 pages, 417159 bytes).
 PDF statistics:
- 300 PDF objects out of 1000 (max. 8388607)
- 191 compressed objects within 2 object streams
+ 329 PDF objects out of 1000 (max. 8388607)
+ 212 compressed objects within 3 object streams
  0 named destinations out of 1000 (max. 500000)
- 28 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 33 words of extra memory for PDF output out of 10000 (max. 10000000)
 

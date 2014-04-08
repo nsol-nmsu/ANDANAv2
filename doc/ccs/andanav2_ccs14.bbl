@@ -1,0 +1,50 @@
+\begin{thebibliography}{1}
+
+\bibitem{Netflix}
+V.~Adhikari, Y.~Guo, F.~Hao, M.~Varvello, V.~Hilt, M.~Steiner, and Z.-L. Zhang.
+\newblock Unreeling netflix: Understanding and improving multi-cdn movie
+  delivery.
+\newblock In {\em INFOCOM, 2012 Proceedings IEEE}, pages 1620--1628, March
+  2012.
+
+\bibitem{andana}
+S.~DiBenedetto, P.~Gasti, G.~Tsudik, and E.~Uzun.
+\newblock Andana: Anonymous named data networking application.
+\newblock In {\em Network and Distributed System Security - NDSS}. The Internet
+  Society, 2012.
+
+\bibitem{Tor}
+R.~Dingledine, N.~Mathewson, and P.~Syverson.
+\newblock Tor: The second-generation onion router.
+\newblock In {\em Proceedings of the 13th Conference on USENIX Security
+  Symposium - Volume 13}, SSYM'04, pages 21--21, Berkeley, CA, USA, 2004.
+  USENIX Association.
+
+\bibitem{attacking-unlinkability}
+M.~Franz, B.~Meyer, and A.~Pashalidis.
+\newblock Attacking unlinkability: The importance of context.
+\newblock In N.~Borisov and P.~Golle, editors, {\em Privacy Enhancing
+  Technologies}, volume 4776 of {\em Lecture Notes in Computer Science}, pages
+  1--16. Springer Berlin Heidelberg, 2007.
+
+\bibitem{tor-traffic-analysis}
+S.~Murdoch and G.~Danezis.
+\newblock Low-cost traffic analysis of tor.
+\newblock In {\em Security and Privacy, 2005 IEEE Symposium on}, pages
+  183--195, May 2005.
+
+\bibitem{linkability-attacks}
+S.~Schiffner and S.~Clau\ss.
+\newblock Using linkability information to attack mix-based anonymity services.
+\newblock In {\em Proceedings of the 9th International Symposium on Privacy
+  Enhancing Technologies}, PETS '09, pages 94--107, Berlin, Heidelberg, 2009.
+  Springer-Verlag.
+
+\bibitem{ndn-techreport}
+L.~Zhang, D.~Estrin, J.~Burke, V.~Jacobson, J.~D. Thornton, D.~K. Smetters,
+  B.~Zhang, G.~Tsudik, D.~Massey, C.~Papadopoulos, et~al.
+\newblock Named data networking (ndn) project.
+\newblock {\em Relat{\'o}rio T{\'e}cnico NDN-0001, Xerox Palo Alto Research
+  Center-PARC}, 2010.
+
+\end{thebibliography}

@@ -1,13 +1,5 @@
 \section{Security Analysis} \label{sec:security}
-In order to assess the security of {\sf AND\=aNA-v2} it is important to first define an adversarial model and corresponding definition of security. To this end, we define an adversarial model for {\sf AND\=aNA-v2} that has the same capabilities as presented in \cite{andana}:
-\begin{itemize}
-	\item Deploy compromised routers
-	\item Compromise existing routers
-	\item Control content producers
-	\item Deploy compromised caches
-	\item Observe and replay traffic
-\end{itemize}
-Furthermore, any of these actions or capabiltiies can be carried out adaptively (i.e., in response to status updates from the network or based on the adversary's observations). We also note that the time required to carry out an attack is non-negligibly larger than the average RTT for an interest-content exchange in order to make this model realistic. 
+In order to assess the security of {\sf AND\=aNA-v2} it is important to first define an adversarial model and corresponding definition of security. To this end, we define an adversarial model for {\sf AND\=aNA-v2} that has the same capabilities as presented in \cite{andana}: Deploy compromised routers, Compromise existing routers, Control content producers, Deploy compromised caches, and Observe and replay traffic. Furthermore, any of these actions or capabiltiies can be carried out adaptively (i.e., in response to status updates from the network or based on the adversary's observations). We also note that the time required to carry out an attack is non-negligibly larger than the average RTT for an interest-content exchange in order to make this model realistic. 
 
 We also make use of the same notions of producer and consumer anonymity and unlinkability to define the security of this scheme. Before reintroducing these definitions, we first establish the relevant notation. An adversary $\mathcal{A}$ is defined as a 4-tuple $(\mathsf{P}_{\mathcal{A}}, \mathsf{C}_{\mathcal{A}}, \mathsf{R}_{\mathcal{A}}, \mathsf{IF}_{\mathcal{A}})$, where each individual component denotes the set of producers, consumers, routers, and interfaces compromised by $\mathcal{A}$, respectively. Following \cite{andana}, a router $r$ is deemed compromised (i.e., $r \in \mathcal{R}_{\mathcal{A}}$) if all of its interfaces belong to $\mathsf{IF}_{\mathcal{A}}$. Similarly, if $\mathcal{A}$ controls a producer or consumer then they have complete (and adaptive) control over how they behave in the application session, meaning that $\mathcal{A}$ can control everything from the timing, format, and actual information of each piece of content. We also define the anonmity set with respect to an interface $\mathsf{if}_i^r$ (i.e., interface $i$ of router $r$) to be 
 \begin{align*}
