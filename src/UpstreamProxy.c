@@ -282,7 +282,7 @@ enum ccn_upcall_res WrapInterest(struct ccn_closure *selfp, enum ccn_upcall_kind
 
     if (client->config->circuit_creation == CIRCUIT_CREATION_PIGGYBACK)
     {
-
+        // TODO: re-write, sloppy before
     }
     else // CIRCUIT_CREATION_HANDSHAKE
     {
@@ -320,6 +320,15 @@ enum ccn_upcall_res WrapInterest(struct ccn_closure *selfp, enum ccn_upcall_kind
 
             // Encrypt the name using the encryption key
             BOB *encryptedPayload = NULL;
+
+            // Append entry in the state table
+            ProxyStateTableEntry* newStateEntry = AllocateNewStateEntry(client->stateTable);
+            newStateEntry->ink = (uint8_t*)malloc(sizeof(uint8_t) * newName->length);
+            memcpy(newStateEntry->ink, newName->buf, newName->length);
+            newStateEntry->inklen = newName->length;
+            newStateEntry->inv = (uint8_t*)malloc(sizeof(uint8_t) * name->length);
+            memcpy(newStateEntry->inv, name->buf, name->length);
+            newStateEntry->invlen = name->length;
 
             // Perform wrapping, depending on where we are in the circuit
             if (i == client->numProxies - 1)
@@ -408,6 +417,9 @@ enum ccn_upcall_res UnwrapContent(struct ccn_closure *selfp, enum ccn_upcall_kin
     UpstreamProxy *proxy = selfp->data;
     struct ccn_charbuf *new_name = NULL;
     struct ccn_charbuf *new_content = NULL;
+    struct ccn_charbuf *name = NULL;
+    struct ccn_indexbuf *nameComponents = NULL;
+    int numComponents = 0;
 
     DEBUG_PRINT("Client Content handle called\n");
 
@@ -439,6 +451,7 @@ enum ccn_upcall_res UnwrapContent(struct ccn_closure *selfp, enum ccn_upcall_kin
     new_name = ccn_charbuf_create();
     ccn_name_init(new_name);
     ccn_name_append_components(new_name, info->content_ccnb, info->content_comps->buf[0], info->content_comps->buf[info->matched_comps]);
+    numComponents = ccn_util_extract_name(info->interest_ccnb, info->interest_comps, &name, &nameComponents);
 
 #ifdef PROXYDEBUG
     DEBUG_PRINT("Name matches %d comps\n", info->matched_comps);
@@ -446,9 +459,11 @@ enum ccn_upcall_res UnwrapContent(struct ccn_closure *selfp, enum ccn_upcall_kin
     DEBUG_PRINT("\n");
 #endif
 
-    // Retrieve the original name from the state table
-    // caw
-    struct ccn_charbuf *origName = NULL;
+    // Retrieve the original name from the state table and re-build a ccn-compliant name to send downstream
+    ProxyStateTableEntry* stateEntry = FindStateEntry(proxy->stateTable, name->buf, name->length);
+    struct ccn_charbuf *origName = ccn_charbuf_create();
+    ccn_name_init(origName);
+    ccn_name_append(origName, stateEntry->inv, stateEntry->invlen);
 
     // Extract the encrypted piece of content
     unsigned char *decrypted_content = NULL;
@@ -464,7 +479,7 @@ enum ccn_upcall_res UnwrapContent(struct ccn_closure *selfp, enum ccn_upcall_kin
     for (int i = proxy->numProxies - 1; i >= 0; i--) // order of unwrapping does't matter - XOR is commutative
     {
         // Identify the correct session table entry
-        ProxySessionTableEntry *entry = proxy->pathProxies[i]->sessionTable->head;
+        ProxySessionTableEntry *entry = FindEntryByIndex(proxy->pathProxies[i]->sessionTable, NULL, 0);
 
         // Perform the XOR padding on the same plaintext buffer (XOR is commutative)
         PRGBasedXorPad(entry->encryption_key, KEYLEN, ptContent, ptContent, ptLength);
