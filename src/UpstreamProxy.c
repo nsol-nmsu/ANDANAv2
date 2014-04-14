@@ -211,6 +211,7 @@ enum ccn_upcall_res WrapInterest(struct ccn_closure *selfp, enum ccn_upcall_kind
     UpstreamProxy* client = selfp->data;
     Proxy* proxy = client->baseProxy;
 
+    int i;
     size_t numComponents;
     struct ccn_charbuf *name = NULL;
     struct ccn_indexbuf *nameComponents = NULL;
@@ -290,7 +291,7 @@ enum ccn_upcall_res WrapInterest(struct ccn_closure *selfp, enum ccn_upcall_kind
         // get session/state table entries for each router
         // compute H(session + siv)
         // increment SIV
-        for (int i = client->numProxies - 1; i >= 0; i--)
+        for (i = client->numProxies - 1; i >= 0; i--)
         {
             // session_index = H(sid XOR siv)
             uint8_t session_index[SHA256_DIGEST_LENGTH];
@@ -414,6 +415,7 @@ enum ccn_upcall_res UnwrapContent(struct ccn_closure *selfp, enum ccn_upcall_kin
 {
 	enum ccn_upcall_res ret = CCN_UPCALL_RESULT_ERR;
 	int res;
+    int i;
 
     // Recover the proxy     
     UpstreamProxy *proxy = selfp->data;
@@ -478,7 +480,7 @@ enum ccn_upcall_res UnwrapContent(struct ccn_closure *selfp, enum ccn_upcall_kin
     uint8_t* ptContent = (uint8_t*)malloc(content->length * sizeof(uint8_t));
     uint32_t ptLength = content->length;
     memcpy(ptContent, content->buf, ptLength);
-    for (int i = proxy->numProxies - 1; i >= 0; i--) // order of unwrapping does't matter - XOR is commutative
+    for (i = proxy->numProxies - 1; i >= 0; i--) // order of unwrapping does't matter - XOR is commutative
     {
         // Identify the correct session table entry
         ProxySessionTableEntry *entry = FindEntryByIndex(proxy->pathProxies[i]->sessionTable, NULL, 0);
