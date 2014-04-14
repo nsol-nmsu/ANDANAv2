@@ -45,7 +45,8 @@ unsigned char* KDF(unsigned char * key, unsigned int keylen, char * s, unsigned 
  */
 void XOR(uint8_t* x, uint8_t* y, uint8_t* z, int len)
 {
-    for (int i = 0; i < len; i++)
+    int i;
+    for (i = 0; i < len; i++)
     {
         z[i] = x[i] ^ y[i];
     }
@@ -56,8 +57,9 @@ void XOR(uint8_t* x, uint8_t* y, uint8_t* z, int len)
  */
 void INC(uint8_t* x, int len)
 {
+    int i;
     int carry = 0;
-    for (int i = len - 1; i >= 0; i--) 
+    for (i = len - 1; i >= 0; i--) 
     {
         if (x[i] == 0xFF)
         {
