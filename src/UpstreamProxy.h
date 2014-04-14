@@ -21,6 +21,7 @@ struct UpstreamProxy
 {
     ProxySessionTable* sessionTable;
     ProxyStateTable* stateTable;
+    UpstreamProxyStateTable* upstreamStateTable;
     Config* config;
     Proxy* baseProxy;
 

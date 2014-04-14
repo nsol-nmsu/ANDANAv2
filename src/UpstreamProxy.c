@@ -100,6 +100,7 @@ UpstreamProxy* UpstreamProxySessionInit(Config* config, struct ccn_charbuf *uri,
         // memcpy(stateEntry->session_index, session_index, SHA256_DIGEST_LENGTH);
         stateEntry->nonce = 0xDEADBEEF; // for debugging purposes
         node->stateTable = (ProxyStateTable*)malloc(sizeof(ProxyStateTable));
+        node->upstreamStateTable = (UpstreamProxyStateTable*)malloc(sizeof(UpstreamProxyStateTable));
         node->sessionTable = (ProxySessionTable*)malloc(sizeof(ProxySessionTable));
 
         // Use the session ID to recreate the initial rand_seed for encryption/decryption
@@ -275,6 +276,18 @@ enum ccn_upcall_res WrapInterest(struct ccn_closure *selfp, enum ccn_upcall_kind
         return ret;
     }
 
+    // Allocate a new state entry
+    UpstreamProxyStateTableEntry* newStateEntry = AllocateNewUpstreamStateEntry(client->upstreamStateTable);
+    newStateEntry->invalues = (uint8_t**)malloc(sizeof(uint8_t*) * client->numProxies);
+    for (i = 0; i < client->numProxies; i++)
+    {
+        newStateEntry->invalues[i] = (uint8_t*)malloc(SHA256_DIGEST_LENGTH);
+    }
+
+    // Set the original interest name in the upstream state entry
+    newStateEntry->origName = ccn_charbuf_create();
+    ccn_charbuf_append_charbuf(newStateEntry->origName, name);
+
     // Initialize the base name for the wrapped interest
     ccn_name_init(newName);
 
@@ -283,7 +296,7 @@ enum ccn_upcall_res WrapInterest(struct ccn_closure *selfp, enum ccn_upcall_kind
 
     if (client->config->circuit_creation == CIRCUIT_CREATION_PIGGYBACK)
     {
-        // TODO: re-write, sloppy before
+        // TODO: re-write to make it non-sloppy
     }
     else // CIRCUIT_CREATION_HANDSHAKE
     {
@@ -319,14 +332,11 @@ enum ccn_upcall_res WrapInterest(struct ccn_closure *selfp, enum ccn_upcall_kind
             // append session ID
             ccn_name_append(innerName, (void*)session_index, SHA256_DIGEST_LENGTH);
 
+            // Append the index to the upstream state table
+            memcpy(newStateEntry->invalues[i], session_index, SHA256_DIGEST_LENGTH);
+
             // Encrypt the name using the encryption key
             BOB *encryptedPayload = NULL;
-
-            // Allocate a new state entry
-            ProxyStateTableEntry* newStateEntry = AllocateNewStateEntry(client->stateTable);
-            newStateEntry->inv = (uint8_t*)malloc(sizeof(uint8_t) * innerName->length);
-            memcpy(newStateEntry->inv, innerName->buf, innerName->length);
-            newStateEntry->invlen = innerName->length;
 
             // Perform wrapping, depending on where we are in the circuit
             if (i == client->numProxies - 1)
@@ -365,11 +375,6 @@ enum ccn_upcall_res WrapInterest(struct ccn_closure *selfp, enum ccn_upcall_kind
                 ccn_charbuf_destroy(wrappedInterest);
             }
 
-            // Now set the key to the encrypted interest
-            newStateEntry->ink = (uint8_t*)malloc(sizeof(uint8_t) * encryptedPayload->len);
-            memcpy(newStateEntry->ink, encryptedPayload->blob, encryptedPayload->len);
-            newStateEntry->inklen = encryptedPayload->len;
-
             // Copy this interest so that it can be encrypted the next go round
             ccn_charbuf_append_charbuf(wrappedInterest, innerName);
 
@@ -392,6 +397,11 @@ enum ccn_upcall_res WrapInterest(struct ccn_closure *selfp, enum ccn_upcall_kind
         ccn_charbuf_destroy(&c);
     #endif
     }
+
+    // Now set the key to the encrypted interest name 
+    newStateEntry->ink = (uint8_t*)malloc(sizeof(uint8_t) * newName->length);
+    memcpy(newStateEntry->ink, newName->buf, newName->length);
+    newStateEntry->inklen = newName->length;
 
     // Shoot out the new interest
     res = ccn_express_interest(proxy->handle, newName, proxy->content_handler, NULL);
@@ -464,10 +474,10 @@ enum ccn_upcall_res UnwrapContent(struct ccn_closure *selfp, enum ccn_upcall_kin
 #endif
 
     // Retrieve the original name from the state table and re-build a ccn-compliant name to send downstream
-    ProxyStateTableEntry* stateEntry = FindStateEntry(proxy->stateTable, name->buf, name->length);
+    UpstreamProxyStateTableEntry* stateEntry = FindUpstreamStateEntry(proxy->stateTable, name->buf, name->length);
     struct ccn_charbuf *origName = ccn_charbuf_create();
     ccn_name_init(origName);
-    ccn_name_append(origName, stateEntry->inv, stateEntry->invlen);
+    ccn_charbuf_append_charbuf(origName, stateEntry->origName);
 
     // Extract the encrypted piece of content
     unsigned char *decrypted_content = NULL;
@@ -476,14 +486,13 @@ enum ccn_upcall_res UnwrapContent(struct ccn_closure *selfp, enum ccn_upcall_kin
     ccn_charbuf_append(content, info->content_ccnb, info->pco->offset[CCN_PCO_E]);
 
     // Unwrap each layer of XOR padding, (content->buf and content->length)
-    // caw: refactor
     uint8_t* ptContent = (uint8_t*)malloc(content->length * sizeof(uint8_t));
     uint32_t ptLength = content->length;
     memcpy(ptContent, content->buf, ptLength);
     for (i = proxy->numProxies - 1; i >= 0; i--) // order of unwrapping does't matter - XOR is commutative
     {
         // Identify the correct session table entry
-        ProxySessionTableEntry *entry = FindEntryByIndex(proxy->pathProxies[i]->sessionTable, NULL, 0);
+        ProxySessionTableEntry *entry = FindEntryByIndex(proxy->pathProxies[i]->sessionTable, stateEntry->invalues[i], SHA256_DIGEST_LENGTH);
 
         // Perform the XOR padding on the same plaintext buffer (XOR is commutative)
         PRGBasedXorPad(entry->encryption_key, KEYLEN, ptContent, ptContent, ptLength);
