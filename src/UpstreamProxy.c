@@ -321,14 +321,11 @@ enum ccn_upcall_res WrapInterest(struct ccn_closure *selfp, enum ccn_upcall_kind
             // Encrypt the name using the encryption key
             BOB *encryptedPayload = NULL;
 
-            // Append entry in the state table
+            // Allocate a new state entry
             ProxyStateTableEntry* newStateEntry = AllocateNewStateEntry(client->stateTable);
-            newStateEntry->ink = (uint8_t*)malloc(sizeof(uint8_t) * newName->length);
-            memcpy(newStateEntry->ink, newName->buf, newName->length);
-            newStateEntry->inklen = newName->length;
-            newStateEntry->inv = (uint8_t*)malloc(sizeof(uint8_t) * name->length);
-            memcpy(newStateEntry->inv, name->buf, name->length);
-            newStateEntry->invlen = name->length;
+            newStateEntry->inv = (uint8_t*)malloc(sizeof(uint8_t) * innerName->length);
+            memcpy(newStateEntry->inv, innerName->buf, innerName->length);
+            newStateEntry->invlen = innerName->length;
 
             // Perform wrapping, depending on where we are in the circuit
             if (i == client->numProxies - 1)
@@ -366,6 +363,11 @@ enum ccn_upcall_res WrapInterest(struct ccn_closure *selfp, enum ccn_upcall_kind
                 // Wipe out the wrapped interest so it can be rebuild below
                 ccn_charbuf_destroy(wrappedInterest);
             }
+
+            // Now set the key to the encrypted interest
+            newStateEntry->ink = (uint8_t*)malloc(sizeof(uint8_t) * encryptedPayload->len);
+            memcpy(newStateEntry->ink, encryptedPayload->blob, encryptedPayload->len);
+            newStateEntry->inklen = encryptedPayload->len;
 
             // Copy this interest so that it can be encrypted the next go round
             ccn_charbuf_append_charbuf(wrappedInterest, innerName);

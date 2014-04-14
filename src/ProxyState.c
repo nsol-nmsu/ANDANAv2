@@ -1,6 +1,9 @@
 #include "ProxyState.h"
 #include "Util.h"
 
+/**
+ * TODO
+ */ 
 void AppendSessionEntry(ProxySessionTable* table, ProxySessionTableEntry* entry)
 {
 	ProxySessionTableEntry* curr = table->head;
@@ -21,6 +24,9 @@ void AppendSessionEntry(ProxySessionTable* table, ProxySessionTableEntry* entry)
 	entry->next = NULL; // terminate the list
 }
 
+/**
+ * TODO
+ */ 
 ProxySessionTableEntry* AllocateNewSessionEntry(ProxySessionTable* table)
 {
 	ProxySessionTableEntry* newEntry = (ProxySessionTableEntry*)malloc(sizeof(ProxySessionTableEntry));
@@ -44,6 +50,9 @@ ProxySessionTableEntry* AllocateNewSessionEntry(ProxySessionTable* table)
 	return newEntry;
 }
 
+/**
+ * TODO
+ */ 
 ProxySessionTableEntry* FindEntryByIndex(ProxySessionTable* table, uint8_t* index, uint32_t len)
 {
 	ProxySessionTableEntry* curr = table->head;
@@ -57,6 +66,9 @@ ProxySessionTableEntry* FindEntryByIndex(ProxySessionTable* table, uint8_t* inde
 	return NULL;	
 }
 
+/**
+ * TODO
+ */ 
 void AddStateEntry(ProxyStateTable* table, ProxyStateTableEntry* entry)
 {
 	ProxyStateTableEntry* curr = table->head;
@@ -77,6 +89,9 @@ void AddStateEntry(ProxyStateTable* table, ProxyStateTableEntry* entry)
 	entry->next = NULL; // terminate the list
 }
 
+/**
+ * TODO
+ */ 
 ProxyStateTableEntry* AllocateNewStateEntry(ProxyStateTable* table)
 {
 	ProxyStateTableEntry* newEntry = (ProxyStateTableEntry*)malloc(sizeof(ProxyStateTableEntry));
@@ -102,7 +117,7 @@ ProxyStateTableEntry* AllocateNewStateEntry(ProxyStateTable* table)
 
 /**
  * TODO
- */
+ */ 
 ProxyStateTableEntry* FindStateEntry(ProxyStateTable* table, uint8_t* key, uint32_t len)
 {
 	ProxyStateTableEntry* curr = table->head;
