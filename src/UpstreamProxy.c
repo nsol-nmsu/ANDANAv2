@@ -459,10 +459,15 @@ enum ccn_upcall_res UnwrapContent(struct ccn_closure *selfp, enum ccn_upcall_kin
     // Unwrap each layer of XOR padding, (content->buf and content->length)
     // caw: refactor
     uint8_t* ptContent = (uint8_t*)malloc(content->length * sizeof(uint8_t));
-    memcpy(ptContent, content->buf, content->length);
+    uint32_t ptLength = content->length;
+    memcpy(ptContent, content->buf, ptLength);
     for (int i = proxy->numProxies - 1; i >= 0; i--) // order of unwrapping does't matter - XOR is commutative
     {
-        PRGBasedXorPad(proxy->)
+        // Identify the correct session table entry
+        ProxySessionTableEntry *entry = proxy->pathProxies[i]->sessionTable->head;
+
+        // Perform the XOR padding on the same plaintext buffer (XOR is commutative)
+        PRGBasedXorPad(entry->encryption_key, KEYLEN, ptContent, ptContent, ptLength);
     }
 
     // // Sign the new encrypted content

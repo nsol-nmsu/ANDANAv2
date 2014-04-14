@@ -538,7 +538,7 @@ int PRGBasedXorPad(uint8_t* key, uint32_t keylen, uint8_t* pt, uint8_t* ct, uint
     // Force a re-seed
     RAND_seed(key, keylen);
 
-    // Generate the random pad
+    // Generate the random pad using a DPRG
     uint8_t* pad = (uint8_t*)malloc(len * sizeof(uint8_t));
     int res = RandomBytes(pad, len);
     if (res < 0)
