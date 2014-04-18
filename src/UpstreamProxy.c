@@ -457,8 +457,8 @@ enum ccn_upcall_res UnwrapContent(struct ccn_closure *selfp, enum ccn_upcall_kin
     case CCN_UPCALL_CONSUMED_INTEREST: /**< incoming interest, someone has answered */
     case CCN_UPCALL_FINAL:             /**< handler is about to be deregistered */
     default:
-        DEBUG_PRINT("upcall other kind = %d\n", kind);
-        return(CCN_UPCALL_RESULT_ERR);
+        DEBUG_PRINT("Upcall other kind = %d\n", kind);
+        return CCN_UPCALL_RESULT_ERR;
     }
 
     // Find name in Content Object
@@ -494,7 +494,7 @@ enum ccn_upcall_res UnwrapContent(struct ccn_closure *selfp, enum ccn_upcall_kin
         // Identify the correct session table entry
         ProxySessionTableEntry *entry = FindEntryByIndex(proxy->pathProxies[i]->sessionTable, stateEntry->invalues[i], SHA256_DIGEST_LENGTH);
 
-        // Perform the XOR padding on the same plaintext buffer (XOR is commutative)
+        // Perform the XOR padding on the same plaintext buffer (XOR is commutative) to remove a layer of encryption
         PRGBasedXorPad(entry->encryption_key, KEYLEN, ptContent, ptContent, ptLength);
     }
 

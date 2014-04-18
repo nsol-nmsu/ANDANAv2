@@ -45,7 +45,7 @@ DownstreamProxy* DownstreamProxyInit(const char *key_uri, const char *filter_uri
 
     DEBUG_PRINT("%d %s DownstreamProxyInit complete\n", __LINE__, __func__);
 
-    return(server);
+    return server;
 }
 
 /** 
@@ -362,7 +362,7 @@ enum ccn_upcall_res UnwrapInterest(struct ccn_closure *selfp, enum ccn_upcall_ki
         DEBUG_PRINT("%d %s received interest time out\n", __LINE__, __func__);
     default:
         DEBUG_PRINT("OUT %d %s\n", __LINE__, __func__);
-        return(CCN_UPCALL_RESULT_OK);
+        return CCN_UPCALL_RESULT_OK;
     }
 
     // Extract Name from Interest
@@ -501,7 +501,7 @@ enum ccn_upcall_res WrapContent(struct ccn_closure *selfp, enum ccn_upcall_kind 
     }
     case CCN_UPCALL_FINAL:/**< handler is about to be deregistered */
         DEBUG_PRINT("OUT %d %s final upcall\n", __LINE__, __func__);
-        return(CCN_UPCALL_RESULT_OK);
+        return CCN_UPCALL_RESULT_OK;
 
     case CCN_UPCALL_INTEREST:          /**< incoming interest */
     case CCN_UPCALL_CONSUMED_INTEREST: /**< incoming interest, someone has answered */
@@ -590,7 +590,11 @@ int AnonServerDestroy(DownstreamProxy** server)
     free(s->baseProxy->content_handler);
     // ccn_proxy_destroy(&(s->proxy));
     // ccn_crypto_pubkey_destroy(&(s->privkey));
+
+    // TODO: free up other malloc'd resources
+
+    // Lastly, free up the server
     free(s);
 
-    return(0);
+    return 0;
 }

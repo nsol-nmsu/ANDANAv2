@@ -1,0 +1,17 @@
+Notes:
+- windowing approach needed for interests to account for interest/content loss along the router
+- unlinkability is not provided in Tor (but we get unlinkability)
+=> 1 hop ANDANA ~ 2 hop TOR
+- need to do proof of anonymity for 1 router (if adv compromises producer and node, and can listen on backpath close to node, then security compromised)
+- what about trust? how to find PKs of routers? code shipped with hash digest of directory service (or something else besides a directory service?)
+- how does a router publish its name prefix to accept anonymizing traffic?
+  -> need to address the fact that each router has a globally addressable name
+
+Evaluation:
+- have spread out nodes in AWS
+- only limit to 1/2 hops in the circuit
+
+Conferences:
+- ICN: May 30
+- ICNP: May 9
+- CCS: May 16
