@@ -100,6 +100,7 @@ UpstreamProxy* UpstreamProxySessionInit(Config* config, struct ccn_charbuf *uri,
         // memcpy(stateEntry->session_index, session_index, SHA256_DIGEST_LENGTH);
         stateEntry->nonce = 0xDEADBEEF; // for debugging purposes
         node->stateTable = (ProxyStateTable*)malloc(sizeof(ProxyStateTable));
+        node->stateTable->head = NULL;
         node->upstreamStateTable = (UpstreamProxyStateTable*)malloc(sizeof(UpstreamProxyStateTable));
         node->sessionTable = (ProxySessionTable*)malloc(sizeof(ProxySessionTable));
 
