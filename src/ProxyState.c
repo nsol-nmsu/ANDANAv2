@@ -15,7 +15,7 @@ void AppendSessionEntry(ProxySessionTable* table, ProxySessionTableEntry* entry)
 	else
 	{
 		DEBUG_PRINT("Appending to the end of the table\n");
-		while (curr != NULL)
+		while (curr->next != NULL)
 		{
 			curr = curr->next;
 		}
@@ -40,7 +40,7 @@ ProxySessionTableEntry* AllocateNewSessionEntry(ProxySessionTable* table)
 	else
 	{
 		DEBUG_PRINT("Appending to the end of the table\n");
-		while (curr != NULL)
+		while (curr->next != NULL)
 		{
 			curr = curr->next;
 		}
