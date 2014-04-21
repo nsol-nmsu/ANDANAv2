@@ -62,6 +62,7 @@ ProxySessionTableEntry* FindEntryByIndex(ProxySessionTable* table, uint8_t* inde
 		{
 			return curr;
 		}
+		curr = curr->next;
 	}	
 	return NULL;	
 }
@@ -80,7 +81,7 @@ void AddStateEntry(ProxyStateTable* table, ProxyStateTableEntry* entry)
 	else
 	{
 		DEBUG_PRINT("Appending to the end of the table\n");
-		while (curr != NULL)
+		while (curr->next != NULL)
 		{
 			curr = curr->next;
 		}
@@ -105,7 +106,7 @@ ProxyStateTableEntry* AllocateNewStateEntry(ProxyStateTable* table)
 	else
 	{
 		DEBUG_PRINT("Appending to the end of the table\n");
-		while (curr != NULL)
+		while (curr->next != NULL)
 		{
 			curr = curr->next;
 		}
@@ -127,6 +128,7 @@ ProxyStateTableEntry* FindStateEntry(ProxyStateTable* table, uint8_t* key, uint3
 		{
 			return curr;
 		}
+		curr = curr->next;
 	}	
 	return NULL;	
 }
@@ -145,7 +147,7 @@ void AddUpstreamStateEntry(UpstreamProxyStateTable* table, UpstreamProxyStateTab
 	else
 	{
 		DEBUG_PRINT("Appending to the end of the table\n");
-		while (curr != NULL)
+		while (curr->next != NULL)
 		{
 			curr = curr->next;
 		}
@@ -170,7 +172,7 @@ UpstreamProxyStateTableEntry* AllocateNewUpstreamStateEntry(UpstreamProxyStateTa
 	else
 	{
 		DEBUG_PRINT("Appending to the end of the table\n");
-		while (curr != NULL)
+		while (curr->next != NULL)
 		{
 			curr = curr->next;
 		}
@@ -192,6 +194,7 @@ UpstreamProxyStateTableEntry* FindUpstreamStateEntry(UpstreamProxyStateTable* ta
 		{
 			return curr;
 		}
+		curr = curr->next;
 	}	
 	return NULL;	
 }
