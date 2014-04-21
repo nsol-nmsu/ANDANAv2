@@ -163,6 +163,7 @@ UpstreamProxyStateTableEntry* AllocateNewUpstreamStateEntry(UpstreamProxyStateTa
 {
 	UpstreamProxyStateTableEntry* newEntry = (UpstreamProxyStateTableEntry*)malloc(sizeof(UpstreamProxyStateTableEntry));
 	UpstreamProxyStateTableEntry* curr = table->head;
+	DEBUG_PRINT("curr = %p\n", curr);
 	if (curr == NULL)
 	{
 		DEBUG_PRINT("AllocateNewUpstreamStateEntry: Inserting new entry into the table\n");
