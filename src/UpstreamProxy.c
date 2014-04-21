@@ -194,6 +194,7 @@ UpstreamProxy* UpstreamProxySessionInit(Config* config, struct ccn_charbuf *uri,
         // }
 
         DEBUG_PRINT("Session created successfully\n");
+        return node;
     }
     else if (config->circuit_creation == CIRCUIT_CREATION_PIGGYBACK)
     {
