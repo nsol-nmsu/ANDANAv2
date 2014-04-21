@@ -15,7 +15,7 @@ void AppendSessionEntry(ProxySessionTable* table, ProxySessionTableEntry* entry)
 	else
 	{
 		DEBUG_PRINT("Appending to the end of the table\n");
-		while (curr != NULL)
+		while (curr->next != NULL)
 		{
 			curr = curr->next;
 		}
@@ -41,7 +41,7 @@ ProxySessionTableEntry* AllocateNewSessionEntry(ProxySessionTable* table)
 	else
 	{
 		DEBUG_PRINT("AllocateNewSessionEntry: Appending to the end of the table\n");
-		while (curr != NULL)
+		while (curr->next != NULL)
 		{
 			curr = curr->next;
 		}
@@ -85,7 +85,7 @@ void AddStateEntry(ProxyStateTable* table, ProxyStateTableEntry* entry)
 	else
 	{
 		DEBUG_PRINT("Appending to the end of the table\n");
-		while (curr != NULL)
+		while (curr->next != NULL)
 		{
 			curr = curr->next;
 		}
@@ -111,7 +111,7 @@ ProxyStateTableEntry* AllocateNewStateEntry(ProxyStateTable* table)
 	else
 	{
 		DEBUG_PRINT("Appending to the end of the table\n");
-		while (curr != NULL)
+		while (curr->next != NULL)
 		{
 			curr = curr->next;
 		}
@@ -153,7 +153,7 @@ void AddUpstreamStateEntry(UpstreamProxyStateTable* table, UpstreamProxyStateTab
 	else
 	{
 		DEBUG_PRINT("Appending to the end of the table\n");
-		while (curr != NULL)
+		while (curr->next != NULL)
 		{
 			curr = curr->next;
 		}
@@ -180,7 +180,7 @@ UpstreamProxyStateTableEntry* AllocateNewUpstreamStateEntry(UpstreamProxyStateTa
 	else
 	{
 		DEBUG_PRINT("AllocateNewUpstreamStateEntry: Appending to the end of the table\n");
-		while (curr != NULL)
+		while (curr->next != NULL)
 		{
 			curr = curr->next;
 		}
