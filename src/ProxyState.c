@@ -176,7 +176,9 @@ UpstreamProxyStateTableEntry* AllocateNewUpstreamStateEntry(UpstreamProxyStateTa
 		{
 			curr = curr->next;
 		}
+		DEBUG_PRINT("Setting next\n");
 		curr->next = newEntry;
+		DEBUG_PRINT("Fixing entry\n");
 	}
 	newEntry->next = NULL; // terminate the list
 	return newEntry;
