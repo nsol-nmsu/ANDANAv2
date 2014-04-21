@@ -1,3 +1,4 @@
+
 Notes:
 - windowing approach needed for interests to account for interest/content loss along the router
 - unlinkability is not provided in Tor (but we get unlinkability)
@@ -15,3 +16,19 @@ Conferences:
 - ICN: May 30
 - ICNP: May 9
 - CCS: May 16
+- WPES: end of June deadline
+
+Summer ideas:
+- extending network-layer trust model to application layer (SYSTEMS/DESIGN):
+	1: how to specify trust model at application?
+	2: what should the API for specifying trust model and parameters (e.g., key locations) look like?
+	3: what kinds of applications to test with different trust models? (email, ---key name service---, web, bidirectional traffic, etc...)
+	4: what kind of trust models should even exist?
+- access control/accounting (CRYPTO/SYSTEMS/DESIGN):
+	1: reservation and broadcast encryption, CP/KP-ABE
+	2: what kind of revocation-friendly access control schemes exist?
+	3: can we avoid online requirement for access?...
+	4: WTF TO DO WITH REVOCATION?
+- (hierarchy) identity-based crypto for human-readable keys
+	-> signatures, not encryption, does it exist?...
+
