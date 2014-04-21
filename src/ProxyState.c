@@ -46,7 +46,8 @@ ProxySessionTableEntry* AllocateNewSessionEntry(ProxySessionTable* table)
 			curr = curr->next;
 		}
 		DEBUG_PRINT("Setting next\n");
-		curr->next = newEntry;
+		curr->next = (ProxySessionTableEntry*)malloc(sizeof(ProxySessionTableEntry));
+		memcpy(curr->next, newEntry, sizeof(ProxySessionTable));
 		DEBUG_PRINT("Fixing entry\n");
 	}
 	newEntry->next = NULL; // terminate the list
@@ -88,7 +89,8 @@ void AddStateEntry(ProxyStateTable* table, ProxyStateTableEntry* entry)
 		{
 			curr = curr->next;
 		}
-		curr->next = entry;
+		curr->next = (ProxyStateTableEntry*)malloc(sizeof(ProxyStateTableEntry));
+		memcpy(curr->next, entry, sizeof(ProxyStateTableEntry));
 	}
 	entry->next = NULL; // terminate the list
 }
@@ -113,7 +115,8 @@ ProxyStateTableEntry* AllocateNewStateEntry(ProxyStateTable* table)
 		{
 			curr = curr->next;
 		}
-		curr->next = newEntry;
+		curr->next = (ProxyStateTableEntry*)malloc(sizeof(ProxyStateTableEntry));
+		memcpy(curr->next, newEntry, sizeof(ProxyStateTableEntry));
 	}
 	newEntry->next = NULL; // terminate the list
 	return newEntry;
@@ -154,7 +157,8 @@ void AddUpstreamStateEntry(UpstreamProxyStateTable* table, UpstreamProxyStateTab
 		{
 			curr = curr->next;
 		}
-		curr->next = entry;
+		curr->next = (UpstreamProxyStateTableEntry*)malloc(sizeof(UpstreamProxyStateTableEntry));
+		memcpy(curr->next, entry, sizeof(UpstreamProxyStateTableEntry));
 	}
 	entry->next = NULL; // terminate the list
 }
@@ -181,7 +185,8 @@ UpstreamProxyStateTableEntry* AllocateNewUpstreamStateEntry(UpstreamProxyStateTa
 			curr = curr->next;
 		}
 		DEBUG_PRINT("Setting next\n");
-		curr->next = newEntry;
+		curr->next = (UpstreamProxyStateTableEntry*)malloc(sizeof(UpstreamProxyStateTableEntry));
+		memcpy(curr->next, newEntry, sizeof(UpstreamProxyStateTableEntry));
 		DEBUG_PRINT("Fixing entry\n");
 	}
 	newEntry->next = NULL; // terminate the list
