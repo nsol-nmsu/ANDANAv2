@@ -149,6 +149,7 @@ enum ccn_upcall_res DownstreamSessionListener(struct ccn_closure *selfp, enum cc
 
     // Allocate space for the state/session tables
     // sessionEntry = (ProxySessionTableEntry*)malloc(sizeof(ProxySessionTableEntry));
+    if (server->sessionTable->head == NULL) DEBUG_PRINT("HEAD IS NULL\n");
     ProxySessionTableEntry* sessionEntry = AllocateNewSessionEntry(server->sessionTable);
     DEBUG_PRINT("Done.\n");
 
