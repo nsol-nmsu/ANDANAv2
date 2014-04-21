@@ -30,16 +30,16 @@ void AppendSessionEntry(ProxySessionTable* table, ProxySessionTableEntry* entry)
 ProxySessionTableEntry* AllocateNewSessionEntry(ProxySessionTable* table)
 {
 	ProxySessionTableEntry* newEntry = (ProxySessionTableEntry*)malloc(sizeof(ProxySessionTableEntry));
-	ProxySessionTableEntry* curr;
+	ProxySessionTableEntry* curr = table->head;
 	if (curr == NULL)
 	{
-		DEBUG_PRINT("Inserting new entry into the table\n");
+		DEBUG_PRINT("AllocateNewSessionEntry: Inserting new entry into the table\n");
 		table->head = newEntry;
 		return newEntry;
 	}
 	else
 	{
-		DEBUG_PRINT("Appending to the end of the table\n");
+		DEBUG_PRINT("AllocateNewSessionEntry: Appending to the end of the table\n");
 		while (curr->next != NULL)
 		{
 			curr = curr->next;
@@ -96,7 +96,7 @@ void AddStateEntry(ProxyStateTable* table, ProxyStateTableEntry* entry)
 ProxyStateTableEntry* AllocateNewStateEntry(ProxyStateTable* table)
 {
 	ProxyStateTableEntry* newEntry = (ProxyStateTableEntry*)malloc(sizeof(ProxyStateTableEntry));
-	ProxyStateTableEntry* curr;
+	ProxyStateTableEntry* curr = table->head;
 	if (curr == NULL)
 	{
 		DEBUG_PRINT("Inserting new entry into the table\n");
@@ -162,16 +162,16 @@ void AddUpstreamStateEntry(UpstreamProxyStateTable* table, UpstreamProxyStateTab
 UpstreamProxyStateTableEntry* AllocateNewUpstreamStateEntry(UpstreamProxyStateTable* table)
 {
 	UpstreamProxyStateTableEntry* newEntry = (UpstreamProxyStateTableEntry*)malloc(sizeof(UpstreamProxyStateTableEntry));
-	UpstreamProxyStateTableEntry* curr;
+	UpstreamProxyStateTableEntry* curr = table->head;
 	if (curr == NULL)
 	{
-		DEBUG_PRINT("Inserting new entry into the table\n");
+		DEBUG_PRINT("AllocateNewUpstreamStateEntry: Inserting new entry into the table\n");
 		table->head = newEntry;
 		return newEntry;
 	}
 	else
 	{
-		DEBUG_PRINT("Appending to the end of the table\n");
+		DEBUG_PRINT("AllocateNewUpstreamStateEntry: Appending to the end of the table\n");
 		while (curr->next != NULL)
 		{
 			curr = curr->next;
