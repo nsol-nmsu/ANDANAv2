@@ -31,6 +31,7 @@ ProxySessionTableEntry* AllocateNewSessionEntry(ProxySessionTable* table)
 {
 	ProxySessionTableEntry* newEntry = (ProxySessionTableEntry*)malloc(sizeof(ProxySessionTableEntry));
 	ProxySessionTableEntry* curr = table->head;
+	DEBUG_PRINT("curr = %p\n", curr);
 	if (curr == NULL)
 	{
 		DEBUG_PRINT("AllocateNewSessionEntry: Inserting new entry into the table\n");
@@ -44,7 +45,9 @@ ProxySessionTableEntry* AllocateNewSessionEntry(ProxySessionTable* table)
 		{
 			curr = curr->next;
 		}
+		DEBUG_PRINT("Setting next\n");
 		curr->next = newEntry;
+		DEBUG_PRINT("Fixing entry\n");
 	}
 	newEntry->next = NULL; // terminate the list
 	return newEntry;
