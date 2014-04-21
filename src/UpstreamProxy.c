@@ -108,7 +108,7 @@ UpstreamProxy* UpstreamProxySessionInit(Config* config, struct ccn_charbuf *uri,
         RandomBytes(stateEntry->rand_seed, SHA256_DIGEST_LENGTH);
 
         DEBUG_PRINT("Appending new state table entry\n");
-        AppendStateEntry(node->sessionTable, stateEntry);
+        AddStateEntry(node->sessionTable, stateEntry);
 
         // Total length of the payload
         unsigned payloadSize = KEYLEN + MACKLEN + SHA256_DIGEST_LENGTH + SHA256_DIGEST_LENGTH + SHA256_DIGEST_LENGTH + SHA256_DIGEST_LENGTH;
