@@ -111,16 +111,19 @@ int main(int argc, char** argv)
     DEBUG_PRINT("Starting path creation\n");
 
     // Initialize each proxy hop specified by the user
-    int numProxies = argc - 1;
+    int numProxies = argc - 2;
+    int pIndex = 0;
     UpstreamProxy** proxies = (UpstreamProxy**)malloc(numProxies * sizeof(UpstreamProxy*));
     DEBUG_PRINT("Creating %d proxies\n", numProxies);
-	for (i = 2; i < argc; i++) 
+	for (pIndex = 0, i = 2; pIndex < numProxies; pIndex++, i++) 
 	{
         DEBUG_PRINT("Initializing session state for node %s\n", argv[i]);
 		struct ccn_charbuf *uri = ccn_charbuf_create();
 		ccn_name_from_uri(uri, argv[i]);
-		proxies[i - 2] = UpstreamProxySessionInit(config, uri, pubkey, NULL, i == argc - 1);
+		proxies[pIndex] = UpstreamProxySessionInit(config, uri, pubkey, NULL, pIndex == numProxies - 1);
 	}
+
+    DEBUG_PRINT("Sessions established - setting up the interest/content handlers now\n");
 
     // Hookup the wrapping/unwrapping handlers and then start the client
     UpstreamProxy* client = proxies[0];
