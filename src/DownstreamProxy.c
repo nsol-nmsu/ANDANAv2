@@ -150,6 +150,7 @@ enum ccn_upcall_res DownstreamSessionListener(struct ccn_closure *selfp, enum cc
     // Allocate space for the state/session tables
     // sessionEntry = (ProxySessionTableEntry*)malloc(sizeof(ProxySessionTableEntry));
     ProxySessionTableEntry* sessionEntry = AllocateNewSessionEntry(server->sessionTable);
+    DEBUG_PRINT("Done.\n");
 
     // Extract the name and components
     res = ccn_util_extract_name(info->interest_ccnb, info->interest_comps, &request_name, &request_comps);
