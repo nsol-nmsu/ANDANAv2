@@ -149,7 +149,7 @@ UpstreamProxy* UpstreamProxySessionInit(Config* config, struct ccn_charbuf *uri,
 
         // Send the interest out and wait for the response
         DEBUG_PRINT("Sending nonce: %x\n", stateEntry->nonce);
-        struct ccn_parsed_ContentObject response_pco = { 0 };
+        struct ccn_parsed_ContentObject response_pco = { 0, 0, 0, 0, 0, 0, 0, 0 };
         struct ccn_charbuf *response = ccn_charbuf_create();
         struct ccn_indexbuf *response_comps = ccn_indexbuf_create();
         res = ccn_get(sessionh, int_name, NULL, 3000, response, &response_pco, response_comps, 0);
