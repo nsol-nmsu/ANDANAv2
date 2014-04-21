@@ -22,6 +22,7 @@ DownstreamProxy* DownstreamProxyInit(const char *key_uri, const char *filter_uri
     DownstreamProxy *server = (DownstreamProxy*)malloc(sizeof(DownstreamProxy));
     server->stateTable = (ProxyStateTable*)malloc(sizeof(ProxyStateTable));
     server->sessionTable = (ProxySessionTable*)malloc(sizeof(ProxySessionTable));
+    server->sessionTable->head = NULL;
 
     DEBUG_PRINT("%d %s DownstreamProxyInit invoked\n", __LINE__, __func__);
 
