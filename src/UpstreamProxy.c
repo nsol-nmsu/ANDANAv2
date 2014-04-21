@@ -102,7 +102,9 @@ UpstreamProxy* UpstreamProxySessionInit(Config* config, struct ccn_charbuf *uri,
         node->stateTable = (ProxyStateTable*)malloc(sizeof(ProxyStateTable));
         node->stateTable->head = NULL;
         node->upstreamStateTable = (UpstreamProxyStateTable*)malloc(sizeof(UpstreamProxyStateTable));
+        node->upstreamStateTable->head = NULL;
         node->sessionTable = (ProxySessionTable*)malloc(sizeof(ProxySessionTable));
+        node->sessionTable->head = NULL;
 
         // Use the session ID to recreate the initial rand_seed for encryption/decryption
         RandomSeed(session_id, SHA256_DIGEST_LENGTH);
