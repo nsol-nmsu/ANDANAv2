@@ -293,7 +293,7 @@ enum ccn_upcall_res WrapInterest(struct ccn_closure *selfp, enum ccn_upcall_kind
     ccn_name_init(newName);
 
     // Iteratively wrapped interest
-    struct ccn_charbuf *wrappedInterest = NULL;
+    struct ccn_charbuf *wrappedInterest = ccn_charbuf_create();
 
     if (client->config->circuit_creation == CIRCUIT_CREATION_PIGGYBACK)
     {
@@ -342,6 +342,8 @@ enum ccn_upcall_res WrapInterest(struct ccn_closure *selfp, enum ccn_upcall_kind
             // Perform wrapping, depending on where we are in the circuit
             if (i == client->numProxies - 1)
             {
+                DEBUG_PRINT("Encrypting first interest\n");
+
                 // Encrypt the original interest
                 res = SKEncrypt(&encryptedPayload, hop->sessionTable->head->encryption_key, name->buf, name->length);
                 if (res < 0)
@@ -358,6 +360,8 @@ enum ccn_upcall_res WrapInterest(struct ccn_closure *selfp, enum ccn_upcall_kind
             }
             else
             {
+                DEBUG_PRINT("Encrypting previous interest\n");
+
                 // Encrypt the previous interest
                 res = SKEncrypt(&encryptedPayload, hop->sessionTable->head->encryption_key, wrappedInterest, wrappedInterest->length);
                 if (res < 0)
