@@ -127,14 +127,14 @@ int main(int argc, char** argv)
     DEBUG_PRINT("Sessions established - setting up the interest/content handlers now\n");
 
     // Hookup the wrapping/unwrapping handlers and then start the client
-    UpstreamProxy* client = proxies[0];
+    Proxy* baseProxy = InitProxy(NULL, NULL, argv[2]);
     struct ccn_closure int_handler;
     struct ccn_closure content_handler;
     int_handler.p = &WrapInterest;
     int_handler.data = client;
     content_handler.p = &UnwrapContent;
     content_handler.data = client;
-    ccn_proxy_set_handlers(client->baseProxy, &int_handler, &content_handler);
+    ccn_proxy_set_handlers(baseProxy, &int_handler, &content_handler);
 
     // Store the path for recovery later in the upstream handler
     client->pathProxies = (UpstreamProxy**)malloc(numProxies * sizeof(UpstreamProxy*));
@@ -142,7 +142,7 @@ int main(int argc, char** argv)
     memcpy(client->pathProxies, proxies, numProxies * sizeof(UpstreamProxy*));
 
     // Connect and run
-    if (ProxyConnect(client->baseProxy) < 0) 
+    if (ProxyConnect(baseProxy) < 0) 
     {
         fprintf(stderr, "Error: Failed to connect to ccnd\n");
         return -1;
@@ -150,7 +150,7 @@ int main(int argc, char** argv)
     else 
     {
         // Kick it...
-        ProxyRun(client->baseProxy);
+        ProxyRun(baseProxy);
     }
 
 	return 0;
