@@ -127,7 +127,9 @@ int main(int argc, char** argv)
     DEBUG_PRINT("Sessions established - setting up the interest/content handlers now\n");
 
     // Hookup the wrapping/unwrapping handlers and then start the client
+    UpstreamProxy* client = (UpstreamProxy*)malloc(sizeof(UpstreamProxy));
     Proxy* baseProxy = InitProxy(NULL, NULL, argv[2]);
+    client->baseProxy = baseProxy;
     struct ccn_closure int_handler;
     struct ccn_closure content_handler;
     int_handler.p = &WrapInterest;
