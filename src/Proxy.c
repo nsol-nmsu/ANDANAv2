@@ -201,7 +201,7 @@ int ProxyConnect(Proxy* proxy)
         return -2;
     }
 
-    DEBUG_PRINT("%d %s setting up interest handler\n", __LINE__, __func__);
+    DEBUG_PRINT("%d %s setting up interest handler%s \n", __LINE__, __func__, proxy->filter);
     ccn_set_interest_filter(proxy->handle, proxy->filter, proxy->int_handler);
 
     DEBUG_PRINT("%d %s interest printer setup\n", __LINE__, __func__);
