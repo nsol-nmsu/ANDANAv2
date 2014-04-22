@@ -385,7 +385,7 @@ enum ccn_upcall_res WrapInterest(struct ccn_closure *selfp, enum ccn_upcall_kind
 
     #ifdef UPSTREAM_PROXY_DEBUG
         struct ccn_charbuf *c = ccn_charbuf_create();
-        ccn_uri_append(c, wrappedInterest->buf, wrappedInterest->length, 1);
+        ccn_charbuf_append_charbuf(c, wrappedInterest);
         DEBUG_PRINT("name = %s\n", ccn_charbuf_as_string(c));
         ccn_charbuf_destroy(&c);
     #endif
