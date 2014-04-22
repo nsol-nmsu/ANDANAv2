@@ -384,7 +384,7 @@ enum ccn_upcall_res WrapInterest(struct ccn_closure *selfp, enum ccn_upcall_kind
             }
 
             // Copy this interest so that it can be encrypted the next go round
-            ccn_name_append(wrappedInterest, innerName);
+            ccn_name_append(wrappedInterest, innerName->buf, innerName->length);
             DEBUG_PRINT("name = %s\n", ccn_charbuf_as_string(wrappedInterest));
 
     #ifdef UPSTREAM_PROXY_DEBUG
@@ -397,7 +397,7 @@ enum ccn_upcall_res WrapInterest(struct ccn_closure *selfp, enum ccn_upcall_kind
         }
 
         // Copy the mangled/wrapped interest into newName - the new interest to be sent out
-        ccn_name_append(newName, wrappedInterest);
+        ccn_name_append(newName, wrappedInterest->buf, wrappedInterest->length);
 
     #ifdef UPSTREAM_PROXY_DEBUG
         struct ccn_charbuf *c = ccn_charbuf_create();
