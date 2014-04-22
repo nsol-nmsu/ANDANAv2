@@ -115,11 +115,11 @@ int main(int argc, char** argv)
     int pIndex = 0;
     UpstreamProxy** proxies = (UpstreamProxy**)malloc(numProxies * sizeof(UpstreamProxy*));
     DEBUG_PRINT("Creating %d proxies\n", numProxies);
-	for (pIndex = 0, i = 2; pIndex < numProxies; pIndex++, i++) 
+	for (pIndex = 0; pIndex < numProxies; pIndex++) 
 	{
-        DEBUG_PRINT("Initializing session state for node %s\n", argv[i]);
+        DEBUG_PRINT("Initializing session state for node %s\n", argv[pIndex + 2]);
 		struct ccn_charbuf *uri = ccn_charbuf_create();
-		ccn_name_from_uri(uri, argv[i]);
+		ccn_name_from_uri(uri, argv[pIndex + 2]);
 		proxies[pIndex] = UpstreamProxySessionInit(config, uri, pubkey, NULL, pIndex == numProxies - 1);
 	}
 

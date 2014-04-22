@@ -9,7 +9,6 @@ UpstreamProxy* UpstreamProxySessionInit(Config* config, struct ccn_charbuf *uri,
 
     Proxy* baseNode = InitProxyBase(uri, pubkey, interest_template, is_exit);
     UpstreamProxy* node = (UpstreamProxy*)malloc(sizeof(UpstreamProxy));
-    // node->sessionTable = (ProxySessionTable*)malloc(sizeof(ProxySessionTable));
     node->sessionTable = (ProxySessionTable*)malloc(sizeof(ProxySessionTable));
     node->config = (Config*)malloc(sizeof(Config));
     node->baseProxy = (Proxy*)malloc(sizeof(Proxy));
@@ -193,12 +192,11 @@ UpstreamProxy* UpstreamProxySessionInit(Config* config, struct ccn_charbuf *uri,
         //     return NULL;
         // }
 
-        DEBUG_PRINT("Session created successfully\n");
-        return node;
+        DEBUG_PRINT("Session created successfully.\n");
     }
     else if (config->circuit_creation == CIRCUIT_CREATION_PIGGYBACK)
     {
-        DEBUG_PRINT("CIRCUIT_CREATION_PIGGYBACK - no interests to be sent here.\n");
+        DEBUG_PRINT("CIRCUIT_CREATION_PIGGYBACK - no interests to be sent in this case.\n");
     }
 
     return node;
