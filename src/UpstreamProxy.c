@@ -163,21 +163,7 @@ UpstreamProxy* UpstreamProxySessionInit(Config* config, struct ccn_charbuf *uri,
         size_t payload_length;
 
         DEBUG_PRINT("Trying to recover the content object\n");
-        res = ccn_content_get_value(response->buf, response->length, &response_pco, &const_payload,&payload_length);
-
-        // Store a local copy of the response payload
-        payload = calloc(payload_length, sizeof(unsigned char));
-        memcpy(payload, const_payload, payload_length);
-
-        DEBUG_PRINT("Trying to parse the returned response of length: %lu\n", payload_length);
-
-        const unsigned char *session_index_ack = NULL;
-        size_t session_index_ack_size;
-        // ccn_name_comp_get(const_payload, payload_comps, 0, &session_index_ack, &session_index_ack_size);
-
-        unsigned int nonce_ack = 0;
-        memcpy(&nonce_ack, payload, sizeof(unsigned int));
-        DEBUG_PRINT("Retrieved nonce: %x\n", nonce_ack);
+        res = ccn_content_get_value(response->buf, response->length, &response_pco, &const_payload, &payload_length);
 
         // Verify the the ack'd message was correct
         if (payload_length != sizeof(unsigned int)) 
@@ -185,6 +171,17 @@ UpstreamProxy* UpstreamProxySessionInit(Config* config, struct ccn_charbuf *uri,
             fprintf(stderr, "%d %s differing session id sizes: got %lu expected %d\n", __LINE__, __func__, payload_length, SHA256_DIGEST_LENGTH);
             return NULL;
         }
+
+        // Store a local copy of the response payload
+        payload = calloc(payload_length, sizeof(unsigned char));
+        memcpy(payload, const_payload, payload_length);
+
+        DEBUG_PRINT("Trying to parse the returned response of length: %lu\n", payload_length);
+
+        unsigned int nonce_ack = 0;
+        memcpy(&nonce_ack, payload, sizeof(unsigned int));
+        DEBUG_PRINT("Retrieved nonce: %x\n", nonce_ack);
+
         // if (memcmp(payload, session_index, sizeof(unsigned int)) != 0)
         // {
         //     fprintf(stderr, "%d %s invalid session index ACK'd back\n", __LINE__, __func__);

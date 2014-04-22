@@ -120,7 +120,8 @@ int main(int argc, char** argv)
         DEBUG_PRINT("Initializing session state for node %s\n", argv[pIndex + 2]);
 		struct ccn_charbuf *uri = ccn_charbuf_create();
 		ccn_name_from_uri(uri, argv[pIndex + 2]);
-		proxies[pIndex] = UpstreamProxySessionInit(config, uri, pubkey, NULL, pIndex == numProxies - 1);
+        int isExit = pIndex == numProxies - 1;
+		proxies[pIndex] = UpstreamProxySessionInit(config, uri, pubkey, NULL, isExit);
 	}
 
     DEBUG_PRINT("Sessions established - setting up the interest/content handlers now\n");
