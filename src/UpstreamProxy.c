@@ -72,8 +72,8 @@ UpstreamProxy* UpstreamProxySessionInit(Config* config, struct ccn_charbuf *uri,
         if(!RandomBytes(session_iv, SHA256_DIGEST_LENGTH)) return NULL;
 
         // The session ID is the hash of some fresh randomness
-        unsigned char randomness[SESSIONRAND_LENGTH];
-        if(!RandomBytes(randomness, SESSIONRAND_LENGTH))
+        unsigned char randomness[SHA256_DIGEST_LENGTH];
+        if(!RandomBytes(randomness, SHA256_DIGEST_LENGTH))
         {
             return NULL;
         }
