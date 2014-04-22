@@ -128,6 +128,12 @@ int main(int argc, char** argv)
 
     // Hookup the wrapping/unwrapping handlers and then start the client
     UpstreamProxy* client = (UpstreamProxy*)malloc(sizeof(UpstreamProxy));
+    client->upstreamStateTable = (UpstreamProxyStateTable*)malloc(sizeof(UpstreamProxyStateTable));
+
+    // ProxySessionTable* sessionTable;
+    // ProxyStateTable* stateTable;
+    // UpstreamProxyStateTable* upstreamStateTable;
+
     const char filter_uri[] = "ccnx:/";
     Proxy* baseProxy = InitProxy(NULL, filter_uri, argv[2]);
     client->baseProxy = baseProxy;
