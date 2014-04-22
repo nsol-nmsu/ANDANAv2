@@ -137,6 +137,8 @@ int main(int argc, char** argv)
     const char filter_uri[] = "ccnx:/";
     Proxy* baseProxy = InitProxy(NULL, filter_uri, argv[2]);
     client->baseProxy = baseProxy;
+    client->config = (Config*)malloc(sizeof(Config));
+    memcpy(client->config, config, sizeof(Config));
     struct ccn_closure int_handler;
     struct ccn_closure content_handler;
     int_handler.p = &WrapInterest;
