@@ -332,7 +332,8 @@ enum ccn_upcall_res WrapInterest(struct ccn_closure *selfp, enum ccn_upcall_kind
 
             // append session ID
             ccn_name_append(innerName, (void*)session_index, SHA256_DIGEST_LENGTH);
-            DEBUG_PRINT("name = %s\n", ccn_charbuf_as_string(innerName));
+            DEBUG_PRINT("innerName = %s\n", ccn_charbuf_as_string(innerName));
+            DEBUG_PRINT("name = %s\n", ccn_charbuf_as_string(name));
 
             // Append the index to the upstream state table
             memcpy(newStateEntry->invalues[i], session_index, SHA256_DIGEST_LENGTH);
@@ -383,7 +384,7 @@ enum ccn_upcall_res WrapInterest(struct ccn_closure *selfp, enum ccn_upcall_kind
             }
 
             // Copy this interest so that it can be encrypted the next go round
-            ccn_charbuf_append_charbuf(wrappedInterest, innerName);
+            ccn_name_append(wrappedInterest, innerName);
             DEBUG_PRINT("name = %s\n", ccn_charbuf_as_string(wrappedInterest));
 
     #ifdef UPSTREAM_PROXY_DEBUG
@@ -396,7 +397,7 @@ enum ccn_upcall_res WrapInterest(struct ccn_closure *selfp, enum ccn_upcall_kind
         }
 
         // Copy the mangled/wrapped interest into newName - the new interest to be sent out
-        ccn_charbuf_append_charbuf(newName, wrappedInterest);
+        ccn_name_append(newName, wrappedInterest);
 
     #ifdef UPSTREAM_PROXY_DEBUG
         struct ccn_charbuf *c = ccn_charbuf_create();
