@@ -332,6 +332,7 @@ enum ccn_upcall_res WrapInterest(struct ccn_closure *selfp, enum ccn_upcall_kind
 
             // append session ID
             ccn_name_append(innerName, (void*)session_index, SHA256_DIGEST_LENGTH);
+            DEBUG_PRINT("name = %s\n", ccn_charbuf_as_string(innerName));
 
             // Append the index to the upstream state table
             memcpy(newStateEntry->invalues[i], session_index, SHA256_DIGEST_LENGTH);
@@ -352,6 +353,7 @@ enum ccn_upcall_res WrapInterest(struct ccn_closure *selfp, enum ccn_upcall_kind
                     return CCN_UPCALL_RESULT_ERR;
                 }
                 res = ccn_name_append(innerName, (void*)encryptedPayload->blob, encryptedPayload->len);
+                DEBUG_PRINT("name = %s\n", ccn_charbuf_as_string(innerName));
                 if (res < 0)
                 {
                     DEBUG_PRINT("Failed appending encrypted name to wrapped interest.\n");
@@ -382,6 +384,7 @@ enum ccn_upcall_res WrapInterest(struct ccn_closure *selfp, enum ccn_upcall_kind
 
             // Copy this interest so that it can be encrypted the next go round
             ccn_charbuf_append_charbuf(wrappedInterest, innerName);
+            DEBUG_PRINT("name = %s\n", ccn_charbuf_as_string(wrappedInterest));
 
     #ifdef UPSTREAM_PROXY_DEBUG
         struct ccn_charbuf *c = ccn_charbuf_create();
