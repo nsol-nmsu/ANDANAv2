@@ -289,6 +289,7 @@ enum ccn_upcall_res WrapInterest(struct ccn_closure *selfp, enum ccn_upcall_kind
     ccn_charbuf_append_charbuf(newStateEntry->origName, name);
 
     // Initialize the base name for the wrapped interest
+    newName = ccn_charbuf_create();
     ccn_name_init(newName);
 
     // Iteratively wrapped interest
@@ -321,7 +322,7 @@ enum ccn_upcall_res WrapInterest(struct ccn_closure *selfp, enum ccn_upcall_kind
             INC(client->pathProxies[i]->sessionTable->head->session_iv, SHA256_DIGEST_LENGTH);
 
             // The inner interest
-            struct ccn_charbuf *innerName = NULL;
+            struct ccn_charbuf *innerName = ccn_charbuf_create();
             ccn_name_init(innerName);
 
             // append prefix URI
