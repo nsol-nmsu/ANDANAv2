@@ -373,7 +373,7 @@ enum ccn_upcall_res WrapInterest(struct ccn_closure *selfp, enum ccn_upcall_kind
                 }
 
                 // Wipe out the wrapped interest so it can be rebuild below
-                ccn_charbuf_destroy(wrappedInterest);
+                // ccn_charbuf_destroy(wrappedInterest);
             }
 
             // Copy this interest so that it can be encrypted the next go round
