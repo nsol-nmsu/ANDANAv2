@@ -232,28 +232,28 @@ enum ccn_upcall_res WrapInterest(struct ccn_closure *selfp, enum ccn_upcall_kind
     // Extract the interest name
     numComponents = ccn_util_extract_name(info->interest_ccnb, info->interest_comps, &name, &nameComponents);
 
-    // Need to check to make sure this interest doesn't match what we sent out. Otherwise, 
-    // we'll just keep encapsulating the same thing over and over.
-    int num_matching_comps = ccn_util_name_match(client->baseProxy->prefix, client->baseProxy->prefix_comps, name, nameComponents);
+//     // Need to check to make sure this interest doesn't match what we sent out. Otherwise, 
+//     // we'll just keep encapsulating the same thing over and over.
+//     int num_matching_comps = ccn_util_name_match(client->baseProxy->prefix, client->baseProxy->prefix_comps, name, nameComponents);
 
-    if (num_matching_comps == client->baseProxy->prefix_ncomps) 
-    {
-        DEBUG_PRINT("Interest matches %d of %d components, ignoring interest\n", num_matching_comps, (int)client->baseProxy->prefix_ncomps);
+//     if (num_matching_comps == client->baseProxy->prefix_ncomps) 
+//     {
+//         DEBUG_PRINT("Interest matches %d of %d components, ignoring interest\n", num_matching_comps, (int)client->baseProxy->prefix_ncomps);
 
-#ifdef PROXYDEBUG
-    ccn_util_println_pc_fmt(name->buf, name->length);
-    DEBUG_PRINT("Name has %lu comps\n", nameComponents->n-1);
-    ccn_util_println_pc_fmt(client->baseProxy->prefix->buf, client->baseProxy->prefix->length);
-    DEBUG_PRINT("Name has %lu comps\n", client->baseProxy->prefix_comps->n-1);
-#endif
-        ccn_charbuf_destroy(&name);
-        ccn_indexbuf_destroy(&nameComponents);
-        return ret;
-    } 
-    else 
-    {
-        DEBUG_PRINT("Interest matches %d of %d components\n", num_matching_comps, (int)client->baseProxy->prefix_ncomps);
-    }
+// #ifdef PROXYDEBUG
+//     ccn_util_println_pc_fmt(name->buf, name->length);
+//     DEBUG_PRINT("Name has %lu comps\n", nameComponents->n-1);
+//     ccn_util_println_pc_fmt(client->baseProxy->prefix->buf, client->baseProxy->prefix->length);
+//     DEBUG_PRINT("Name has %lu comps\n", client->baseProxy->prefix_comps->n-1);
+// #endif
+//         ccn_charbuf_destroy(&name);
+//         ccn_indexbuf_destroy(&nameComponents);
+//         return ret;
+//     } 
+//     else 
+//     {
+//         DEBUG_PRINT("Interest matches %d of %d components\n", num_matching_comps, (int)client->baseProxy->prefix_ncomps);
+//     }
 
     // Create a new name encapsulated & encrypted name 
     //  newNameComponents = ccn_indexbuf_create();
@@ -281,6 +281,8 @@ enum ccn_upcall_res WrapInterest(struct ccn_closure *selfp, enum ccn_upcall_kind
     {
         newStateEntry->invalues[i] = (uint8_t*)malloc(SHA256_DIGEST_LENGTH);
     }
+
+    DEBUG_PRINT("upstream PIT entry setup\n");
 
     // Set the original interest name in the upstream state entry
     newStateEntry->origName = ccn_charbuf_create();
