@@ -128,7 +128,8 @@ int main(int argc, char** argv)
 
     // Hookup the wrapping/unwrapping handlers and then start the client
     UpstreamProxy* client = (UpstreamProxy*)malloc(sizeof(UpstreamProxy));
-    Proxy* baseProxy = InitProxy(NULL, NULL, argv[2]);
+    const char filter_uri[] = "ccnx:/";
+    Proxy* baseProxy = InitProxy(NULL, filter_uri, argv[2]);
     client->baseProxy = baseProxy;
     struct ccn_closure int_handler;
     struct ccn_closure content_handler;
