@@ -400,6 +400,9 @@ enum ccn_upcall_res WrapInterest(struct ccn_closure *selfp, enum ccn_upcall_kind
         }
 
         // Copy the mangled/wrapped interest into newName - the new interest to be sent out
+        UpstreamProxy* hop = client->pathProxies[i];
+        Proxy* hopBase = hop->baseProxy;
+        ccn_name_append(newName, hopBase->uri->buf, hopBase->uri->length);
         ccn_name_append(newName, wrappedInterestName->buf, wrappedInterestName->length);
 
     #ifdef UPSTREAM_PROXY_DEBUG
