@@ -206,16 +206,16 @@ enum ccn_upcall_res WrapInterest(struct ccn_closure *selfp, enum ccn_upcall_kind
 {
 	enum ccn_upcall_res ret = CCN_UPCALL_RESULT_ERR;
 	int res;
-
-    UpstreamProxy* client = selfp->data;
-    Proxy* proxy = client->baseProxy;
-
     int i;
     size_t numComponents;
     struct ccn_charbuf *name = NULL;
     struct ccn_indexbuf *nameComponents = NULL;
     struct ccn_charbuf *newName = NULL;
-    struct ccn_indexbuf *newNameComponents = NULL;
+    UpstreamProxyStateTableEntry* newStateEntry;
+
+    // Extract the client/proxy
+    UpstreamProxy* client = selfp->data;
+    Proxy* proxy = client->baseProxy;
 
     switch (kind) 
     {
@@ -229,72 +229,50 @@ enum ccn_upcall_res WrapInterest(struct ccn_closure *selfp, enum ccn_upcall_kind
         return CCN_UPCALL_RESULT_ERR;
     }
 
-    // Extract the interest name
-    numComponents = ccn_util_extract_name(info->interest_ccnb, info->interest_comps, &name, &nameComponents);
-    DEBUG_PRINT("Interest = %s\n", ccn_charbuf_as_string(name));
-
-//     // Need to check to make sure this interest doesn't match what we sent out. Otherwise, 
-//     // we'll just keep encapsulating the same thing over and over.
-//     int num_matching_comps = ccn_util_name_match(client->baseProxy->prefix, client->baseProxy->prefix_comps, name, nameComponents);
-
-//     if (num_matching_comps == client->baseProxy->prefix_ncomps) 
-//     {
-//         DEBUG_PRINT("Interest matches %d of %d components, ignoring interest\n", num_matching_comps, (int)client->baseProxy->prefix_ncomps);
-
-// #ifdef PROXYDEBUG
-//     ccn_util_println_pc_fmt(name->buf, name->length);
-//     DEBUG_PRINT("Name has %lu comps\n", nameComponents->n-1);
-//     ccn_util_println_pc_fmt(client->baseProxy->prefix->buf, client->baseProxy->prefix->length);
-//     DEBUG_PRINT("Name has %lu comps\n", client->baseProxy->prefix_comps->n-1);
-// #endif
-//         ccn_charbuf_destroy(&name);
-//         ccn_indexbuf_destroy(&nameComponents);
-//         return ret;
-//     } 
-//     else 
-//     {
-//         DEBUG_PRINT("Interest matches %d of %d components\n", num_matching_comps, (int)client->baseProxy->prefix_ncomps);
-//     }
-
-    // Create a new name encapsulated & encrypted name 
-    //  newNameComponents = ccn_indexbuf_create();
-    // ccn_name_append(name, info->interest_ccnb, info->pi->offset[CCN_PI_E]);
-    // ccn_indexbuf_destroy(&nameComponents);
-
-    // Parse the name components in their encrypted form
-    // struct ccn_buf_decoder decoder;
-    // struct ccn_buf_decoder *d = &decoder;
-    // ccn_buf_decoder_start(d, name->buf, name->length);
-    // nameComponents = ccn_indexbuf_create();
-    // res = ccn_parse_Name(d, nameComponents);
-    // if (res <= 0) 
-    // {
-    //     DEBUG_PRINT("%d %s error parsing encapsulated name\n", __LINE__, __func__);
-    //     ccn_charbuf_destroy(&name);
-    //     ccn_indexbuf_destroy(&nameComponents);
-    //     return ret;
-    // }
-
     // Allocate a new state entry
-    UpstreamProxyStateTableEntry* newStateEntry = AllocateNewUpstreamStateEntry(client->upstreamStateTable);
+    newStateEntry = AllocateNewUpstreamStateEntry(client->upstreamStateTable);
     newStateEntry->invalues = (uint8_t**)malloc(sizeof(uint8_t*) * client->numProxies);
     for (i = 0; i < client->numProxies; i++)
     {
         newStateEntry->invalues[i] = (uint8_t*)malloc(SHA256_DIGEST_LENGTH);
     }
-
     DEBUG_PRINT("upstream PIT entry setup\n");
+
+    // Extract the interest name and then generate the encrypted interest
+    numComponents = ccn_util_extract_name(info->interest_ccnb, info->interest_comps, &name, &nameComponents);
+    DEBUG_PRINT("Interest = %s\n", ccn_charbuf_as_string(name));
+    newName = EncryptInterest(client, newStateEntry, name, nameComponents);
+
+    // Shoot out the new interest
+    res = ccn_express_interest(proxy->handle, newName, proxy->content_handler, NULL);
+    if(res != 0) 
+    {
+        DEBUG_PRINT("Express interest result = %d\n",res);
+        return CCN_UPCALL_RESULT_ERR;
+    } 
+    else 
+    {
+        ret = CCN_UPCALL_RESULT_INTEREST_CONSUMED;
+    }
+
+	return ret;
+}
+
+struct ccn_charbuf* EncryptInterest(UpstreamProxy* client, UpstreamProxyStateTableEntry* newStateEntry, struct ccn_charbuf* origInterest, struct ccn_indexbuf *origComponents)
+{
+    int i;
+    int res;
+    struct ccn_charbuf* newName;
+    struct ccn_charbuf* wrappedInterestName;
 
     // Set the original interest name in the upstream state entry
     newStateEntry->origName = ccn_charbuf_create();
-    ccn_charbuf_append_charbuf(newStateEntry->origName, name);
+    ccn_charbuf_append_charbuf(newStateEntry->origName, origInterest);
 
     // Initialize the base name for the wrapped interest
     newName = ccn_charbuf_create();
     ccn_name_init(newName);
-
-    // Iteratively wrapped interest
-    struct ccn_charbuf *wrappedInterestName = ccn_charbuf_create();
+    wrappedInterestName = ccn_charbuf_create();
     ccn_name_init(wrappedInterestName);
 
     if (client->config->circuit_creation == CIRCUIT_CREATION_PIGGYBACK)
@@ -336,7 +314,7 @@ enum ccn_upcall_res WrapInterest(struct ccn_closure *selfp, enum ccn_upcall_kind
             // ccn_name_append(innerName, (void*)session_index, SHA256_DIGEST_LENGTH);
             ccn_name_append_str(innerName, "rawr");
             DEBUG_PRINT("innerName = %s\n", ccn_charbuf_as_string(innerName));
-            DEBUG_PRINT("name = %s\n", ccn_charbuf_as_string(name));
+            DEBUG_PRINT("name = %s\n", ccn_charbuf_as_string(origInterest));
 
             // Append the index to the upstream state table
             memcpy(newStateEntry->invalues[i], session_index, SHA256_DIGEST_LENGTH);
@@ -350,7 +328,7 @@ enum ccn_upcall_res WrapInterest(struct ccn_closure *selfp, enum ccn_upcall_kind
                 DEBUG_PRINT("Encrypting first interest...\n");
 
                 // Encrypt the original interest
-                res = SKEncrypt(&encryptedPayload, hop->sessionTable->head->encryption_key, name->buf, name->length);
+                res = SKEncrypt(&encryptedPayload, hop->sessionTable->head->encryption_key, origInterest->buf, origInterest->length);
                 if (res < 0)
                 {
                     DEBUG_PRINT("Failed encrypting interest payload: %d.\n", i);
@@ -418,19 +396,7 @@ enum ccn_upcall_res WrapInterest(struct ccn_closure *selfp, enum ccn_upcall_kind
     memcpy(newStateEntry->ink, newName->buf, newName->length);
     newStateEntry->inklen = newName->length;
 
-    // Shoot out the new interest
-    res = ccn_express_interest(proxy->handle, newName, proxy->content_handler, NULL);
-    if(res != 0) 
-    {
-        DEBUG_PRINT("Express interest result = %d\n",res);
-        return CCN_UPCALL_RESULT_ERR;
-    } 
-    else 
-    {
-        ret = CCN_UPCALL_RESULT_INTEREST_CONSUMED;
-    }
-
-	return ret;
+    return newName;
 }
 
 /**

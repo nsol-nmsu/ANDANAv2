@@ -47,6 +47,11 @@ enum ccn_upcall_res WrapInterest(struct ccn_closure *selfp, enum ccn_upcall_kind
 /**
  * TODO
  */
+struct ccn_charbuf* EncryptInterest(UpstreamProxy* client, UpstreamProxyStateTableEntry* newStateEntry, struct ccn_charbuf* origInterest, struct ccn_indexbuf *origComponents);
+
+/**
+ * TODO
+ */
 enum ccn_upcall_res UnwrapContent(struct ccn_closure *selfp, enum ccn_upcall_kind kind, struct ccn_upcall_info *info);
 
 #endif /* ANON_CONSUMER_PROXY_H_ */
