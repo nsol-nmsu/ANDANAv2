@@ -294,7 +294,8 @@ enum ccn_upcall_res WrapInterest(struct ccn_closure *selfp, enum ccn_upcall_kind
     ccn_name_init(newName);
 
     // Iteratively wrapped interest
-    struct ccn_charbuf *wrappedInterest = ccn_charbuf_create();
+    struct ccn_charbuf *wrappedInterestName = ccn_charbuf_create();
+    ccn_name_init(wrappedInterestName);
 
     if (client->config->circuit_creation == CIRCUIT_CREATION_PIGGYBACK)
     {
@@ -368,7 +369,7 @@ enum ccn_upcall_res WrapInterest(struct ccn_closure *selfp, enum ccn_upcall_kind
                 DEBUG_PRINT("Encrypting previous interest\n");
 
                 // Encrypt the previous interest
-                res = SKEncrypt(&encryptedPayload, hop->sessionTable->head->encryption_key, wrappedInterest, wrappedInterest->length);
+                res = SKEncrypt(&encryptedPayload, hop->sessionTable->head->encryption_key, wrappedInterestName, wrappedInterestName->length);
                 if (res < 0)
                 {
                     DEBUG_PRINT("Failed encrypting interest payload: %d.\n", i);
@@ -386,8 +387,8 @@ enum ccn_upcall_res WrapInterest(struct ccn_closure *selfp, enum ccn_upcall_kind
             }
 
             // Copy this interest so that it can be encrypted the next go round
-            ccn_name_append(wrappedInterest, innerName->buf, innerName->length);
-            DEBUG_PRINT("wrappedInterest = %s\n", ccn_charbuf_as_string(wrappedInterest));
+            ccn_name_append(wrappedInterestName, innerName->buf, innerName->length);
+            DEBUG_PRINT("wrappedInterestName = %s\n", ccn_charbuf_as_string(wrappedInterestName));
 
         // #ifdef UPSTREAM_PROXY_DEBUG
         //     struct ccn_charbuf *c = ccn_charbuf_create();
@@ -399,7 +400,7 @@ enum ccn_upcall_res WrapInterest(struct ccn_closure *selfp, enum ccn_upcall_kind
         }
 
         // Copy the mangled/wrapped interest into newName - the new interest to be sent out
-        ccn_name_append(newName, wrappedInterest->buf, wrappedInterest->length);
+        ccn_name_append(newName, wrappedInterestName->buf, wrappedInterestName->length);
 
     #ifdef UPSTREAM_PROXY_DEBUG
         struct ccn_charbuf *c = ccn_charbuf_create();
