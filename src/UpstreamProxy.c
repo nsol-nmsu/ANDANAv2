@@ -329,7 +329,7 @@ enum ccn_upcall_res WrapInterest(struct ccn_closure *selfp, enum ccn_upcall_kind
             // append prefix URI
             UpstreamProxy* hop = client->pathProxies[i];
             Proxy* hopBase = hop->baseProxy;
-            ccn_name_append_components(innerName, hopBase->uri->buf, hopBase->uri_comps->buf[0], hopBase->uri_comps->buf[hopBase->uri_comps->n - 1]);
+            ccn_name_append(innerName, hopBase->uri->buf, hopBase->uri->length);
 
             // append session ID
             // ccn_name_append(innerName, (void*)session_index, SHA256_DIGEST_LENGTH);
