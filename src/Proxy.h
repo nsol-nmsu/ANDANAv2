@@ -42,6 +42,7 @@ typedef struct
 
     struct ccn_charbuf* uri;               /* ccnx uri for this proxy */
     struct ccn_indexbuf* uri_comps;
+    // int uriComponents;
     // struct ccn_charbuf* interest_template; /* Template to use for this proxy */
     struct ccn_pkey* pubkey;               /* Public key identifying this proxy. */
     // struct ccn_pkey* symkey;
