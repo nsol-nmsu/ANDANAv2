@@ -231,6 +231,7 @@ enum ccn_upcall_res WrapInterest(struct ccn_closure *selfp, enum ccn_upcall_kind
 
     // Extract the interest name
     numComponents = ccn_util_extract_name(info->interest_ccnb, info->interest_comps, &name, &nameComponents);
+    DEBUG_PRINT("Interest = %s\n", ccn_charbuf_as_string(name));
 
 //     // Need to check to make sure this interest doesn't match what we sent out. Otherwise, 
 //     // we'll just keep encapsulating the same thing over and over.
