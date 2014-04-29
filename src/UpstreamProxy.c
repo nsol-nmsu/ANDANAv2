@@ -332,7 +332,8 @@ enum ccn_upcall_res WrapInterest(struct ccn_closure *selfp, enum ccn_upcall_kind
             ccn_name_append_components(innerName, hopBase->uri->buf, hopBase->uri_comps->buf[0], hopBase->uri_comps->buf[hopBase->uri_comps->n - 1]);
 
             // append session ID
-            ccn_name_append(innerName, (void*)session_index, SHA256_DIGEST_LENGTH);
+            // ccn_name_append(innerName, (void*)session_index, SHA256_DIGEST_LENGTH);
+            ccn_name_append_str(innerName, "rawr");
             DEBUG_PRINT("innerName = %s\n", ccn_charbuf_as_string(innerName));
             DEBUG_PRINT("name = %s\n", ccn_charbuf_as_string(name));
 
@@ -345,7 +346,7 @@ enum ccn_upcall_res WrapInterest(struct ccn_closure *selfp, enum ccn_upcall_kind
             // Perform wrapping, depending on where we are in the circuit
             if (i == client->numProxies - 1)
             {
-                DEBUG_PRINT("Encrypting first interest\n");
+                DEBUG_PRINT("Encrypting first interest...\n");
 
                 // Encrypt the original interest
                 res = SKEncrypt(&encryptedPayload, hop->sessionTable->head->encryption_key, name->buf, name->length);
