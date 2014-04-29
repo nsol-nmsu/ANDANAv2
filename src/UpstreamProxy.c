@@ -258,22 +258,22 @@ enum ccn_upcall_res WrapInterest(struct ccn_closure *selfp, enum ccn_upcall_kind
 
     // Create a new name encapsulated & encrypted name 
     //  newNameComponents = ccn_indexbuf_create();
-    ccn_name_append(name, info->interest_ccnb, info->pi->offset[CCN_PI_E]);
-    ccn_indexbuf_destroy(&nameComponents);
+    // ccn_name_append(name, info->interest_ccnb, info->pi->offset[CCN_PI_E]);
+    // ccn_indexbuf_destroy(&nameComponents);
 
     // Parse the name components in their encrypted form
-    struct ccn_buf_decoder decoder;
-    struct ccn_buf_decoder *d = &decoder;
-    ccn_buf_decoder_start(d, name->buf, name->length);
-    nameComponents = ccn_indexbuf_create();
-    res = ccn_parse_Name(d, nameComponents);
-    if (res <= 0) 
-    {
-        DEBUG_PRINT("%d %s error parsing encapsulated name\n", __LINE__, __func__);
-        ccn_charbuf_destroy(&name);
-        ccn_indexbuf_destroy(&nameComponents);
-        return ret;
-    }
+    // struct ccn_buf_decoder decoder;
+    // struct ccn_buf_decoder *d = &decoder;
+    // ccn_buf_decoder_start(d, name->buf, name->length);
+    // nameComponents = ccn_indexbuf_create();
+    // res = ccn_parse_Name(d, nameComponents);
+    // if (res <= 0) 
+    // {
+    //     DEBUG_PRINT("%d %s error parsing encapsulated name\n", __LINE__, __func__);
+    //     ccn_charbuf_destroy(&name);
+    //     ccn_indexbuf_destroy(&nameComponents);
+    //     return ret;
+    // }
 
     // Allocate a new state entry
     UpstreamProxyStateTableEntry* newStateEntry = AllocateNewUpstreamStateEntry(client->upstreamStateTable);
@@ -355,7 +355,7 @@ enum ccn_upcall_res WrapInterest(struct ccn_closure *selfp, enum ccn_upcall_kind
                     return CCN_UPCALL_RESULT_ERR;
                 }
                 res = ccn_name_append(innerName, (void*)encryptedPayload->blob, encryptedPayload->len);
-                DEBUG_PRINT("name = %s\n", ccn_charbuf_as_string(innerName));
+                DEBUG_PRINT("innerName = %s\n", ccn_charbuf_as_string(innerName));
                 if (res < 0)
                 {
                     DEBUG_PRINT("Failed appending encrypted name to wrapped interest.\n");
@@ -386,14 +386,14 @@ enum ccn_upcall_res WrapInterest(struct ccn_closure *selfp, enum ccn_upcall_kind
 
             // Copy this interest so that it can be encrypted the next go round
             ccn_name_append(wrappedInterest, innerName->buf, innerName->length);
-            DEBUG_PRINT("name = %s\n", ccn_charbuf_as_string(wrappedInterest));
+            DEBUG_PRINT("wrappedInterest = %s\n", ccn_charbuf_as_string(wrappedInterest));
 
-    #ifdef UPSTREAM_PROXY_DEBUG
-        struct ccn_charbuf *c = ccn_charbuf_create();
-        ccn_charbuf_append_charbuf(c, wrappedInterest);
-        DEBUG_PRINT("name = %s\n", ccn_charbuf_as_string(c));
-        ccn_charbuf_destroy(&c);
-    #endif
+        // #ifdef UPSTREAM_PROXY_DEBUG
+        //     struct ccn_charbuf *c = ccn_charbuf_create();
+        //     ccn_charbuf_append_charbuf(c, wrappedInterest);
+        //     DEBUG_PRINT("name = %s\n", ccn_charbuf_as_string(c));
+        //     ccn_charbuf_destroy(&c);
+        // #endif
 
         }
 
@@ -403,7 +403,7 @@ enum ccn_upcall_res WrapInterest(struct ccn_closure *selfp, enum ccn_upcall_kind
     #ifdef UPSTREAM_PROXY_DEBUG
         struct ccn_charbuf *c = ccn_charbuf_create();
         ccn_uri_append(c, newName->buf, newName->length, 1);
-        DEBUG_PRINT("name = %s\n", ccn_charbuf_as_string(c));
+        DEBUG_PRINT("newName to be sent = %s\n", ccn_charbuf_as_string(c));
         ccn_charbuf_destroy(&c);
     #endif
     }
