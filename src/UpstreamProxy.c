@@ -330,11 +330,19 @@ struct ccn_charbuf* EncryptInterest(UpstreamProxy* client, UpstreamProxyStateTab
                     DEBUG_PRINT("Failed encrypting interest payload: %d.\n", i);
                     return CCN_UPCALL_RESULT_ERR;
                 }
-                res = ccn_name_append(innerName, (void*)encryptedPayload->blob, encryptedPayload->len);
+
+                // Format the raw string of bytes for the interest by appendig a CCN_CLOSE terminator
+                uint8_t* formattedPayload = (uint8_t*)malloc((encryptedPayload->len + 1) * sizeof(uint8_t));
+                memcpy(formattedPayload, encryptedPayload->blob, encryptedPayload->len);
+                uint8_t closer = CCN_CLOSE;
+                memcpy(formattedPayload + encryptedPayload->len, &closer, sizeof(uint8_t));
+
+                // Append the formatted interest (with the interest terminator) to the end
+                res = ccn_name_append(innerName, (void*)formattedPayload, encryptedPayload->len + 1);
                 DEBUG_PRINT("innerName = %s\n", ccn_charbuf_as_string(innerName));
                 if (res < 0)
                 {
-                    DEBUG_PRINT("Failed appending encrypted name to wrapped interest.\n");
+                    DEBUG_PRINT("Failed appending encrypted name to wrapped interest.: %d\n", res);
                     return CCN_UPCALL_RESULT_ERR;
                 }
             }
@@ -352,7 +360,7 @@ struct ccn_charbuf* EncryptInterest(UpstreamProxy* client, UpstreamProxyStateTab
                 res = ccn_name_append(innerName, (void*)encryptedPayload->blob, encryptedPayload->len);
                 if (res < 0)
                 {
-                    DEBUG_PRINT("Failed appending encrypted name to wrapped interest.\n");
+                    DEBUG_PRINT("Failed appending encrypted name to wrapped interest.: %d\n", res);
                     return CCN_UPCALL_RESULT_ERR;
                 }
 
