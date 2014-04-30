@@ -9,7 +9,7 @@
 #include "../Crypto.h"
 
 #define HASH_INPUT_LENGTH 1024
-#define SK_INPUT_LENGTH 512
+#define SK_INPUT_LENGTH 12
 #define PK_INPUT_LENGTH 128
 #define MAC_INPUT_LENGTH 2048
 

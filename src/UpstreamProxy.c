@@ -270,8 +270,6 @@ struct ccn_charbuf* EncryptInterest(UpstreamProxy* client, UpstreamProxyStateTab
     ccn_charbuf_append_charbuf(newStateEntry->origName, origInterest);
 
     // Initialize the base name for the wrapped interest
-    newName = ccn_charbuf_create();
-    ccn_name_init(newName);
     wrappedInterestName = ccn_charbuf_create();
     ccn_name_init(wrappedInterestName);
 
@@ -301,18 +299,16 @@ struct ccn_charbuf* EncryptInterest(UpstreamProxy* client, UpstreamProxyStateTab
             // siv++
             INC(client->pathProxies[i]->sessionTable->head->session_iv, SHA256_DIGEST_LENGTH);
 
-            // The inner interest
-            struct ccn_charbuf *innerName = ccn_charbuf_create();
-            ccn_name_init(innerName);
-
             // append prefix URI
             UpstreamProxy* hop = client->pathProxies[i];
             Proxy* hopBase = hop->baseProxy;
-            ccn_name_append(innerName, hopBase->uri->buf, hopBase->uri->length);
+
+            // The inner interest - create it with the URI of the designated hop
+            struct ccn_charbuf *innerName = ccn_charbuf_create();
+            ccn_name_from_uri(innerName, hopBase->uri->buf);
 
             // append session ID
-            // ccn_name_append(innerName, (void*)session_index, SHA256_DIGEST_LENGTH);
-            ccn_name_append_str(innerName, "rawr");
+            ccn_name_append(innerName, (void*)session_index, SHA256_DIGEST_LENGTH);
             DEBUG_PRINT("innerName = %s\n", ccn_charbuf_as_string(innerName));
             DEBUG_PRINT("name = %s\n", ccn_charbuf_as_string(origInterest));
 
@@ -378,20 +374,22 @@ struct ccn_charbuf* EncryptInterest(UpstreamProxy* client, UpstreamProxyStateTab
         }
 
         // Copy the mangled/wrapped interest into newName - the new interest to be sent out
-        UpstreamProxy* hop = client->pathProxies[i];
-        Proxy* hopBase = hop->baseProxy;
-        ccn_name_append_components(newName, hopBase->uri->buf, hopBase->uri->buf[1], hopBase->uri->buf[hopBase->uri_comps->n - 1]);
-        ccn_name_append(newName, wrappedInterestName->buf, wrappedInterestName->length);
+        // UpstreamProxy* hop = client->pathProxies[i];
+        // Proxy* hopBase = hop->baseProxy;
+        // newName = ccn_charbuf_create();
+        // ccn_name_from_uri(newName, hopBase->uri->buf);
+        // ccn_name_append(newName, wrappedInterestName->buf, wrappedInterestName->length);
 
-    #ifdef UPSTREAM_PROXY_DEBUG
-        struct ccn_charbuf *c = ccn_charbuf_create();
-        ccn_uri_append(c, newName->buf, newName->length, 1);
-        DEBUG_PRINT("newName to be sent = %s\n", ccn_charbuf_as_string(c));
-        ccn_charbuf_destroy(&c);
-    #endif
+    // #ifdef UPSTREAM_PROXY_DEBUG
+    //     struct ccn_charbuf *c = ccn_charbuf_create();
+    //     ccn_uri_append(c, newName->buf, newName->length, 1);
+    //     DEBUG_PRINT("newName to be sent = %s\n", ccn_charbuf_as_string(c));
+    //     ccn_charbuf_destroy(&c);
+    // #endif
     }
 
     // Now set the key to the encrypted interest name 
+    newName = wrappedInterestName;
     newStateEntry->ink = (uint8_t*)malloc(sizeof(uint8_t) * newName->length);
     memcpy(newStateEntry->ink, newName->buf, newName->length);
     newStateEntry->inklen = newName->length;
