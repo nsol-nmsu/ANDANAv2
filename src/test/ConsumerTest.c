@@ -37,6 +37,19 @@ int main(int argc, char** argv)
 
     printf("same names? %d\n", memcmp(orig->buf, newName->buf, orig->length) == 0);
 
+    // Test URI and binary appending
+    struct ccn_charbuf* testName = ccn_charbuf_create();
+    ccn_name_from_uri(testName, "ccnx:/proxy/test/1/2/3/");
+    printf("test anme = %s\n", ccn_charbuf_as_string(testName));
+    uint8_t blob[SHA256_DIGEST_LENGTH];
+    RandomBytes(blob, SHA256_DIGEST_LENGTH);
+    // uint8_t* encoded = base64_encode(blob, SHA256_DIGEST_LENGTH);
+    // encoded[SHA256_DIGEST_LENGTH - 1] = CCN_CLOSE;
+    blob[SHA256_DIGEST_LENGTH - 1] = CCN_CLOSE;
+    // res = ccn_name_append(testName, encoded, SHA256_DIGEST_LENGTH);
+    res = ccn_name_append(testName, blob, SHA256_DIGEST_LENGTH);
+    printf("success? %d\n", res == 0);
+
     ///// send over the wire....
     // now decrypt
 

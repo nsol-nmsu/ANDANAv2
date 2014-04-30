@@ -422,7 +422,8 @@ int encrypt_encode(uint8_t * name, unsigned int name_length, uint8_t * symmkey, 
     ciphlen = encrypt_binary(name, name_length, symmkey, symmkey_length, key, &ciph);
 
     // Encode in Base64 the ciphertext
-    *encrypted_name = (uint8_t *)base64_encode(ciph, ciphlen);
+    int outlen;
+    *encrypted_name = (uint8_t *)base64_encode(ciph, ciphlen, &outlen);
 
     free(ciph);
     return (int)strlen((char* )*encrypted_name);

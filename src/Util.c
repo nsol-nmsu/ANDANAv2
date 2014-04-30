@@ -18,7 +18,7 @@ void print_hex(unsigned char * s, int len)
 	}
 }
 
-char * base64_encode(const unsigned char *input, int length)
+char * base64_encode(const unsigned char *input, int length, int* outlen)
 {
     BIO *bmem, *b64;
     BUF_MEM *bptr;
@@ -51,6 +51,7 @@ char * base64_encode(const unsigned char *input, int length)
     for(i=0; buff[i]; i++)
         if(buff[i] == '/')
             buff[i] = '-';
+    memcpy(outlen, i, sizeof(int));
     
     return buff;
 }

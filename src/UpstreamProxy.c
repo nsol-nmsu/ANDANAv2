@@ -336,9 +336,11 @@ struct ccn_charbuf* EncryptInterest(UpstreamProxy* client, UpstreamProxyStateTab
                 memcpy(formattedPayload, encryptedPayload->blob, encryptedPayload->len);
                 uint8_t closer = CCN_CLOSE;
                 memcpy(formattedPayload + encryptedPayload->len, &closer, sizeof(uint8_t));
+                int finalLen;
+                uint8_t* finalName = base64_encode(formattedPayload, encryptedPayload->len + 1, &finalLen);
 
                 // Append the formatted interest (with the interest terminator) to the end
-                res = ccn_name_append(innerName, (void*)formattedPayload, encryptedPayload->len + 1);
+                res = ccn_name_append(innerName, (void*)finalName, finalLen);
                 DEBUG_PRINT("innerName = %s\n", ccn_charbuf_as_string(innerName));
                 if (res < 0)
                 {
@@ -357,6 +359,9 @@ struct ccn_charbuf* EncryptInterest(UpstreamProxy* client, UpstreamProxyStateTab
                     DEBUG_PRINT("Failed encrypting interest payload: %d.\n", i);
                     return CCN_UPCALL_RESULT_ERR;
                 }
+
+                // TODO: adopt formatting above if it works
+
                 res = ccn_name_append(innerName, (void*)encryptedPayload->blob, encryptedPayload->len);
                 if (res < 0)
                 {

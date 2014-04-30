@@ -25,7 +25,7 @@
 
 ///// TODO
 void print_hex(unsigned char * s, int len);
-char * base64_encode(const unsigned char *input, int length);
+char * base64_encode(const unsigned char *input, int length, int* outlen);
 unsigned char *base64_decode(char *input);
 unsigned char * base64_decode_len(char *in, int * len);
 
