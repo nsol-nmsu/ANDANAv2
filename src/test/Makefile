@@ -1,6 +1,7 @@
-FLAGS=-Wall -g -Wno-deprecated-declarations
+FLAGS=-g -w
 INCLUDE=-I. 
 LIBS=-lccn -lcrypto 
 
 crypto:
 	gcc $(FLAGS) -o TestCrypto TestCrypto.c ../Crypto.c -lcrypto -lccn
+	gcc $(FLAGS) -o ConsumerTest ConsumerTest.c ../Crypto.c ../Proxy.c ../UpstreamProxy.c ../CryptoWrapper.c ../Util.c ../ProxyState.c -lcrypto -lccn
