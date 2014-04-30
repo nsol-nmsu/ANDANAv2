@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-2.5-1.40.14 (TeX Live 2013) (format=pdflatex 2013.5.30)  8 APR 2014 12:34
+This is pdfTeX, Version 3.1415926-2.5-1.40.14 (TeX Live 2013) (format=pdflatex 2013.5.30)  30 APR 2014 14:16
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -966,17 +966,19 @@ File: ./images/andana_v1_design.pdf Graphic file (type pdf)
 
 <use ./images/andana_v1_design.pdf>
 Package pdftex.def Info: ./images/andana_v1_design.pdf used on input line 19.
-(pdftex.def)             Requested size: 363.3566pt x 209.78323pt.
- [2]) (./03-design.tex
-Underfull \vbox (badness 10000) has occurred while \output is active []
+(pdftex.def)             Requested size: 247.07982pt x 142.65106pt.
 
- [3 <./images/andana_v1_design.pdf>]
+Overfull \hbox (7.07982pt too wide) in paragraph at lines 19--21
+ [] 
+ []
+
+[2 <./images/andana_v1_design.pdf>]) (./03-design.tex
 Overfull \hbox (1.26718pt too wide) in paragraph at lines 38--39
 []\T1/aer/m/n/9 With the end of goal of sup-port-ing highly ef-fi-cient and ano
 ny-
  []
 
-
+[3]
 Overfull \hbox (6.91461pt too wide) in paragraph at lines 41--42
 []\T1/aer/m/n/9 Establish con-tent en-cryp-tion keys $\OML/cmm/m/it/9 E[]$ \T1/
 aer/m/n/9 and ini-tial counter
@@ -1001,16 +1003,16 @@ Underfull \hbox (badness 10000) in paragraph at lines 123--124
 :=
  []
 
-<./images/circuit.pdf, id=48, 704.6325pt x 377.41pt>
+<./images/circuit.pdf, id=51, 704.6325pt x 377.41pt>
 File: ./images/circuit.pdf Graphic file (type pdf)
 
 <use ./images/circuit.pdf>
 Package pdftex.def Info: ./images/circuit.pdf used on input line 141.
 (pdftex.def)             Requested size: 352.3154pt x 188.70453pt.
- [4]
-<./images/pool.pdf, id=58, 556.0775pt x 283.0575pt>
+ <./images/pool.pdf, id=52, 556.0775pt x 283.0575pt>
 File: ./images/pool.pdf Graphic file (type pdf)
- <use ./images/pool.pdf>
+
+<use ./images/pool.pdf>
 Package pdftex.def Info: ./images/pool.pdf used on input line 153.
 (pdftex.def)             Requested size: 278.03807pt x 141.5284pt.
 
@@ -1019,37 +1021,22 @@ Underfull \hbox (badness 1009) in paragraph at lines 204--205
 /cmm/m/it/9 ; [][]; [][]\OT1/cmr/m/n/9 )$ \T1/aer/m/n/9 based on
  []
 
-<./images/circuit_usage.pdf, id=59, 630.355pt x 574.145pt>
+<./images/circuit_usage.pdf, id=53, 630.355pt x 574.145pt>
 File: ./images/circuit_usage.pdf Graphic file (type pdf)
 
 <use ./images/circuit_usage.pdf>
 Package pdftex.def Info: ./images/circuit_usage.pdf used on input line 232.
 (pdftex.def)             Requested size: 409.72589pt x 373.18983pt.
 ) (./04-implementation.tex) (./06-security.tex
-[5 <./images/circuit.pdf>]
-
-LaTeX Warning: Text page \thepage  contains only floats.
-
-
-Overfull \vbox (4.61418pt too high) has occurred while \output is active []
-
-
-
-LaTeX Warning: Text page \thepage  contains only floats.
-
-
-Overfull \vbox (4.61418pt too high) has occurred while \output is active []
-
-
-[6 <./images/pool.pdf> <./images/circuit_usage.pdf>]
+[4] [5 <./images/circuit.pdf> <./images/pool.pdf>]
 
 LaTeX Font Warning: Font shape `T1/aer/bx/sc' undefined
 (Font)              using `T1/aer/bx/n' instead on input line 28.
 
+[6 <./images/circuit_usage.pdf>]
+Underfull \vbox (badness 5578) has occurred while \output is active []
 
-Underfull \vbox (badness 10000) has occurred while \output is active []
 
- [7]
 Overfull \hbox (18.96703pt too wide) in paragraph at lines 43--44
 []\T1/aer/m/it/9 Consumer $\OML/cmm/m/it/9 u \OMS/cmsy/m/n/9 2 \OT1/cmr/m/n/9 (
 \OT1/cmss/m/n/9 C \OMS/cmsy/m/n/9 n \OT1/cmss/m/n/9 C[]\OT1/cmr/m/n/9 )$ \T1/ae
@@ -1062,7 +1049,7 @@ Overfull \hbox (3.19724pt too wide) in paragraph at lines 54--55
 ymity in con-
  []
 
-
+[7]
 Overfull \hbox (4.78824pt too wide) in paragraph at lines 79--80
 \T1/aer/m/n/9 of col-li-sion re-sis-tance of $\OML/cmm/m/it/9 H$ \T1/aer/m/n/9 
 which states that $[]\OT1/cmr/m/n/9 [[](\OML/cmm/m/it/9 H\OT1/cmr/m/n/9 ) =
@@ -1091,7 +1078,7 @@ LaTeX Warning: There were multiply-defined labels.
 Here is how much of TeX's memory you used:
  18688 strings out of 493315
  344177 string characters out of 6137904
- 412465 words of memory out of 5000000
+ 417465 words of memory out of 5000000
  21698 multiletter control sequences out of 15000+600000
  57188 words of font info for 79 fonts, out of 8000000 for 9000
  957 hyphenation exceptions out of 8191
@@ -1116,7 +1103,7 @@ fonts/type1/public/amsfonts/cm/cmti9.pfb></usr/local/texlive/2013/texmf-dist/fo
 nts/type1/urw/helvetic/uhvb8a.pfb></usr/local/texlive/2013/texmf-dist/fonts/typ
 e1/urw/helvetic/uhvr8a.pfb></usr/local/texlive/2013/texmf-dist/fonts/type1/urw/
 times/utmb8a.pfb>
-Output written on andanav2_ccs14.pdf (9 pages, 417159 bytes).
+Output written on andanav2_ccs14.pdf (9 pages, 417597 bytes).
 PDF statistics:
  329 PDF objects out of 1000 (max. 8388607)
  212 compressed objects within 3 object streams

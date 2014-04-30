@@ -14,13 +14,13 @@ Content-centric traffic also has strong security implications. Firstly, it means
 \subsection{AND\=aNA-v1 Design Highlights}
 Section \ref{sec:design} provides a detailed description of the design of {\sf AND\=aNA-v2}, which is inspired by Tor and its predecessor, {\sf AND\=aNA-v1}. To motivate our changes we first describe the {\sf AND\=aNA-v1} design in sufficient detail. As previously mentioned, {\sf AND\=aNA-v1} achieves anonymous communication using mix behavior analogous to Tor; Interests for content are wrapped in layers of encryption, where each encrypted layer has sufficient information necessary to forward the interest to the correct anonymizing router. Note that unlike Tor, persistent circuits with long-term TCP connections are not established with {\sf AND\=aNA-v1}. Rather, ephemeral circuits are created as an interest is decrypted and forwarded upstream towards the consumer. State information in each anonymizing router is only maintained in the symmetric (session-based) variant of {\sf AND\=aNA-v1}. Once a piece of content is retrieved corresponding to an interest, each anonymizing router wraps it with a layer of encrypting using a public or symmetric key specific in the corresponding interest, and is subsequently sent back downstream. In this way, circuits only exist for the duration of a single interest-content retrieval. This behavior is illustrated in Figure \ref{fig:andanav1_design}.
 
-\begin{figure*}
+\begin{figure}
 \begin{center}
-\includegraphics[scale=0.5]{./images/andana_v1_design.pdf}
+\includegraphics[scale=0.34]{./images/andana_v1_design.pdf}
 \label{fig:andanav1_design}
 \caption{Interest and content onion encryption and decryption in the original {\sf AND\=aNA-v1} design.}
 \end{center}
-\end{figure*}
+\end{figure}
 
 In the symmetric variant of {\sf AND\=aNA-v1}, state information consisting of a unique session identifier and symmetric key used for interest and content decryption and encryption, respectively, is established and persisted in each anonymizing router using a standard three-way handshake protocol. While the use of symmetric encryption removes the computational burden of asymmetric content encryption, the reference design required that the session identifier be sent in the clear for every interest, allowing an adversary to link packets and content together and render the consumer susceptible to a deanonymization attack (see the following section for more details). Furthermore, not only is the initial state establishment protocol composed of interests that are distinct from regular encrypted interests, the handshake procedure wastes consumer bandwidth and time when used for short-term anonymous traffic. 
 
