@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-2.5-1.40.14 (TeX Live 2013) (format=pdflatex 2013.5.30)  5 MAY 2014 09:29
+This is pdfTeX, Version 3.1415926-2.5-1.40.14 (TeX Live 2013) (format=pdflatex 2013.5.30)  5 MAY 2014 09:43
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1001,6 +1001,9 @@ er
  []
 
 ) (./03-design.tex [3 <./images/andana_v1_design.pdf>]
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+
 Overfull \hbox (1.26718pt too wide) in paragraph at lines 39--40
 []\T1/aer/m/n/9 With the end of goal of sup-port-ing highly ef-fi-cient and ano
 ny-
@@ -1011,10 +1014,6 @@ Overfull \hbox (6.91461pt too wide) in paragraph at lines 42--43
 []\T1/aer/m/n/9 Establish con-tent en-cryp-tion keys $\OML/cmm/m/it/9 E[]$ \T1/
 aer/m/n/9 and ini-tial counter
  []
-
-
-LaTeX Warning: Reference `fig:circuit' on page \thepage  undefined on input lin
-e 46.
 
 [4] <./images/pool.pdf, id=57, 556.0775pt x 283.0575pt>
 File: ./images/pool.pdf Graphic file (type pdf)
@@ -1028,45 +1027,56 @@ Underfull \hbox (badness 1009) in paragraph at lines 230--231
 /cmm/m/it/9 ; [][]; [][]\OT1/cmr/m/n/9 )$ \T1/aer/m/n/9 based on
  []
 
-<./images/circuit_usage.pdf, id=58, 630.355pt x 574.145pt>
-File: ./images/circuit_usage.pdf Graphic file (type pdf)
 
-<use ./images/circuit_usage.pdf>
-Package pdftex.def Info: ./images/circuit_usage.pdf used on input line 258.
-(pdftex.def)             Requested size: 409.72589pt x 373.18983pt.
+Overfull \hbox (14.27216pt too wide) in paragraph at lines 275--276
+\T1/aer/m/n/9 point-ers, $[]$, $[]$, $[]$, and $[]$,
+ []
+
+[5]
+Overfull \hbox (17.11363pt too wide) in paragraph at lines 276--277
+\T1/aer/m/n/9 party will check to en-sure that $[] \OMS/cmsy/m/n/9 ^^@ [] \OML/
+cmm/m/it/9 <
+ []
+
+
+Overfull \hbox (15.96803pt too wide) in paragraph at lines 277--278
+\T1/aer/m/n/9 some in-ter-est is-sued be-tween $[]$ and $[]$,
+ []
+
+
+Underfull \vbox (badness 2653) has occurred while \output is active []
+
+ [6 <./images/pool.pdf>] <./images/ctr_split.pdf, id=133, 1143.27126pt x 608.27
+25pt>
+File: ./images/ctr_split.pdf Graphic file (type pdf)
+
+<use ./images/ctr_split.pdf>
+Package pdftex.def Info: ./images/ctr_split.pdf used on input line 285.
+(pdftex.def)             Requested size: 514.46732pt x 273.7201pt.
+
+Overfull \hbox (10.46732pt too wide) in paragraph at lines 285--286
+ [] 
+ []
+
 ) (./04-implementation.tex
 LaTeX Font Info:    Try loading font information for T1+aett on input line 2.
 
 (/usr/local/texlive/2013/texmf-dist/tex/latex/ae/t1aett.fd
 File: t1aett.fd 1997/11/16 Font definitions for T1/aett.
-)) (./06-security.tex [5]
-Overfull \hbox (3.59624pt too wide) in paragraph at lines 1--1
-[]\secfnt SECURITY AND COR-RECT-NESS ANAL-
- []
-
-
-Underfull \vbox (badness 10000) has occurred while \output is active []
-
- [6 <./images/pool.pdf>]
-Underfull \vbox (badness 10000) has occurred while \output is active []
-
-
-Underfull \vbox (badness 10000) has occurred while \output is active []
-
- [7 <./images/circuit_usage.pdf>]
+)) (./06-security.tex
 Overfull \hbox (18.96703pt too wide) in paragraph at lines 7--8
 []\T1/aer/m/it/9 Consumer $\OML/cmm/m/it/9 u \OMS/cmsy/m/n/9 2 \OT1/cmr/m/n/9 (
 \OT1/cmss/m/n/9 C \OMS/cmsy/m/n/9 n \OT1/cmss/m/n/9 C[]\OT1/cmr/m/n/9 )$ \T1/ae
 r/m/it/9 has con-sumer anonymity
  []
 
-
+[7]
 Overfull \hbox (3.19724pt too wide) in paragraph at lines 18--19
 []\T1/aer/m/it/9 Consumer $\OML/cmm/m/it/9 u$ \T1/aer/m/it/9 has pro-ducer anon
 ymity in con-
  []
 
-
+[8 <./images/ctr_split.pdf>]
 Overfull \hbox (12.02725pt too wide) in paragraph at lines 67--68
 []\T1/aer/m/n/9 By the de-sign of \T1/aess/m/n/9 AND\T1/aer/m/n/9 , it fol-lows
  that $[]\OT1/cmr/m/n/9 [[]] =
@@ -1078,14 +1088,9 @@ Overfull \hbox (21.87932pt too wide) in paragraph at lines 67--68
 /cmr/m/n/9 [[]] \OMS/cmsy/m/n/9 ^^T
  []
 
-[8]) (./05-performance.tex) (./andanav2_ccs14.bbl) [9
-
-] (./andanav2_ccs14.aux)
+) (./05-performance.tex) (./andanav2_ccs14.bbl) [9] (./andanav2_ccs14.aux)
 
 LaTeX Font Warning: Some font shapes were not available, defaults substituted.
-
-
-LaTeX Warning: There were undefined references.
 
 
 LaTeX Warning: There were multiply-defined labels.
@@ -1093,8 +1098,8 @@ LaTeX Warning: There were multiply-defined labels.
  ) 
 Here is how much of TeX's memory you used:
  18668 strings out of 493315
- 343483 string characters out of 6137904
- 405416 words of memory out of 5000000
+ 343459 string characters out of 6137904
+ 406426 words of memory out of 5000000
  21674 multiletter control sequences out of 15000+600000
  57676 words of font info for 81 fonts, out of 8000000 for 9000
  957 hyphenation exceptions out of 8191
@@ -1118,10 +1123,10 @@ ts/type1/public/amsfonts/cm/cmtt9.pfb></usr/local/texlive/2013/texmf-dist/fonts
 /type1/urw/helvetic/uhvb8a.pfb></usr/local/texlive/2013/texmf-dist/fonts/type1/
 urw/helvetic/uhvr8a.pfb></usr/local/texlive/2013/texmf-dist/fonts/type1/urw/tim
 es/utmb8a.pfb>
-Output written on andanav2_ccs14.pdf (9 pages, 369315 bytes).
+Output written on andanav2_ccs14.pdf (9 pages, 408116 bytes).
 PDF statistics:
- 252 PDF objects out of 1000 (max. 8388607)
- 168 compressed objects within 2 object streams
+ 381 PDF objects out of 1000 (max. 8388607)
+ 232 compressed objects within 3 object streams
  0 named destinations out of 1000 (max. 500000)
  28 words of extra memory for PDF output out of 10000 (max. 10000000)
 

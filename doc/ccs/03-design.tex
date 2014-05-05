@@ -253,19 +253,37 @@ We note that anonymous routers must be chosen in a \emph{mutually excluse} manne
 \label{alg:ar_content_handler}
 \end{algorithm}
 
-\begin{figure*}[ht!]
-\begin{center}
-\includegraphics[scale=0.65]{./images/circuit_usage.pdf}
-\end{center}
-\caption{Visual depiction of the interaction between the consumer and the first hop router for the handshake-based variant. The procedure repeats in the same manner for all further upstream routers after each interest is unrolled and resulting content is encrypted.}
-\label{fig:circuit_usage}
-\end{figure*}
+% \begin{figure*}[ht!]
+% \begin{center}
+% \includegraphics[scale=0.65]{./images/circuit_usage.pdf}
+% \end{center}
+% \caption{Visual depiction of the interaction between the consumer and the first hop router for the handshake-based variant. The procedure repeats in the same manner for all further upstream routers after each interest is unrolled and resulting content is encrypted.}
+% \label{fig:circuit_usage}
+% \end{figure*}
 
 \subsection{Online Session Establishment and Circuit Usage} \label{sec:piggyback}
 As previously mentioned, sessions may be created via the handshake technique or online. The process for online state initialization is very similar to the handshake routine with the following exceptions:
 \begin{itemize}
-  \item The \emph{first} interest $\mathsf{int}-1$ issued by the consumer is appended with the encrypted state information (minus the session index) similar to as is done in the handshake variant. The session index $\mathsf{SID}$ is still appended to the interest before the state information. This enables the anonymizing proxies to check for the presence of the session index in their state table. If an entry is not found, the remainder of the interest is decrypted and treated as the initial state information.
-  \item All \emph{subsequent} interests $\mathsf{int}-i$ ($i > 1$) are prepended with the session index and \emph{padded} with an $l$ bits of data so that $|\mathsf{int}-1| = |\mathsf{int}-i|$ (i.e., the length of all interests are equal). Since the concatenation of the session identifier and the state information is indistinguishable from the concatenation of a different session identifer and random pad, an adversary cannot distinguish between $\mathsf{int}-1$ and $\mathsf{int}-i$.
+  \item The \emph{first} interest $\mathsf{int}$:$1$ issued by the consumer is appended with the encrypted state information (minus the session index) similar to as is done in the handshake variant. The session index $\mathsf{SID}$ is still appended to the interest before the state information. This enables the anonymizing proxies to check for the presence of the session index in their state table. If an entry is not found, the remainder of the interest is decrypted and treated as the initial state information.
+  \item All \emph{subsequent} interests $\mathsf{int}$:$i$ ($i > 1$) are prepended with the session index and \emph{padded} with an $l$ bits of data so that $|\mathsf{int}$:$1| = |\mathsf{int}$:$i|$ (i.e., the length of all interests are equal). Since the concatenation of the session identifier and the state information is indistinguishable from the concatenation of a different session identifer and random pad, an adversary cannot distinguish between $\mathsf{int}$:$1$ and $\mathsf{int}$:$i$.
 \end{itemize}
 Beyond these changes, the operation and usage of the circuits remains the same for consumers and anonymizing proxies. We omit algorithmic details about the above differences since they should be clear from context.
 
+\subsection{Interest Flow Control via Windowing} \label{sec:windowing}
+To further increase the throughput of {\sf AND}, the design makes use of a flow control mechanism analogous to the sliding window technique used in standard TCP implementations. In particular, {\sf AND} uses a global maximum window size $w$ that refers to the maximum number of interests that can be issued asynchronously without being acknowledged. The behavior of the interest sliding window will then proceed as follows:
+\begin{itemize}
+  \item All parties, including the consumer and each AR participating in an anonymous circuit, will maintain four pointers, $\mathsf{WindowStart}$, $\mathsf{WindowEnd}$, $\mathsf{KeyStart}$, and $\mathsf{KeyEnd}$, where $\mathsf{WindowEnd} - \mathsf{WindowStart} \leq w$ will always be an invariant. To start, $\mathsf{WindowStart} = \mathsf{WindowEnd} = 0 = \mathsf{KeyStart} = \mathsf{KeyEnd} = 0$.
+  \item When an interest is to be issued or forwarded, the party will check to ensure that $\mathsf{WindowEnd} - \mathsf{WindowStart} < w$, and if so interest is sent/forwarded and $\mathsf{WindowEnd}$ is incremented by one. In addition, the keystream at the consumer (for each AR) or AR is pumped by $M$ bits and $\mathsf{KeyEnd}$ is incremented by $M$, where $M$ is the largest piece of content received thus far. Otherwise, the interest is buffered at the consumer or AR. 
+  \item When a piece of content arrives that corresponds to some interest issued between $\mathsf{WindowStart}$ and $\mathsf{WindowEnd}$, $\mathsf{WindowStart}$ is incremented by one and an event is triggered forcing the party to check their interest buffers for new intersts to be sent. In addition, $\mathsf{KeyStart}$ is incremented by the size of the content, and checks to see if the maximum content size $M$ needs to be updated.
+\end{itemize}
+Using this technique, if a router receives an interest for a particular anonymous circuit when $\mathsf{WindowEnd} - \mathsf{WindowStart} \geq w$, then the interest is dropped. Interest and content flow control and correct functionality of the consumer guarantees that interests will not be issued when the window is full. 
+
+Also, while all parties must share the same window size, the consumer $w$ is free to change the window size to adapt to the state of the network. For instance, if there is very little end-to-end latency for content, then the consumer may wish to increase the size of the window. In order to support such dynamic windowing, the consumer must inform all routers in an anonymous circuit of the desired window size. {\sf AND} supports this by appending the window size to the session index $\mathsf{SIndex}_i$ for each $r_i$ in a circuit. In order to ensure that no two interests are distinguishable by this window size $w$, it is also masked by a random one-time pad $p$ (i.e. $w' = w \oplus p$, where $w$ is interpreted as an integer encoded in binary) that is included in the encrypted interest. In other words, once an interest is decrypted the pad $p$ is recovered, and then the router computes $w = w' \oplus p$. If $w$ is larger than the stored value associated with the circuit, then the new result is simply updated and operation proceeds as normal. Otherwise, the router enters a ``backoff'' state where it waits for content to be returned and the resulting window size to return to normal before issuing any further interests. This dynamic windowing method is currently not implemented in the {\sf AND} system.
+
+\begin{figure*}[ht!]
+\begin{center}
+\includegraphics[scale=0.45]{./images/ctr_split.pdf}
+\end{center}
+\caption{Visual depiction of window-based keystream precomputation during upstream interest traversal.}
+\label{fig:circuit}
+\end{figure*}
