@@ -33,6 +33,12 @@ S.~Murdoch and G.~Danezis.
 \newblock In {\em Security and Privacy, 2005 IEEE Symposium on}, pages
   183--195, May 2005.
 
+\bibitem{ccnx}
+PARC.
+\newblock {CCNx}.
+\newblock Available online at: \url{https://github.com/ProjectCCNx/ccnx}, May
+  2014.
+
 \bibitem{linkability-attacks}
 S.~Schiffner and S.~Clau\ss.
 \newblock Using linkability information to attack mix-based anonymity services.

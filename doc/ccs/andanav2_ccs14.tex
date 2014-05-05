@@ -18,7 +18,7 @@
 
 \begin{document}
 
-\title{AND\=aNA-v2: Application-Layer Support for \\ Low-Latency Bidirectional Anonymous Traffic in NDN}
+\title{AND: High Performance Anonymous Named Data}
 
 \numberofauthors{3} 
 \author{
@@ -37,7 +37,6 @@ Gene Tsudik\\
 % 3rd. author
 \alignauthor 
 Ersin Uzun\\
-       \affaddr{Computer Science Laboratory}\\
        \affaddr{PARC}\\
        \affaddr{Palo Alto, CA, USA}\\
        \email{Ersin.Uzun@parm.com}
@@ -46,7 +45,7 @@ Ersin Uzun\\
 
 \maketitle
 \begin{abstract}
-TODO
+With the increasing trend of personal and private activities and correspondence conducted on the Internet, the need for anonymous communication provided by services such as Tor continues to escalate. Furthermore, as information-centric networking (ICN) gains momentum, the need for a Tor-like analog to support high performance anonymous communication rises at an equal rate. ICN designs such as Named Data Networking are unique in that all communication is content-based rather than host-based, i.e., content, rather than hosts, are addressable in the network. In order to mask user locations and identities, it becomes necessary to mask the process in which content is requested. {\sf ANDaNA} (Anonymous Named Data Networking Application) was the first attempt to provide this type of anonymity in the context of NDN. However, its elementary design and implementation led to severe performance issues that would hinder widespread usage. To this end, we propose {\sf AND}, a new and vastly improved variant of {\sf ANDaNA}, to support high throughput and low latency anonymous content retrieval in NDN in unidirectional and bidirectional settings. In this work, we describe the design, implementation, and performance of {\sf AND}, and also prove various anonymity guarantees provided by our design. Our experimental results show that {\sf AND} introduces minimal overhead with a minimal number of anonymizing proxies (1), while simultaneously ensuring anonymity guarantees similar to Tor.
 \end{abstract}
 
 % A category with the (minimum) three required fields
@@ -54,9 +53,9 @@ TODO
 %A category including the fourth, optional field follows...
 \category{D.2.8}{TODO}{TODO}[TODO]
 
-\terms{TODO}
+\terms{NDN, Anonymity, Tor}
 
-\keywords{TODO} % NOT required for Proceedings
+% \keywords{TODO} % NOT required for Proceedings
 
 \input{01-intro}
 \input{02-prelims}
@@ -65,11 +64,11 @@ TODO
 \input{06-security}
 \input{05-performance}
 
-\section{Conclusion}
-TODO
+% \section{Conclusion}
+% TODO
 
-\section{Acknowledgments}
-TODO
+% \section{Acknowledgments}
+% TODO
 
 % The following two commands are all you need in the
 % initial runs of your .tex file to

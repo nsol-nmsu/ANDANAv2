@@ -4,57 +4,52 @@
 \citation{ndn-techreport}
 \citation{andana}
 \citation{Tor}
-\citation{ccnx}
 \@writefile{toc}{\contentsline {section}{\numberline {1}Introduction}{\thepage }}
 \newlabel{sec:introduction}{{1}{\thepage }}
+\citation{ccnx}
+\citation{andana}
+\citation{andana}
+\citation{andana}
+\citation{andana}
 \@writefile{toc}{\contentsline {section}{\numberline {2}Preliminaries}{\thepage }}
 \newlabel{sec:preliminaries}{{2}{\thepage }}
 \@writefile{toc}{\contentsline {subsection}{\numberline {2.1}NDN Overview}{\thepage }}
-\newlabel{fig:andanav1_design}{{2.3}{\thepage }}
-\@writefile{lof}{\contentsline {figure}{\numberline {1}{\ignorespaces Interest and content onion encryption and decryption in the original {\sf  AND\=aNA-v1} design.}}{\thepage }}
 \@writefile{toc}{\contentsline {subsection}{\numberline {2.2}Notions of Anonymity}{\thepage }}
-\@writefile{tdo}{\contentsline {todo}{I think a section dedicated to anonymity and relevant definitions is warranted here, oui?}{\thepage }}
-\pgfsyspdfmark {pgfid1}{28688383}{28853875}
-\@writefile{toc}{\contentsline {subsection}{\numberline {2.3}AND\=aNA-v1 Design Highlights}{\thepage }}
 \citation{tor-traffic-analysis}
 \citation{attacking-unlinkability}
 \citation{linkability-attacks}
-\citation{Tor}
-\@writefile{tdo}{\contentsline {todo}{We can probably go farther here - has the point been driven home?}{\thepage }}
-\pgfsyspdfmark {pgfid2}{11386879}{42139980}
-\@writefile{toc}{\contentsline {subsection}{\numberline {2.4}Pitfalls and Shortcomings}{\thepage }}
-\@writefile{toc}{\contentsline {section}{\numberline {3}AND\=aNA-v2 Design}{\thepage }}
+\newlabel{fig:andanav1_design}{{2.3}{\thepage }}
+\@writefile{lof}{\contentsline {figure}{\numberline {1}{\ignorespaces Interest and content onion encryption and decryption in the original {\sf  AND\=aNA} design.}}{\thepage }}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.3}AND\=aNA Design Highlights}{\thepage }}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.4}Design and Engineering Pitfalls}{\thepage }}
+\@writefile{toc}{\contentsline {section}{\numberline {3}AND Design}{\thepage }}
 \newlabel{sec:design}{{3}{\thepage }}
-\@writefile{toc}{\contentsline {subsection}{\numberline {3.1}Circuit and Session Establishment}{\thepage }}
-\citation{andana}
-\citation{andana}
+\citation{Tor}
 \@writefile{lot}{\contentsline {table}{\numberline {1}{\ignorespaces Notation used in the presentation of this work.}}{\thepage }}
 \newlabel{tab:notation}{{1}{\thepage }}
-\@writefile{toc}{\contentsline {subsection}{\numberline {3.2}AND\=aNA-v2 Circuit Usage}{\thepage }}
-\@writefile{toc}{\contentsline {section}{\numberline {4}Implementation}{\thepage }}
-\newlabel{sec:introduction}{{4}{\thepage }}
-\@writefile{toc}{\contentsline {section}{\numberline {5}Security Analysis}{\thepage }}
-\newlabel{sec:security}{{5}{\thepage }}
-\citation{andana}
-\@writefile{lof}{\contentsline {figure}{\numberline {2}{\ignorespaces Sample session-based circuit between a consumer $C$ and producer $P$ with ARs $r_1,r_2,r_3,r_4$, where the end routers on the path are run on the same node as $C$ and $P$.}}{\thepage }}
-\newlabel{fig:circuit}{{2}{\thepage }}
-\@writefile{lof}{\contentsline {figure}{\numberline {3}{\ignorespaces A sample bidirectional circuit configuration in which two parties communicate using mutually exclusive ARs in both directions. Note that it is not required for each circuit to be the same length, nor is it required that the intersection of the routers for each direction of the circuit to be empty (i.e., routers may \emph  {unknowingly} support sessions traversing in both directions).}}{\thepage }}
-\newlabel{fig:pool}{{3}{\thepage }}
-\citation{andana}
-\citation{andana}
-\citation{andana}
-\citation{andana}
-\@writefile{lof}{\contentsline {figure}{\numberline {4}{\ignorespaces Visual depiction of the interaction between the consumer and the first hop router. The procedure repeats in the same manner for all further upstream routers after each interest is unrolled and resulting content is encrypted.}}{\thepage }}
-\newlabel{fig:circuit_usage}{{4}{\thepage }}
-\citation{andana}
-\citation{andana}
-\@writefile{loa}{\contentsline {algorithm}{\numberline {1}{\ignorespaces Circuit and Session Establishment Protocol}}{\thepage }}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.1}Circuit and Session Establishment}{\thepage }}
+\citation{ccnx}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.2}AND Circuit Usage}{\thepage }}
 \@writefile{loa}{\contentsline {algorithm}{\numberline {2}{\ignorespaces Encrypted Interest Generation}}{\thepage }}
 \newlabel{alg:enc_int_gen}{{2}{\thepage }}
-\@writefile{loa}{\contentsline {algorithm}{\numberline {3}{\ignorespaces AR Encrypted Interest Forwarding}}{\thepage }}
-\newlabel{alg:enc_int_forward}{{3}{\thepage }}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.3}Online Session Establishment and Circuit Usage}{\thepage }}
+\newlabel{sec:piggyback}{{3.3}{\thepage }}
 \@writefile{loa}{\contentsline {algorithm}{\numberline {4}{\ignorespaces AR Content Handling}}{\thepage }}
 \newlabel{alg:ar_content_handler}{{4}{\thepage }}
+\@writefile{toc}{\contentsline {section}{\numberline {4}Implementation}{\thepage }}
+\newlabel{sec:introduction}{{4}{\thepage }}
+\citation{andana}
+\@writefile{loa}{\contentsline {algorithm}{\numberline {1}{\ignorespaces Circuit and Session Establishment Protocol}}{\thepage }}
+\@writefile{lof}{\contentsline {figure}{\numberline {2}{\ignorespaces A sample bidirectional circuit configuration in which two parties communicate using mutually exclusive ARs in both directions. Note that it is not required for each circuit to be the same length, nor is it required that the intersection of the routers for each direction of the circuit to be empty (i.e., routers may \emph  {unknowingly} support sessions traversing in both directions).}}{\thepage }}
+\newlabel{fig:pool}{{2}{\thepage }}
+\@writefile{toc}{\contentsline {section}{\numberline {5}Security and Correctness Analysis}{\thepage }}
+\newlabel{sec:security}{{5}{\thepage }}
+\@writefile{loa}{\contentsline {algorithm}{\numberline {3}{\ignorespaces AR Encrypted Interest Forwarding}}{\thepage }}
+\newlabel{alg:enc_int_forward}{{3}{\thepage }}
+\@writefile{lof}{\contentsline {figure}{\numberline {3}{\ignorespaces Visual depiction of the interaction between the consumer and the first hop router for the handshake-based variant. The procedure repeats in the same manner for all further upstream routers after each interest is unrolled and resulting content is encrypted.}}{\thepage }}
+\newlabel{fig:circuit_usage}{{3}{\thepage }}
+\citation{andana}
+\citation{andana}
 \bibstyle{abbrv}
 \bibdata{ref}
 \bibcite{Netflix}{1}
@@ -62,10 +57,9 @@
 \bibcite{Tor}{3}
 \bibcite{attacking-unlinkability}{4}
 \bibcite{tor-traffic-analysis}{5}
-\bibcite{linkability-attacks}{6}
-\bibcite{ndn-techreport}{7}
+\bibcite{ccnx}{6}
+\bibcite{linkability-attacks}{7}
+\bibcite{ndn-techreport}{8}
 \@writefile{toc}{\contentsline {section}{\numberline {6}Performance}{\thepage }}
 \newlabel{sec:performance}{{6}{\thepage }}
-\@writefile{toc}{\contentsline {section}{\numberline {7}Conclusion}{\thepage }}
-\@writefile{toc}{\contentsline {section}{\numberline {8}Acknowledgments}{\thepage }}
-\@writefile{toc}{\contentsline {section}{\numberline {9}References}{\thepage }}
+\@writefile{toc}{\contentsline {section}{\numberline {7}References}{\thepage }}
