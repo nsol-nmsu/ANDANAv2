@@ -1,0 +1,9 @@
+- reaplce NDN with general "ccn"
+	 any ICN-variant that has I/C support is supported by this 
+	 something that shares interest/content features with CCN/NDN (named content, caches, etc etc)
+ - caching is not really used 
+ ***- really only relying on itnerest/content paradigm
+ - anonymously share code (low priority)
+ - link to code in implementation section
+ - how many hops does tor recommend/need?
+ - emphasize why this can't be compared with Tor (apples/avacados - transport layer nonexistent, NDN is better arch)
