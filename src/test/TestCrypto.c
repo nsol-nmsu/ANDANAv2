@@ -90,9 +90,10 @@ int testSKDecrypt()
 	if(!RAND_bytes(key, SESSION_KEYLEN)) return -1;
 	SKEncrypt(&out, key, buffer, SK_INPUT_LENGTH);
 	int ctlen = 0;
-	if (SKDecrypt(&original, key, out->blob, SK_INPUT_LENGTH, &ctlen) == 0)
+	BOB* dec;
+	if (SKDecrypt(&dec, key, out->blob, SK_INPUT_LENGTH) == 0)
 	{
-		if (ctlen != SK_INPUT_LENGTH) return -1;
+		if (dec->len != SK_INPUT_LENGTH) return -1;
 		return 0;
 	}
 	return -1;
@@ -114,7 +115,9 @@ int testSK()
 	if(!RAND_bytes(key, SESSION_KEYLEN)) return -1;
 	SKEncrypt(&out, key, buffer, SK_INPUT_LENGTH);
 	int ctlen = 0;
-	SKDecrypt(&original, key, out->blob, SK_INPUT_LENGTH, &ctlen);	
+	BOB* dec;
+	SKDecrypt(&original, key, out->blob, SK_INPUT_LENGTH);	
+	if (dec->len != SK_INPUT_LENGTH) return -1;
 
 	// Compare the two...
 	for (i = 0; i < SK_INPUT_LENGTH; i++)

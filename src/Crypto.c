@@ -427,10 +427,13 @@ int SKEncrypt(BOB** out, unsigned char* key, unsigned char* pt, int len)
  * @param ct - input ciphertext.
  * @param len - length of the ciphertext.
  */
-int SKDecrypt(uint8_t** out, uint8_t* key, uint8_t* ct, int len, int* outlen)
+int SKDecrypt(BOB** out, uint8_t* key, uint8_t* ct, int len)
 {
     // Allocate the BOB for the encrypted session key, IV, and ciphertext
-    (*out) = (unsigned char*)malloc(sizeof(unsigned char) * len);
+    (*out) = (BOB*)malloc(sizeof(BOB));
+    // (*out)->len = len;
+    (*out)->blob = (unsigned char*)malloc(sizeof(unsigned char) * len);
+    // (*out) = (unsigned char*)malloc(sizeof(unsigned char) * len);
 
     int i, nrounds = 5;
     unsigned char raw_key[32], iv[32];
@@ -458,8 +461,8 @@ int SKDecrypt(uint8_t** out, uint8_t* key, uint8_t* ct, int len, int* outlen)
     EVP_DecryptUpdate(&e_ctx, plaintext, &p_len, ct, len);
     EVP_DecryptFinal_ex(&e_ctx, plaintext + p_len, &f_len);
 
-    memcpy(*out, plaintext, p_len);
-    memcpy(outlen, &p_len, sizeof(int));
+    memcpy((*out)->blob, plaintext, p_len);
+    (*out)->len = p_len;
 
     // // Setup the encryption and whatnot (CBC mode)
     // EVP_CIPHER_CTX dec;
