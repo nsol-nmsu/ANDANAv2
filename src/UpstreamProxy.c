@@ -63,7 +63,7 @@ enum ccn_upcall_res WrapInterest(struct ccn_closure *selfp, enum ccn_upcall_kind
 
 struct ccn_charbuf* EncryptInterest(UpstreamProxy* client, UpstreamProxyStateTableEntry* newStateEntry, struct ccn_charbuf* origInterest, struct ccn_indexbuf *origComponents)
 {
-    int i;
+    int i, j;
     int res;
     struct ccn_charbuf* newName;
     struct ccn_charbuf* wrappedInterestName;
@@ -128,8 +128,12 @@ struct ccn_charbuf* EncryptInterest(UpstreamProxy* client, UpstreamProxyStateTab
                 DEBUG_PRINT("Interest = %s\n", ccn_charbuf_as_string(origInterest));
                 DEBUG_PRINT("Length = %d\n", origInterest->length);
 
+                unsigned char tmp[32];
+                for (j = 0; j < 32; j++) tmp[j] = 0xFF;
+
                 // Encrypt the original interest
-                res = SKEncrypt(&encryptedPayload, hop->sessionTable->head->encryption_key, origInterest->buf, origInterest->length);
+                // res = SKEncrypt(&encryptedPayload, hop->sessionTable->head->encryption_key, origInterest->buf, origInterest->length);
+                res = SKEncrypt(&encryptedPayload, hop->sessionTable->head->encryption_key, tmp, 32);
                 if (res < 0)
                 {
                     DEBUG_PRINT("Failed encrypting interest payload: %d.\n", i);

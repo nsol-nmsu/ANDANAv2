@@ -617,6 +617,12 @@ enum ccn_upcall_res UnwrapInterest(struct ccn_closure *selfp, enum ccn_upcall_ki
         return CCN_UPCALL_RESULT_ERR;
     }
 
+    int j;
+    for (j = 0; j < 32; j++)
+    {
+        if (decryptedPayload->blob[j] != 0xFF) DEBUG_PRINT("RAWR: %d %x\n", j, decryptedPayload->blob[j]);
+    }
+
     // Copy the plaintext to a charbuf buffer and then extract the components
     struct ccn_charbuf* decryptedName = ccn_charbuf_create();
     ccn_name_init(decryptedName);
