@@ -142,10 +142,10 @@ struct ccn_charbuf* EncryptInterest(UpstreamProxy* client, UpstreamProxyStateTab
                 uint8_t closer = CCN_CLOSE;
                 memcpy(formattedPayload + encryptedPayload->len, &closer, sizeof(uint8_t));
                 int finalLen;
-                uint8_t* finalName = base64_encode(formattedPayload, encryptedPayload->len + 1, &finalLen);
+                uint8_t* finalNamePayload = base64_encode(formattedPayload, encryptedPayload->len + 1, &finalLen);
 
                 // Append the formatted interest (with the interest terminator) to the end
-                res = ccn_name_append(innerName, (void*)finalName, finalLen);
+                res = ccn_charbuf_append(innerName, (void*)finalNamePayload, finalLen);
                 DEBUG_PRINT("innerName = %s\n", ccn_charbuf_as_string(innerName));
                 if (res < 0)
                 {
