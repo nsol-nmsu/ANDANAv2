@@ -364,19 +364,57 @@ int SKEncrypt(BOB** out, unsigned char* key, unsigned char* pt, int len)
 {
     // Allocate the BOB for the encrypted session key, IV, and ciphertext
     (*out) = (BOB*)malloc(sizeof(BOB));
-    (*out)->len = len;
+    // (*out)->len = len;
     (*out)->blob = (unsigned char*)malloc(sizeof(unsigned char) * len);
     memset((*out)->blob, 0, len);
 
-    // Setup the encryption and whatnot (CBC mode)
-    EVP_CIPHER_CTX en;
-    if (AESInit(key, SESSION_KEYLEN, 0, &en, 0)) 
+    int i, nrounds = 5;
+    unsigned char raw_key[32], iv[32];
+
+    /*
+    * Gen key & IV for AES 256 CBC mode. A SHA1 digest is used to hash the supplied key material.
+    * nrounds is the number of times the we hash the material. More rounds are more secure but
+    * slower.
+    */
+    i = EVP_BytesToKey(EVP_aes_256_cbc(), EVP_sha1(), NULL, key, KEYLEN, nrounds, raw_key, iv);
+    if (i != 32) 
     {
-        DEBUG_PRINT("Error: couldn't initialize AES cipher for encryption\n");
+        printf("Key size is %d bits - should be 256 bits\n", i);
         return -1;
     }
-    unsigned char* ciphertext = AESEncrypt(&en, pt, &len);
-    memcpy((*out)->blob, ciphertext, len);
+
+    EVP_CIPHER_CTX e_ctx;
+    EVP_CIPHER_CTX_init(&e_ctx);
+    EVP_EncryptInit_ex(&e_ctx, EVP_aes_256_cbc(), NULL, raw_key, iv);
+
+    /* max ciphertext len for a n bytes of plaintext is n + AES_BLOCK_SIZE -1 bytes */
+    int c_len = len + AES_BLOCK_SIZE, f_len = 0;
+    unsigned char *ciphertext = malloc(c_len);
+
+    /* allows reusing of 'e' for multiple encryption cycles */
+    EVP_EncryptInit_ex(&e_ctx, NULL, NULL, NULL, NULL);
+
+    /* update ciphertext, c_len is filled with the length of ciphertext generated,
+    *len is the size of plaintext in bytes */
+    EVP_EncryptUpdate(&e_ctx, ciphertext, &c_len, pt, len);
+
+    /* update ciphertext with the final remaining bytes */
+    EVP_EncryptFinal_ex(&e_ctx, ciphertext+c_len, &f_len);
+
+    // Save the resulting encryption information
+    memcpy((*out)->blob, ciphertext, c_len);
+    (*out)->len = c_len;
+
+    // // Setup the encryption and whatnot (CBC mode)
+    // EVP_CIPHER_CTX en;
+    // if (AESInit(key, SESSION_KEYLEN, 0, &en, 0)) 
+    // {
+    //     DEBUG_PRINT("Error: couldn't initialize AES cipher for encryption\n");
+    //     return -1;
+    // }
+    // int outlen = 0;
+    // unsigned char* ciphertext = AESEncrypt(&en, pt, &outlen);
+    // memcpy((*out)->blob, ciphertext, outlen);
     // EVP_CIPHER_CTX_cleanup(&en);
     return 0;
 }
@@ -389,21 +427,50 @@ int SKEncrypt(BOB** out, unsigned char* key, unsigned char* pt, int len)
  * @param ct - input ciphertext.
  * @param len - length of the ciphertext.
  */
-int SKDecrypt(unsigned char** out, unsigned char* key, unsigned char* ct, int len)
+int SKDecrypt(uint8_t** out, uint8_t* key, uint8_t* ct, int len, int* outlen)
 {
     // Allocate the BOB for the encrypted session key, IV, and ciphertext
     (*out) = (unsigned char*)malloc(sizeof(unsigned char) * len);
 
-    // Setup the encryption and whatnot (CBC mode)
-    EVP_CIPHER_CTX dec;
-    if (AESInit(key, SESSION_KEYLEN, 0, 0, &dec)) 
+    int i, nrounds = 5;
+    unsigned char raw_key[32], iv[32];
+
+    /*
+    * Gen key & IV for AES 256 CBC mode. A SHA1 digest is used to hash the supplied key material.
+    * nrounds is the number of times the we hash the material. More rounds are more secure but
+    * slower.
+    */
+    i = EVP_BytesToKey(EVP_aes_256_cbc(), EVP_sha1(), NULL, key, KEYLEN, 1 /* nrounds */, raw_key, iv);
+    if (i != 32) 
     {
-        DEBUG_PRINT("Error: couldn't initialize AES cipher for decryption\n");
+        printf("Key size is %d bits - should be 256 bits\n", i);
         return -1;
     }
-    unsigned char* plaintext = AESDecrypt(&dec, ct, &len);
-    memcpy((*out), plaintext, len);
-    EVP_CIPHER_CTX_cleanup(&dec);
+
+    EVP_CIPHER_CTX e_ctx;
+    EVP_CIPHER_CTX_init(&e_ctx);
+    EVP_DecryptInit_ex(&e_ctx, EVP_aes_256_cbc(), NULL, raw_key, iv);
+
+    int p_len = len, f_len = 0;
+    unsigned char *plaintext = malloc(p_len + AES_BLOCK_SIZE);
+
+    EVP_DecryptInit_ex(&e_ctx, NULL, NULL, NULL, NULL);
+    EVP_DecryptUpdate(&e_ctx, plaintext, &p_len, ct, len);
+    EVP_DecryptFinal_ex(&e_ctx, plaintext + p_len, &f_len);
+
+    memcpy(*out, plaintext, p_len);
+    memcpy(outlen, &p_len, sizeof(int));
+
+    // // Setup the encryption and whatnot (CBC mode)
+    // EVP_CIPHER_CTX dec;
+    // if (AESInit(key, SESSION_KEYLEN, 0, 0, &dec)) 
+    // {
+    //     DEBUG_PRINT("Error: couldn't initialize AES cipher for decryption\n");
+    //     return -1;
+    // }
+    // unsigned char* plaintext = AESDecrypt(&dec, ct, &len);
+    // memcpy((*out), plaintext, len);
+    // EVP_CIPHER_CTX_cleanup(&dec);
     return 0;
 }
 

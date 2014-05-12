@@ -141,7 +141,7 @@ int SKEncrypt(BOB** out, uint8_t* key, uint8_t* pt, int len);
  * @param ct - input ciphertext.
  * @param len - length of the ciphertext.
  */
-int SKDecrypt(uint8_t** out, uint8_t* key, uint8_t* ct, int len);
+int SKDecrypt(uint8_t** out, uint8_t* key, uint8_t* ct, int len, int* outlen);
 
 /**
  * Compute the MAC tag of the input message.
