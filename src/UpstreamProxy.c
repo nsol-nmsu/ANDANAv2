@@ -125,6 +125,8 @@ struct ccn_charbuf* EncryptInterest(UpstreamProxy* client, UpstreamProxyStateTab
             if (i == client->numProxies - 1)
             {
                 DEBUG_PRINT("Encrypting first interest...\n");
+                DEBUG_PRINT("Interest = %s\n", ccn_charbuf_as_string(origInterest));
+                DEBUG_PRINT("Length = %d\n", origInterest->length);
 
                 // Encrypt the original interest
                 res = SKEncrypt(&encryptedPayload, hop->sessionTable->head->encryption_key, origInterest->buf, origInterest->length);
