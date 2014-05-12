@@ -13,14 +13,18 @@
 
 typedef struct
 {
-    struct ccn_pkey *privkey;
-    struct ccn_pkey *node_key;
-    struct ccn_closure session_handler;
     ProxySessionTable* sessionTable;
     ProxyStateTable* stateTable;
+    UpstreamProxyStateTable* upstreamStateTable;
     Config* config;
     Proxy* baseProxy;
+    struct ccn_closure session_handler;
 } DownstreamProxy;
+
+/**
+ * TODO
+ */
+DownstreamProxy* ProxySessionInit(Config* config, struct ccn_charbuf *uri, struct ccn_pkey *pubkey, struct ccn_charbuf *interest_template, int is_exit);
 
 /**
  * TODO
