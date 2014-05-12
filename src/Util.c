@@ -51,7 +51,7 @@ char * base64_encode(const unsigned char *input, int length, int* outlen)
     for(i=0; buff[i]; i++)
         if(buff[i] == '/')
             buff[i] = '-';
-    memcpy(outlen, i, sizeof(int));
+    memcpy(outlen, &i, sizeof(int));
     
     return buff;
 }
