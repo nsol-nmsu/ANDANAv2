@@ -119,32 +119,32 @@ DownstreamProxy* ProxySessionInit(Config* config, struct ccn_charbuf *uri, struc
         DEBUG_PRINT("Packing the interest\n");
 
         // Pack in the state information
-        struct ccn_charbuf *encryption_key_payload = ccn_charbuf_create();
-        ccn_name_init(encryption_key_payload);
+        // struct ccn_charbuf *encryption_key_payload = ccn_charbuf_create();
+        // ccn_name_init(encryption_key_payload);
         ccn_name_append(int_name, encryption_key, KEYLEN);
 
-        struct ccn_charbuf *mac_key_payload = ccn_charbuf_create();
-        ccn_name_init(mac_key_payload);
+        // struct ccn_charbuf *mac_key_payload = ccn_charbuf_create();
+        // ccn_name_init(mac_key_payload);
         ccn_name_append(int_name, mac_key, MACKLEN);
 
-        struct ccn_charbuf *counter_iv_payload = ccn_charbuf_create();
-        ccn_name_init(counter_iv_payload);
+        // struct ccn_charbuf *counter_iv_payload = ccn_charbuf_create();
+        // ccn_name_init(counter_iv_payload);
         ccn_name_append(int_name, counter_iv, SHA256_DIGEST_LENGTH);
 
-        struct ccn_charbuf *session_iv_payload = ccn_charbuf_create();
-        ccn_name_init(session_iv_payload);
+        // struct ccn_charbuf *session_iv_payload = ccn_charbuf_create();
+        // ccn_name_init(session_iv_payload);
         ccn_name_append(int_name, session_iv, SHA256_DIGEST_LENGTH);
 
-        struct ccn_charbuf *session_id_payload = ccn_charbuf_create();
-        ccn_name_init(session_id_payload);
+        // struct ccn_charbuf *session_id_payload = ccn_charbuf_create();
+        // ccn_name_init(session_id_payload);
         ccn_name_append(int_name, session_id, SHA256_DIGEST_LENGTH);
 
         // struct ccn_charbuf *session_index_payload = ccn_charbuf_create();
         // ccn_name_init(session_index_payload);
         // ccn_name_append(int_name, session_index, SHA256_DIGEST_LENGTH);
 
-        struct ccn_charbuf *nonce_payload = ccn_charbuf_create();
-        ccn_name_init(nonce_payload);
+        // struct ccn_charbuf *nonce_payload = ccn_charbuf_create();
+        // ccn_name_init(nonce_payload);
         ccn_name_append(int_name, &(stateEntry->nonce), sizeof(unsigned int));
 
         // Send the interest out and wait for the response

@@ -10,6 +10,7 @@
 #include "CryptoWrapper.h"
 #include "Proxy.h"
 #include "UpstreamProxy.h"
+#include "DownstreamProxy.h"
 #include "Util.h"
 #include "ini.h"
 
@@ -113,7 +114,7 @@ int main(int argc, char** argv)
     // Initialize each proxy hop specified by the user
     int numProxies = argc - 2;
     int pIndex = 0;
-    UpstreamProxy** proxies = (UpstreamProxy**)malloc(numProxies * sizeof(UpstreamProxy*));
+    DownstreamProxy** proxies = (DownstreamProxy**)malloc(numProxies * sizeof(DownstreamProxy*));
     DEBUG_PRINT("Creating %d proxies\n", numProxies);
 	for (pIndex = 0; pIndex < numProxies; pIndex++)
 	{

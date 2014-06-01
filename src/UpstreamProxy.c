@@ -149,7 +149,7 @@ struct ccn_charbuf* EncryptInterest(UpstreamProxy* client, UpstreamProxyStateTab
                 uint8_t* finalNamePayload = base64_encode(formattedPayload, encryptedPayload->len + 1, &finalLen);
 
                 // Append the formatted interest (with the interest terminator) to the end
-                res = ccn_charbuf_append(innerName, (void*)finalNamePayload, finalLen);
+                res = ccn_name_append(innerName, (void*)finalNamePayload, finalLen);
                 DEBUG_PRINT("innerName = %s\n", ccn_charbuf_as_string(innerName));
                 if (res < 0)
                 {
@@ -169,7 +169,7 @@ struct ccn_charbuf* EncryptInterest(UpstreamProxy* client, UpstreamProxyStateTab
                     return CCN_UPCALL_RESULT_ERR;
                 }
 
-                // TODO: adopt formatting above if it works
+                // caw: adopt formatting above if it works
 
                 res = ccn_name_append(innerName, (void*)encryptedPayload->blob, encryptedPayload->len);
                 if (res < 0)
