@@ -177,15 +177,18 @@ struct ccn_charbuf* EncryptInterest(UpstreamProxy* client, UpstreamProxyStateTab
                 }
 
                 // Format the raw string of bytes for the interest by appendig a CCN_CLOSE terminator
-                uint8_t* formattedPayload = (uint8_t*)malloc((encryptedPayload->len + 1) * sizeof(uint8_t));
-                memcpy(formattedPayload, encryptedPayload->blob, encryptedPayload->len);
-                uint8_t closer = CCN_CLOSE;
-                memcpy(formattedPayload + encryptedPayload->len, &closer, sizeof(uint8_t));
-                int finalLen;
-                uint8_t* finalNamePayload = base64_encode(formattedPayload, encryptedPayload->len + 1, &finalLen);
+                // uint8_t* formattedPayload = (uint8_t*)malloc((encryptedPayload->len + 1) * sizeof(uint8_t));
+                // memcpy(formattedPayload, encryptedPayload->blob, encryptedPayload->len);
+                // uint8_t closer = CCN_CLOSE;
+                // memcpy(formattedPayload + encryptedPayload->len, &closer, sizeof(uint8_t));
+                // int finalLen;
+                // uint8_t* finalNamePayload = base64_encode(formattedPayload, encryptedPayload->len + 1, &finalLen);
+
+                printf("ciphertext = ");
+                print_hex(encryptedPayload, 32);
 
                 // Append the formatted interest (with the interest terminator) to the end
-                res = ccn_name_append(innerName, (void*)finalNamePayload, finalLen);
+                res = ccn_name_append(innerName, (void*)encryptedPayload, 32);
                 // ccn_name_append(int_name, &(stateEntry->nonce), sizeof(unsigned int));
                 DEBUG_PRINT("innerName = %s\n", ccn_charbuf_as_string(innerName));
                 if (res < 0)

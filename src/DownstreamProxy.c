@@ -578,6 +578,8 @@ enum ccn_upcall_res UnwrapInterest(struct ccn_closure *selfp, enum ccn_upcall_ki
 
     printf("Decrypting with key: ");
     print_hex(sessionEntry->encryption_key, KEYLEN);
+    printf("ciphertext = ");
+    print_hex(payloadCompBuffer, payloadCompBufferSize);
 
     // Decrypt the interest
     BOB* decryptedPayload;
