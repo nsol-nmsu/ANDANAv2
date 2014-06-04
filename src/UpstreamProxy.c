@@ -111,7 +111,6 @@ struct ccn_charbuf* EncryptInterest(UpstreamProxy* client, UpstreamProxyStateTab
             // ccn_name_from_uri(innerName, hopBase->uri->buf);
             struct ccn_charbuf *innerName = ccn_charbuf_create();
             ccn_charbuf_append_charbuf(innerName, hopBase->uri);
-            ccn_name_append_str(innerName, "TEMP");
 
             // append session ID
             ccn_name_append(innerName, (void*)session_index, SHA256_DIGEST_LENGTH);
