@@ -590,6 +590,9 @@ enum ccn_upcall_res UnwrapInterest(struct ccn_closure *selfp, enum ccn_upcall_ki
         return CCN_UPCALL_RESULT_ERR;
     }
 
+    print("plaintext = ");
+    print_hex(decryptedPayload->blob, 32);
+
     int j;
     for (j = 0; j < 32; j++)
     {
