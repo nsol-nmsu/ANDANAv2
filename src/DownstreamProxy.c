@@ -433,7 +433,7 @@ enum ccn_upcall_res DownstreamSessionListener(struct ccn_closure *selfp, enum cc
         return CCN_UPCALL_RESULT_ERR;
     }
     assert(bob.len == SHA256_DIGEST_LENGTH);
-    memcpy(sessionEntry->session_index, out->blob, SHA256_DIGEST_LENGTH);
+    memcpy(sessionEntry->session_index, out->blob, bob.len);
     memcpy(session_index, out->blob, bob.len);
 
     // Use the encryption key to populate the seed (from the session ID)
