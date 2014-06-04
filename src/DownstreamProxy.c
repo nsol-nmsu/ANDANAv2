@@ -450,7 +450,7 @@ enum ccn_upcall_res DownstreamSessionListener(struct ccn_closure *selfp, enum cc
     struct ccn_charbuf *session_response = ccn_charbuf_create();
     ccn_name_init(session_response);
     ccn_name_append(session_response, session_index, SHA256_DIGEST_LENGTH);
-    // struct ccn_charbuf *signedResp = ccn_charbuf_create();
+    struct ccn_charbuf *signedResp = ccn_charbuf_create();
     struct ccn_signing_params sp = CCN_SIGNING_PARAMS_INIT;
     sp.type = CCN_CONTENT_DATA;
 
