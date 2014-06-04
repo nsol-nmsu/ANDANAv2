@@ -12,6 +12,7 @@
 
 #include "Util.h"
 #include "Crypto.h"
+#include "sha256.h"
 
 //////////////////////
 // BEGIN PRIVATE FUNCTIONS
@@ -91,13 +92,20 @@ int Hash(BOB** out, unsigned char* buffer, int len)
     unsigned char* digest = (unsigned char*)malloc(sizeof(unsigned char) * SHA256_DIGEST_LENGTH);
     (*out) = (BOB*)malloc(sizeof(BOB));
     (*out)->len = SHA256_DIGEST_LENGTH;
+    (*out)->blob = (unsigned char*)malloc(sizeof(unsigned char) * SHA256_DIGEST_LENGTH);
 
     // Perform the hash and store the output digest
-    SHA256_CTX sha256;
-    SHA256_Init(&sha256);
-    SHA256_Update(&sha256, buffer, len);
-    (*out)->blob = (unsigned char*)malloc(sizeof(unsigned char) * SHA256_DIGEST_LENGTH);
-    SHA256_Final((*out)->blob, &sha256);
+    // SHA256_CTX sha256;
+    // SHA256_Init(&sha256);
+    // SHA256_Update(&sha256, buffer, len);
+    // 
+    // SHA256_Final((*out)->blob, &sha256);
+
+    SHA256_CTX_CUSTOM ctx;
+    sha256_init(&ctx);
+    sha256_update(&ctx, buffer, len);
+    sha256_final(&ctx, (*out)->blob);
+
     return 0;
 }
 
