@@ -376,8 +376,6 @@ int SKEncrypt(BOB** out, unsigned char* key, unsigned char* pt, int len)
     // Allocate the BOB for the encrypted session key, IV, and ciphertext
     (*out) = (BOB*)malloc(sizeof(BOB));
     // (*out)->len = len;
-    (*out)->blob = (unsigned char*)malloc(sizeof(unsigned char) * len);
-    memset((*out)->blob, 0, len);
 
     int i, nrounds = 5;
     unsigned char raw_key[32], iv[32];
@@ -415,6 +413,7 @@ int SKEncrypt(BOB** out, unsigned char* key, unsigned char* pt, int len)
     EVP_EncryptFinal_ex(&e_ctx, ciphertext+c_len, &f_len);
 
     // Save the resulting encryption information
+    (*out)->blob = (unsigned char*)malloc(sizeof(unsigned char) * c_len);
     memcpy((*out)->blob, ciphertext, c_len);
     (*out)->len = c_len;
 
@@ -445,7 +444,6 @@ int SKDecrypt(BOB** out, uint8_t* key, uint8_t* ct, int len)
     // Allocate the BOB for the encrypted session key, IV, and ciphertext
     (*out) = (BOB*)malloc(sizeof(BOB));
     // (*out)->len = len;
-    (*out)->blob = (unsigned char*)malloc(sizeof(unsigned char) * len);
     // (*out) = (unsigned char*)malloc(sizeof(unsigned char) * len);
 
     int i, nrounds = 5;
@@ -476,6 +474,7 @@ int SKDecrypt(BOB** out, uint8_t* key, uint8_t* ct, int len)
     EVP_DecryptUpdate(&e_ctx, plaintext, &p_len, ct, len);
     EVP_DecryptFinal_ex(&e_ctx, plaintext + p_len, &f_len);
 
+    (*out)->blob = (unsigned char*)malloc(sizeof(unsigned char) * p_len);
     memcpy((*out)->blob, plaintext, p_len);
     (*out)->len = p_len;
 
