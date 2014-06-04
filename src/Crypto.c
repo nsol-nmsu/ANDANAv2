@@ -13,9 +13,6 @@
 #include "Util.h"
 #include "Crypto.h"
 
-// Private crypto variables only accessible to this module.
-static SHA256_CTX sha256;
-
 //////////////////////
 // BEGIN PRIVATE FUNCTIONS
 //////////////////////
@@ -96,6 +93,7 @@ int Hash(BOB** out, unsigned char* buffer, int len)
     (*out)->len = SHA256_DIGEST_LENGTH;
 
     // Perform the hash and store the output digest
+    SHA256_CTX sha256;
     SHA256_Init(&sha256);
     SHA256_Update(&sha256, buffer, len);
     (*out)->blob = (unsigned char*)malloc(sizeof(unsigned char) * SHA256_DIGEST_LENGTH);
