@@ -87,10 +87,10 @@ DownstreamProxy* DownstreamProxySessionInit(Config* config, struct ccn_charbuf *
         BOB bob;
         bob.blob = (uint8_t*)malloc(SHA256_DIGEST_LENGTH * sizeof(uint8_t));
         bob.len = SHA256_DIGEST_LENGTH;
-        print_hex(session_id, SHA256_DIGEST_LENGTH);
-        printf("\n");
-        print_hex(session_iv, SHA256_DIGEST_LENGTH);
-        printf("\ndone with id/iv\n");
+        // print_hex(session_id, SHA256_DIGEST_LENGTH);
+        // printf("\n");
+        // print_hex(session_iv, SHA256_DIGEST_LENGTH);
+        // printf("\ndone with id/iv\n");
         XOR(session_id, session_iv, bob.blob, bob.len);
         BOB* out;
         res = Hash(&out, bob.blob, bob.len);
@@ -158,9 +158,6 @@ DownstreamProxy* DownstreamProxySessionInit(Config* config, struct ccn_charbuf *
             DEBUG_PRINT("%d %s differing session index sizes: got %lu expected %d\n", __LINE__, __func__, payload_length, SHA256_DIGEST_LENGTH);
             return NULL;
         }
-        print_hex(session_index, SHA256_DIGEST_LENGTH);
-        printf("\n");
-        print_hex(const_payload, SHA256_DIGEST_LENGTH);
         if (memcmp(session_index, const_payload, SHA256_DIGEST_LENGTH) != 0)
         {
             DEBUG_PRINT("Returned session index didn't match\n");
@@ -420,10 +417,6 @@ enum ccn_upcall_res DownstreamSessionListener(struct ccn_closure *selfp, enum cc
     BOB bob;
     bob.blob = (uint8_t*)malloc(SHA256_DIGEST_LENGTH * sizeof(uint8_t));
     bob.len = SHA256_DIGEST_LENGTH;
-    print_hex(session_id, SHA256_DIGEST_LENGTH);
-    printf("\n");
-    print_hex(session_iv, SHA256_DIGEST_LENGTH);
-    printf("\ndone with id/iv\n");
     XOR(session_id, session_iv, bob.blob, bob.len);
     BOB* out;
     res = Hash(&out, bob.blob, bob.len);
@@ -435,6 +428,8 @@ enum ccn_upcall_res DownstreamSessionListener(struct ccn_closure *selfp, enum cc
     assert(bob.len == SHA256_DIGEST_LENGTH);
     memcpy(sessionEntry->session_index, out->blob, bob.len);
     memcpy(session_index, out->blob, bob.len);
+    printf("Stored session index: ");
+    print_hex(session_index, SHA256_DIGEST_LENGTH);
 
     // Use the encryption key to populate the seed (from the session ID)
     RandomSeed(sessionEntry->session_id, SHA256_DIGEST_LENGTH);
@@ -555,6 +550,7 @@ enum ccn_upcall_res UnwrapInterest(struct ccn_closure *selfp, enum ccn_upcall_ki
 
     // Lookup the session identifier and use the associated key to decrypt the interest
     DEBUG_PRINT("proxy->sessionTable = %p\n", proxy->sessionTable);
+    printf("Retrieved session index: ");
     print_hex(sessionIndexCompBuffer, SHA256_DIGEST_LENGTH);
     ProxySessionTableEntry* sessionEntry = FindEntryByIndex(proxy->sessionTable, sessionIndexCompBuffer, sessionIndexCompBufferSize);
     if (sessionEntry == NULL)

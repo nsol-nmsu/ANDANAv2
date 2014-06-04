@@ -103,6 +103,8 @@ struct ccn_charbuf* EncryptInterest(UpstreamProxy* client, UpstreamProxyStateTab
             }
             assert(bob.len == SHA256_DIGEST_LENGTH);
             memcpy(session_index, out->blob, bob.len);
+            printf("Session index being sent: ");
+            print_hex(session_index, SHA256_DIGEST_LENGTH);
 
             // siv++ (for the next piece of data to be retrieved)
             INC(client->pathProxies[i]->sessionTable->head->session_iv, SHA256_DIGEST_LENGTH);
