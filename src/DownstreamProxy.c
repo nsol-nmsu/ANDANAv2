@@ -393,7 +393,7 @@ enum ccn_upcall_res DownstreamSessionListener(struct ccn_closure *selfp, enum cc
         return CCN_UPCALL_RESULT_ERR;
     }
     // memcpy(encryption_key, compBuffer, KEYLEN);
-    memcpy(&(sessionEntry->encryption_key), compBuffer, KEYLEN);
+    memcpy(sessionEntry->encryption_key, compBuffer, KEYLEN);
 
     res = ccn_name_comp_get(request_name->buf, request_comps, (unsigned int)request_comps->n - 6, &compBuffer, &compSize);
     if (res < 0) 
@@ -404,7 +404,7 @@ enum ccn_upcall_res DownstreamSessionListener(struct ccn_closure *selfp, enum cc
         return CCN_UPCALL_RESULT_ERR;
     }
     // memcpy(mac_key, compBuffer, KEYLEN);
-    memcpy(&(sessionEntry->mac_key), compBuffer, KEYLEN);
+    memcpy(sessionEntry->mac_key, compBuffer, KEYLEN);
 
     res = ccn_name_comp_get(request_name->buf, request_comps, (unsigned int)request_comps->n - 5, &compBuffer, &compSize);
     if (res < 0) 
@@ -415,7 +415,7 @@ enum ccn_upcall_res DownstreamSessionListener(struct ccn_closure *selfp, enum cc
         return CCN_UPCALL_RESULT_ERR;
     }
     // memcpy(counter_iv, compBuffer, SHA256_DIGEST_LENGTH);
-    memcpy(&(sessionEntry->counter_iv), compBuffer, SHA256_DIGEST_LENGTH);
+    memcpy(sessionEntry->counter_iv, compBuffer, SHA256_DIGEST_LENGTH);
 
     res = ccn_name_comp_get(request_name->buf, request_comps, (unsigned int)request_comps->n - 4, &compBuffer, &compSize);
     if (res < 0) 
@@ -426,7 +426,7 @@ enum ccn_upcall_res DownstreamSessionListener(struct ccn_closure *selfp, enum cc
         return CCN_UPCALL_RESULT_ERR;
     }
     // memcpy(session_iv, compBuffer, SHA256_DIGEST_LENGTH);
-    memcpy(&(sessionEntry->session_iv), compBuffer, SHA256_DIGEST_LENGTH);
+    memcpy(sessionEntry->session_iv, compBuffer, SHA256_DIGEST_LENGTH);
 
     res = ccn_name_comp_get(request_name->buf, request_comps, (unsigned int)request_comps->n - 3, &compBuffer, &compSize);
     if (res < 0) 
@@ -437,7 +437,7 @@ enum ccn_upcall_res DownstreamSessionListener(struct ccn_closure *selfp, enum cc
         return CCN_UPCALL_RESULT_ERR;
     }
     // memcpy(session_id, compBuffer, SHA256_DIGEST_LENGTH);
-    memcpy(&(sessionEntry->session_id), compBuffer, SHA256_DIGEST_LENGTH);
+    memcpy(sessionEntry->session_id, compBuffer, SHA256_DIGEST_LENGTH);
 
     // res = ccn_name_comp_get(request_name->buf, request_comps, (unsigned int)request_comps->n - 3, &compBuffer, &compSize);
     // if (res < 0) 
@@ -463,7 +463,7 @@ enum ccn_upcall_res DownstreamSessionListener(struct ccn_closure *selfp, enum cc
     }
     // memcpy(session_index, out->blob, bob.len);
     assert(bob.len == SHA256_DIGEST_LENGTH);
-    memcpy(&(sessionEntry->session_index), out->blob, SHA256_DIGEST_LENGTH);
+    memcpy(sessionEntry->session_index, out->blob, SHA256_DIGEST_LENGTH);
 
     // Use the encryption key to populate the seed (from the session ID)
     RandomSeed(sessionEntry->session_id, SHA256_DIGEST_LENGTH);
@@ -480,7 +480,6 @@ enum ccn_upcall_res DownstreamSessionListener(struct ccn_closure *selfp, enum cc
     memcpy(&(sessionEntry->nonce), compBuffer, sizeof(unsigned int));
 
     // Copy the contents of the encrypted payload to the entry
-    // caw: remove hardcoded assertion when debugging is complete
     assert(sessionEntry->nonce == 0xDEADBEEF);
     DEBUG_PRINT("Nonce = %x\n", sessionEntry->nonce);
 
