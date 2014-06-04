@@ -154,6 +154,8 @@ DownstreamProxy* DownstreamProxySessionInit(Config* config, struct ccn_charbuf *
             DEBUG_PRINT("%d %s differing session index sizes: got %lu expected %d\n", __LINE__, __func__, payload_length, SHA256_DIGEST_LENGTH);
             return NULL;
         }
+        print_hex(session_index, SHA256_DIGEST_LENGTH);
+        print_hex(const_payload, SHA256_DIGEST_LENGTH);
         if (memcmp(session_index, const_payload, SHA256_DIGEST_LENGTH) != 0)
         {
             DEBUG_PRINT("Returned session index didn't match\n");
@@ -445,7 +447,10 @@ enum ccn_upcall_res DownstreamSessionListener(struct ccn_closure *selfp, enum cc
 
     // Construct the response message using a ccn name (for convenience).
     // The response just consists of the nonce (signed)
-    struct ccn_charbuf *signedResp = ccn_charbuf_create();
+    struct ccn_charbuf *session_response = ccn_charbuf_create();
+    ccn_name_init(session_response);
+    ccn_name_append(session_response, session_index, SHA256_DIGEST_LENGTH);
+    // struct ccn_charbuf *signedResp = ccn_charbuf_create();
     struct ccn_signing_params sp = CCN_SIGNING_PARAMS_INIT;
     sp.type = CCN_CONTENT_DATA;
 
