@@ -569,12 +569,15 @@ enum ccn_upcall_res UnwrapInterest(struct ccn_closure *selfp, enum ccn_upcall_ki
 
     // Extract the encrypted interest
     // Index 2 will always be the encrypted payload
-    res = ccn_name_comp_get(origName->buf, origNameIndexbuf, 2, &payloadCompBuffer, &payloadCompBufferSize);
+    res = ccn_name_comp_get(origName->buf, origNameIndexbuf, (unsigned int)origNameIndexbuf->n - 2, &payloadCompBuffer, &payloadCompBufferSize);
     if (res < 0)
     {
         DEBUG_PRINT("Failed to extract encrypted interest payload.\n");
         return CCN_UPCALL_RESULT_ERR;
     }
+
+    printf("Decrypting with key: ");
+    print_hex(sessionEntry->encryption_key, KEYLEN);
 
     // Decrypt the interest
     BOB* decryptedPayload;

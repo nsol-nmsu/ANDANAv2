@@ -164,6 +164,9 @@ struct ccn_charbuf* EncryptInterest(UpstreamProxy* client, UpstreamProxyStateTab
                 unsigned char tmp[32];
                 for (j = 0; j < 32; j++) tmp[j] = 0xFF;
 
+                printf("Encrypting with key: ");
+                print_hex(hop->sessionTable->head->encryption_key, KEYLEN);
+
                 // Encrypt the original interest
                 // res = SKEncrypt(&encryptedPayload, hop->sessionTable->head->encryption_key, origInterest->buf, origInterest->length);
                 res = SKEncrypt(&encryptedPayload, hop->sessionTable->head->encryption_key, tmp, 32);
