@@ -218,7 +218,7 @@ DownstreamProxy* DownstreamProxyInit(const char *key_uri, const char *filter_uri
 {
     DownstreamProxy *server = (DownstreamProxy*)malloc(sizeof(DownstreamProxy));
     server->stateTable = (ProxyStateTable*)malloc(sizeof(ProxyStateTable));
-    server->sessionTable = (ProxySessionTable*)malloc(sizeof(ProxySessionTable));
+    // server->sessionTable = (ProxySessionTable*)malloc(sizeof(ProxySessionTable));
     server->sessionTable->head = NULL;
 
     DEBUG_PRINT("%d %s DownstreamProxyInit invoked\n", __LINE__, __func__);
@@ -348,7 +348,8 @@ enum ccn_upcall_res DownstreamSessionListener(struct ccn_closure *selfp, enum cc
     // Allocate space for the state/session tables
     // sessionEntry = (ProxySessionTableEntry*)malloc(sizeof(ProxySessionTableEntry));
     ProxySessionTableEntry* sessionEntry = AllocateNewSessionEntry(server->sessionTable);
-    DEBUG_PRINT("Done.\n");
+    DEBUG_PRINT("server->sessionTable = %p\n", server->sessionTable);
+    DEBUG_PRINT("Done: %p\n", sessionEntry);
 
     // Extract the name and components
     res = ccn_util_extract_name(info->interest_ccnb, info->interest_comps, &request_name, &request_comps);
@@ -591,6 +592,7 @@ enum ccn_upcall_res UnwrapInterest(struct ccn_closure *selfp, enum ccn_upcall_ki
     }
 
     // Lookup the session identifier and use the associated key to decrypt the interest
+    DEBUG_PRINT("proxy->sessionTable = %p\n", proxy->sessionTable);
     ProxySessionTableEntry* sessionEntry = FindEntryByIndex(proxy->sessionTable, sessionIndexCompBuffer, sessionIndexCompBufferSize);
     if (sessionEntry == NULL)
     {

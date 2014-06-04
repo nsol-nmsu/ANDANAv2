@@ -60,6 +60,7 @@ ProxySessionTableEntry* AllocateNewSessionEntry(ProxySessionTable* table)
 ProxySessionTableEntry* FindEntryByIndex(ProxySessionTable* table, uint8_t* index, uint32_t len)
 {
 	ProxySessionTableEntry* curr = table->head;
+	DEBUG_PRINT("curr = %p\n", curr);
 	while (curr != NULL)
 	{
 		if (memcmp(curr->session_index, index, len) == 0)
