@@ -154,6 +154,8 @@ DownstreamProxy* DownstreamProxySessionInit(Config* config, struct ccn_charbuf *
             DEBUG_PRINT("Returned session index didn't match\n");
             return NULL;
         }
+        printf("ACK session index: ");
+        print_hex(const_payload, SHA256_DIGEST_LENGTH);
 
         DEBUG_PRINT("Session created successfully.\n");
     }
