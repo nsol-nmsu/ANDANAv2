@@ -83,6 +83,8 @@ DownstreamProxy* DownstreamProxySessionInit(Config* config, struct ccn_charbuf *
             bob.blob = (uint8_t*)malloc(SHA256_DIGEST_LENGTH * sizeof(uint8_t));
             bob.len = SHA256_DIGEST_LENGTH;
             XOR(session_id, session_iv, bob.blob, bob.len);
+            printf("XOR result for save session = ");
+            print_hex(bob.blob, bob.len);
             BOB* out;
             res = Hash(&out, bob.blob, bob.len);
             if (res < 0)
@@ -418,6 +420,8 @@ enum ccn_upcall_res DownstreamSessionListener(struct ccn_closure *selfp, enum cc
     bob.blob = (uint8_t*)malloc(SHA256_DIGEST_LENGTH * sizeof(uint8_t));
     bob.len = SHA256_DIGEST_LENGTH;
     XOR(session_id, session_iv, bob.blob, bob.len);
+    printf("XOR result for store = ");
+    print_hex(bob.blob, bob.len);
     BOB* out;
     res = Hash(&out, bob.blob, bob.len);
     if (res < 0)

@@ -90,13 +90,13 @@ struct ccn_charbuf* EncryptInterest(UpstreamProxy* client, UpstreamProxyStateTab
         {
             // session_index = H(sid XOR siv)
             uint8_t session_index[SHA256_DIGEST_LENGTH];
+            memset(session_index, 0, SHA256_DIGEST_LENGTH);
             BOB bob;
             bob.blob = (uint8_t*)malloc(SHA256_DIGEST_LENGTH * sizeof(uint8_t));
             bob.len = SHA256_DIGEST_LENGTH;
-            printf("First hop ID/IV\n");
-            print_hex(client->pathProxies[i]->sessionTable->head->session_id, SHA256_DIGEST_LENGTH);
-            print_hex(client->pathProxies[i]->sessionTable->head->session_iv, SHA256_DIGEST_LENGTH);
             XOR(client->pathProxies[i]->sessionTable->head->session_id, client->pathProxies[i]->sessionTable->head->session_iv, bob.blob, bob.len);
+            printf("XOR result for send = ");
+            print_hex(bob.blob, bob.len);
             BOB* out;
             res = Hash(&out, bob.blob, bob.len);
             if (res < 0)
@@ -108,6 +108,26 @@ struct ccn_charbuf* EncryptInterest(UpstreamProxy* client, UpstreamProxyStateTab
             memcpy(session_index, out->blob, out->len);
             printf("Session index being sent: ");
             print_hex(session_index, SHA256_DIGEST_LENGTH);
+            printf("First hop ID/IV\n");
+            print_hex(client->pathProxies[i]->sessionTable->head->session_id, SHA256_DIGEST_LENGTH);
+            print_hex(client->pathProxies[i]->sessionTable->head->session_iv, SHA256_DIGEST_LENGTH);
+
+            // BOB bob;
+            // bob.blob = (uint8_t*)malloc(SHA256_DIGEST_LENGTH * sizeof(uint8_t));
+            // bob.len = SHA256_DIGEST_LENGTH;
+            // XOR(session_id, session_iv, bob.blob, bob.len);
+            // BOB* out;
+            // res = Hash(&out, bob.blob, bob.len);
+            // if (res < 0)
+            // {
+            //     DEBUG_PRINT("Failed to create the session index\n");
+            //     return CCN_UPCALL_RESULT_ERR;
+            // }
+            // assert(bob.len == SHA256_DIGEST_LENGTH);
+            // memcpy(sessionEntry->session_index, out->blob, bob.len);
+            // memcpy(session_index, out->blob, bob.len);
+            // printf("Stored session index: ");
+            // print_hex(session_index, SHA256_DIGEST_LENGTH);
 
             // siv++ (for the next piece of data to be retrieved)
             INC(client->pathProxies[i]->sessionTable->head->session_iv, SHA256_DIGEST_LENGTH);
