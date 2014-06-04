@@ -154,9 +154,9 @@ int main(int argc, char** argv)
     ccn_proxy_set_handlers(baseProxy, &int_handler, &content_handler);
 
     // Store the path for recovery later in the upstream handler
-    client->pathProxies = (UpstreamProxy**)malloc(numProxies * sizeof(UpstreamProxy*));
+    client->pathProxies = (DownstreamProxy**)malloc(numProxies * sizeof(DownstreamProxy*));
     client->numProxies = numProxies;
-    memcpy(client->pathProxies, proxies, numProxies * sizeof(UpstreamProxy*));
+    memcpy(client->pathProxies, proxies, numProxies * sizeof(DownstreamProxy*));
 
     // Connect and run
     if (ProxyConnect(baseProxy) < 0) 

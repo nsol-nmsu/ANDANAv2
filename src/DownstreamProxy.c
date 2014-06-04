@@ -475,14 +475,7 @@ enum ccn_upcall_res DownstreamSessionListener(struct ccn_closure *selfp, enum cc
         res = ccn_put(server->baseProxy->handle, signedResp->buf, signedResp->length);
     }
 
-    // ccn_charbuf_destroy(&decrypted);
-    // ccn_indexbuf_destroy(&decrypted_comps);
-    // ccn_crypto_symkey_destroy(&symkey);
-    // free(session_id);
-    // free(session_key);
-    // free(server_rand);
-    // free(enc_info);
-    // ccn_charbuf_destroy(&signedResp);
+    // TODO: clean up memory here
 
     if (res < 0) 
     {
@@ -598,18 +591,6 @@ enum ccn_upcall_res UnwrapInterest(struct ccn_closure *selfp, enum ccn_upcall_ki
     struct ccn_charbuf* decryptedName = ccn_charbuf_create();
     ccn_name_init(decryptedName);
     res = ccn_charbuf_append(decryptedName, decryptedPayload->blob, decryptedPayload->len);
-
-    // // Manual extraction...
-    // struct ccn_buf_decoder decoder;
-    // struct ccn_buf_decoder *d = &decoder;
-    // d = ccn_buf_decoder_start(d, decryptedName->buf, decryptedName->length);
-    // struct ccn_indexbuf* finalNameIndexBuffer = NULL;
-    // int numComponents = ccn_parse_Name(d, finalNameIndexBuffer);
-    // if (numComponents != 3)
-    // {
-    //     DEBUG_PRINT("Failed to extract new name.\n");
-    //     return CCN_UPCALL_RESULT_ERR;
-    // }
 
     // Save the interest name in the state table so it (and the session entry) can be recovered later
     ProxyStateTableEntry* stateEntry = AllocateNewStateEntry(stateTable);

@@ -7,6 +7,7 @@
 #include "CryptoWrapper.h"
 #include "Proxy.h"
 #include "ProxyState.h"
+#include "DownstreamProxy.h"
 
 #include <ccn/charbuf.h>
 #include <ccn/ccn.h>
@@ -26,7 +27,7 @@ struct UpstreamProxy
     Proxy* baseProxy;
 
     // Only used by the start of the chain for encapsulating interests
-    UpstreamProxy** pathProxies;
+    DownstreamProxy** pathProxies;
     int numProxies;
 
     // Flag to determine if a session has been established or not

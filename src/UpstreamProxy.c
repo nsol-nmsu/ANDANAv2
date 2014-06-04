@@ -90,16 +90,21 @@ struct ccn_charbuf* EncryptInterest(UpstreamProxy* client, UpstreamProxyStateTab
         {
             // session_index = H(sid XOR siv)
             uint8_t session_index[SHA256_DIGEST_LENGTH];
-            XOR(client->pathProxies[i]->sessionTable->head->session_id, client->pathProxies[i]->sessionTable->head->session_iv, session_index, SHA256_DIGEST_LENGTH);
+            BOB bob;
+            bob.blob = (uint8_t*)malloc(SHA256_DIGEST_LENGTH * sizeof(uint8_t));
+            bob.len = SHA256_DIGEST_LENGTH;
+            XOR(client->pathProxies[i]->sessionTable->head->session_id, client->pathProxies[i]->sessionTable->head->session_iv, bob.blob, bob.len);
             BOB* out;
-            res = Hash(&out, session_index, SHA256_DIGEST_LENGTH);
+            res = Hash(&out, bob.blob, bob.len);
             if (res < 0)
             {
                 DEBUG_PRINT("Failed to compute the session index\n");
                 return CCN_UPCALL_RESULT_ERR;
             }
+            assert(bob.len == SHA256_DIGEST_LENGTH);
+            memcpy(session_index, out->blob, bob.len);
 
-            // siv++
+            // siv++ (for the next piece of data to be retrieved)
             INC(client->pathProxies[i]->sessionTable->head->session_iv, SHA256_DIGEST_LENGTH);
 
             // append prefix URI
