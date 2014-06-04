@@ -447,14 +447,14 @@ enum ccn_upcall_res DownstreamSessionListener(struct ccn_closure *selfp, enum cc
     // The response just consists of the nonce (signed)
     struct ccn_charbuf *session_response = ccn_charbuf_create();
     ccn_name_init(session_response);
-    ccn_name_append(session_response, &(sessionEntry->nonce), sizeof(unsigned int));
+    ccn_name_append(session_response, session_index, SHA256_DIGEST_LENGTH);
     struct ccn_charbuf *signedResp = ccn_charbuf_create();
     struct ccn_signing_params sp = CCN_SIGNING_PARAMS_INIT;
     sp.type = CCN_CONTENT_DATA;
     unsigned int nonce = sessionEntry->nonce;
 
     // Sign the response
-    res = ccn_sign_content(server->baseProxy->handle, signedResp, request_name, &sp, &nonce, sizeof(nonce));
+    res = ccn_sign_content(server->baseProxy->handle, signedResp, request_name, &sp, &nonce, SHA256_DIGEST_LENGTH);
     if (res < 0) 
     {
         DEBUG_PRINT("%d %s Failed to signed session creation response\n", __LINE__, __func__);
