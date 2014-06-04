@@ -115,8 +115,8 @@ struct ccn_charbuf* EncryptInterest(UpstreamProxy* client, UpstreamProxyStateTab
 
             // append session ID
             ccn_name_append(innerName, (void*)session_index, SHA256_DIGEST_LENGTH);
-            DEBUG_PRINT("innerName = %s\n", ccn_charbuf_as_string(innerName));
-            DEBUG_PRINT("name = %s\n", ccn_charbuf_as_string(origInterest));
+            DEBUG_PRINT("innerName = %s\n", ccn_charbuf_as_string(innerName)); // e.g. ccnx:/proxy
+            DEBUG_PRINT("name = %s\n", ccn_charbuf_as_string(origInterest)); // e.g. ccnx:/test
 
             // Append the index to the upstream state table
             memcpy(newStateEntry->invalues[i], session_index, SHA256_DIGEST_LENGTH);
@@ -131,6 +131,7 @@ struct ccn_charbuf* EncryptInterest(UpstreamProxy* client, UpstreamProxyStateTab
                 DEBUG_PRINT("Interest = %s\n", ccn_charbuf_as_string(origInterest));
                 DEBUG_PRINT("Length = %d\n", origInterest->length);
 
+                // test data to send
                 unsigned char tmp[32];
                 for (j = 0; j < 32; j++) tmp[j] = 0xFF;
 
@@ -187,8 +188,9 @@ struct ccn_charbuf* EncryptInterest(UpstreamProxy* client, UpstreamProxyStateTab
             }
 
             // Copy this interest so that it can be encrypted the next go round
-            ccn_name_append(wrappedInterestName, innerName->buf, innerName->length);
-            DEBUG_PRINT("wrappedInterestName = %s\n", ccn_charbuf_as_string(wrappedInterestName));
+            wrappedInterestName = innerName;
+            // ccn_name_append(wrappedInterestName, innerName->buf, innerName->length);
+            // DEBUG_PRINT("wrappedInterestName = %s\n", ccn_charbuf_as_string(wrappedInterestName));
 
         // #ifdef UPSTREAM_PROXY_DEBUG
         //     struct ccn_charbuf *c = ccn_charbuf_create();
