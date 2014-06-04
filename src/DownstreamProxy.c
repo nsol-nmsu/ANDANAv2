@@ -76,6 +76,7 @@ DownstreamProxy* DownstreamProxySessionInit(Config* config, struct ccn_charbuf *
         if(!RandomBytes(session_id, SHA256_DIGEST_LENGTH)) return NULL;
 
         // Compute the session index (to check as the ACK)
+        printf("iterating session index\n");
         for (i = 0; i < 10; i++)
         {
             BOB bob;
