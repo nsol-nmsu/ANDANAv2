@@ -100,7 +100,11 @@ int Hash(BOB** out, unsigned char* buffer, int len)
     // SHA256_Update(&sha256, buffer, len);
     // SHA256_Final((*out)->blob, &sha256);
 
+    printf("Hash input: ");
+    print_hex(buffer, len);
     SHA256(buffer, len, (*out)->blob);
+    printf("Hash output: ");
+    print_hex((*out)->blob, len);
 
     // SHA256_CTX_CUSTOM ctx;
     // sha256_init(&ctx);
