@@ -74,23 +74,10 @@ DownstreamProxy* DownstreamProxySessionInit(Config* config, struct ccn_charbuf *
         if(!RandomBytes(session_iv, SHA256_DIGEST_LENGTH)) return NULL;
         if(!RandomBytes(session_id, SHA256_DIGEST_LENGTH)) return NULL;
 
-        // The session ID is the hash of some fresh randomness
-        // unsigned char randomness[SHA256_DIGEST_LENGTH];
-        // if(!RandomBytes(randomness, SHA256_DIGEST_LENGTH))
-        // {
-        //     return NULL;
-        // }
-        // Generate the session - hash of the randomness
-        // SHA256(session_id, SHA256_DIGEST_LENGTH, randomness);
-
         // Compute the session index (to check as the ACK)
         BOB bob;
         bob.blob = (uint8_t*)malloc(SHA256_DIGEST_LENGTH * sizeof(uint8_t));
         bob.len = SHA256_DIGEST_LENGTH;
-        // print_hex(session_id, SHA256_DIGEST_LENGTH);
-        // printf("\n");
-        // print_hex(session_iv, SHA256_DIGEST_LENGTH);
-        // printf("\ndone with id/iv\n");
         XOR(session_id, session_iv, bob.blob, bob.len);
         BOB* out;
         res = Hash(&out, bob.blob, bob.len);
@@ -118,6 +105,10 @@ DownstreamProxy* DownstreamProxySessionInit(Config* config, struct ccn_charbuf *
         node->upstreamStateTable->head = NULL;
         node->sessionTable = (ProxySessionTable*)malloc(sizeof(ProxySessionTable));
         node->sessionTable->head = NULL;
+
+        printf("Stored session ID/IV\n");
+        print_hex(stateEntry->session_id, SHA256_DIGEST_LENGTH);
+        print_hex(stateEntry->session_iv, SHA256_DIGEST_LENGTH);
 
         // Use the session ID to recreate the initial rand_seed for encryption/decryption
         RandomSeed(session_id, SHA256_DIGEST_LENGTH);
