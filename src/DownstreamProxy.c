@@ -593,6 +593,7 @@ enum ccn_upcall_res UnwrapInterest(struct ccn_closure *selfp, enum ccn_upcall_ki
 
     // Lookup the session identifier and use the associated key to decrypt the interest
     DEBUG_PRINT("proxy->sessionTable = %p\n", proxy->sessionTable);
+    print_hex(sessionIndexCompBuffer, SHA256_DIGEST_LENGTH);
     ProxySessionTableEntry* sessionEntry = FindEntryByIndex(proxy->sessionTable, sessionIndexCompBuffer, sessionIndexCompBufferSize);
     if (sessionEntry == NULL)
     {

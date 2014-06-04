@@ -114,6 +114,7 @@ struct ccn_charbuf* EncryptInterest(UpstreamProxy* client, UpstreamProxyStateTab
 
             // append session ID
             ccn_name_append(innerName, (void*)session_index, SHA256_DIGEST_LENGTH);
+            print_hex(session_index, SHA256_DIGEST_LENGTH);
             DEBUG_PRINT("innerName = %s\n", ccn_charbuf_as_string(innerName)); // e.g. ccnx:/proxy
             DEBUG_PRINT("name = %s\n", ccn_charbuf_as_string(origInterest)); // e.g. ccnx:/test
 
