@@ -87,6 +87,10 @@ DownstreamProxy* DownstreamProxySessionInit(Config* config, struct ccn_charbuf *
         BOB bob;
         bob.blob = (uint8_t*)malloc(SHA256_DIGEST_LENGTH * sizeof(uint8_t));
         bob.len = SHA256_DIGEST_LENGTH;
+        print_hex(session_id, SHA256_DIGEST_LENGTH);
+        printf("\n");
+        print_hex(session_iv, SHA256_DIGEST_LENGTH);
+        printf("\ndone with id/iv\n");
         XOR(session_id, session_iv, bob.blob, bob.len);
         BOB* out;
         res = Hash(&out, bob.blob, bob.len);
@@ -416,6 +420,10 @@ enum ccn_upcall_res DownstreamSessionListener(struct ccn_closure *selfp, enum cc
     BOB bob;
     bob.blob = (uint8_t*)malloc(SHA256_DIGEST_LENGTH * sizeof(uint8_t));
     bob.len = SHA256_DIGEST_LENGTH;
+    print_hex(session_id, SHA256_DIGEST_LENGTH);
+    printf("\n");
+    print_hex(session_iv, SHA256_DIGEST_LENGTH);
+    printf("\ndone with id/iv\n");
     XOR(session_id, session_iv, bob.blob, bob.len);
     BOB* out;
     res = Hash(&out, bob.blob, bob.len);
