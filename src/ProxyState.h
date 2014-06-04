@@ -44,8 +44,8 @@ typedef struct ProxySessionTableEntry
 {
   uint8_t encryption_key[KEYLEN];
   uint8_t mac_key[MACKLEN];
-  uint8_t counter_iv[IVLEN];
-  uint8_t session_iv[IVLEN];
+  uint8_t counter_iv[SHA256_DIGEST_LENGTH];
+  uint8_t session_iv[SHA256_DIGEST_LENGTH];
   uint8_t session_id[SHA256_DIGEST_LENGTH];
   uint8_t session_index[SHA256_DIGEST_LENGTH];
   uint8_t rand_seed[SHA256_DIGEST_LENGTH];

@@ -379,8 +379,8 @@ enum ccn_upcall_res DownstreamSessionListener(struct ccn_closure *selfp, enum cc
         ccn_indexbuf_destroy(&request_comps);
         return CCN_UPCALL_RESULT_ERR;
     }
-    memcpy(mac_key, compBuffer, KEYLEN);
-    memcpy(sessionEntry->mac_key, compBuffer, KEYLEN);
+    memcpy(mac_key, compBuffer, MACKLEN);
+    memcpy(sessionEntry->mac_key, compBuffer, MACKLEN);
 
     res = ccn_name_comp_get(request_name->buf, request_comps, (unsigned int)request_comps->n - 5, &compBuffer, &compSize);
     if (res < 0) 
