@@ -16,6 +16,7 @@ void print_hex(unsigned char * s, int len)
 	{
 		printf("%02X", 0xff & s[i]);
 	}
+    printf("\n");
 }
 
 char * base64_encode(const unsigned char *input, int length, int* outlen)

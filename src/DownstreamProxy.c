@@ -541,7 +541,7 @@ enum ccn_upcall_res UnwrapInterest(struct ccn_closure *selfp, enum ccn_upcall_ki
 
     // Extract the session identifier (contains a new name and an Interest template)
     // Index 1 will always be the session index
-    res = ccn_name_comp_get(origName->buf, origNameIndexbuf, 1, &sessionIndexCompBuffer, &sessionIndexCompBufferSize);
+    res = ccn_name_comp_get(origName->buf, origNameIndexbuf, (unsigned int)origNameIndexbuf->n - 3, &sessionIndexCompBuffer, &sessionIndexCompBufferSize);
     if (res < 0)
     {
         DEBUG_PRINT("Failed to extract session index.\n");
