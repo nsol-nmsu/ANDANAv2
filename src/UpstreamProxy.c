@@ -107,8 +107,11 @@ struct ccn_charbuf* EncryptInterest(UpstreamProxy* client, UpstreamProxyStateTab
             Proxy* hopBase = hop->baseProxy;
 
             // The inner interest - create it with the URI of the designated hop
+            // struct ccn_charbuf *innerName = ccn_charbuf_create();
+            // ccn_name_from_uri(innerName, hopBase->uri->buf);
             struct ccn_charbuf *innerName = ccn_charbuf_create();
-            ccn_name_from_uri(innerName, hopBase->uri->buf);
+            ccn_charbuf_append_charbuf(innerName, hopBase->uri);
+            ccn_name_append_str(innerName, "TEMP");
 
             // append session ID
             ccn_name_append(innerName, (void*)session_index, SHA256_DIGEST_LENGTH);
@@ -150,6 +153,7 @@ struct ccn_charbuf* EncryptInterest(UpstreamProxy* client, UpstreamProxyStateTab
 
                 // Append the formatted interest (with the interest terminator) to the end
                 res = ccn_name_append(innerName, (void*)finalNamePayload, finalLen);
+                // ccn_name_append(int_name, &(stateEntry->nonce), sizeof(unsigned int));
                 DEBUG_PRINT("innerName = %s\n", ccn_charbuf_as_string(innerName));
                 if (res < 0)
                 {
