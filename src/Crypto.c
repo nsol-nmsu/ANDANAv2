@@ -454,7 +454,7 @@ int SKDecrypt(BOB** out, uint8_t* key, uint8_t* ct, int len)
     * nrounds is the number of times the we hash the material. More rounds are more secure but
     * slower.
     */
-    i = EVP_BytesToKey(EVP_aes_256_cbc(), EVP_sha1(), NULL, key, KEYLEN, 1 /* nrounds */, raw_key, iv);
+    i = EVP_BytesToKey(EVP_aes_256_cbc(), EVP_sha1(), NULL, key, KEYLEN, nrounds, raw_key, iv);
     if (i != 32) 
     {
         printf("Key size is %d bits - should be 256 bits\n", i);
