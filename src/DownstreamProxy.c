@@ -72,16 +72,16 @@ DownstreamProxy* DownstreamProxySessionInit(Config* config, struct ccn_charbuf *
         if(!RandomBytes(mac_key, MACKLEN)) return NULL;
         if(!RandomBytes(counter_iv, SHA256_DIGEST_LENGTH)) return NULL;
         if(!RandomBytes(session_iv, SHA256_DIGEST_LENGTH)) return NULL;
+        if(!RandomBytes(session_id, SHA256_DIGEST_LENGTH)) return NULL;
 
         // The session ID is the hash of some fresh randomness
-        unsigned char randomness[SHA256_DIGEST_LENGTH];
-        if(!RandomBytes(randomness, SHA256_DIGEST_LENGTH))
-        {
-            return NULL;
-        }
-
+        // unsigned char randomness[SHA256_DIGEST_LENGTH];
+        // if(!RandomBytes(randomness, SHA256_DIGEST_LENGTH))
+        // {
+        //     return NULL;
+        // }
         // Generate the session - hash of the randomness
-        SHA256(session_id, SHA256_DIGEST_LENGTH, randomness);
+        // SHA256(session_id, SHA256_DIGEST_LENGTH, randomness);
 
         // Compute the session index (to check as the ACK)
         BOB bob;
@@ -369,7 +369,7 @@ enum ccn_upcall_res DownstreamSessionListener(struct ccn_closure *selfp, enum cc
         ccn_indexbuf_destroy(&request_comps);
         return CCN_UPCALL_RESULT_ERR;
     }
-    // memcpy(encryption_key, compBuffer, KEYLEN);
+    memcpy(encryption_key, compBuffer, KEYLEN);
     memcpy(sessionEntry->encryption_key, compBuffer, KEYLEN);
 
     res = ccn_name_comp_get(request_name->buf, request_comps, (unsigned int)request_comps->n - 6, &compBuffer, &compSize);
@@ -380,7 +380,7 @@ enum ccn_upcall_res DownstreamSessionListener(struct ccn_closure *selfp, enum cc
         ccn_indexbuf_destroy(&request_comps);
         return CCN_UPCALL_RESULT_ERR;
     }
-    // memcpy(mac_key, compBuffer, KEYLEN);
+    memcpy(mac_key, compBuffer, KEYLEN);
     memcpy(sessionEntry->mac_key, compBuffer, KEYLEN);
 
     res = ccn_name_comp_get(request_name->buf, request_comps, (unsigned int)request_comps->n - 5, &compBuffer, &compSize);
@@ -391,7 +391,7 @@ enum ccn_upcall_res DownstreamSessionListener(struct ccn_closure *selfp, enum cc
         ccn_indexbuf_destroy(&request_comps);
         return CCN_UPCALL_RESULT_ERR;
     }
-    // memcpy(counter_iv, compBuffer, SHA256_DIGEST_LENGTH);
+    memcpy(counter_iv, compBuffer, SHA256_DIGEST_LENGTH);
     memcpy(sessionEntry->counter_iv, compBuffer, SHA256_DIGEST_LENGTH);
 
     res = ccn_name_comp_get(request_name->buf, request_comps, (unsigned int)request_comps->n - 4, &compBuffer, &compSize);
@@ -402,7 +402,7 @@ enum ccn_upcall_res DownstreamSessionListener(struct ccn_closure *selfp, enum cc
         ccn_indexbuf_destroy(&request_comps);
         return CCN_UPCALL_RESULT_ERR;
     }
-    // memcpy(session_iv, compBuffer, SHA256_DIGEST_LENGTH);
+    memcpy(session_iv, compBuffer, SHA256_DIGEST_LENGTH);
     memcpy(sessionEntry->session_iv, compBuffer, SHA256_DIGEST_LENGTH);
 
     res = ccn_name_comp_get(request_name->buf, request_comps, (unsigned int)request_comps->n - 3, &compBuffer, &compSize);
@@ -413,7 +413,7 @@ enum ccn_upcall_res DownstreamSessionListener(struct ccn_closure *selfp, enum cc
         ccn_indexbuf_destroy(&request_comps);
         return CCN_UPCALL_RESULT_ERR;
     }
-    // memcpy(session_id, compBuffer, SHA256_DIGEST_LENGTH);
+    memcpy(session_id, compBuffer, SHA256_DIGEST_LENGTH);
     memcpy(sessionEntry->session_id, compBuffer, SHA256_DIGEST_LENGTH);
 
     // Compute the initial session index = H(ID XOR IV)
