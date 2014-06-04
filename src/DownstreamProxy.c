@@ -3,7 +3,8 @@
 #include "Util.h"
 #include "Config.h"
 
-DownstreamProxy* ProxySessionInit(Config* config, struct ccn_charbuf *uri, struct ccn_pkey *pubkey, struct ccn_charbuf *interest_template, int is_exit)
+// Establish a session with the corresponding downstream proxy in the circuit
+DownstreamProxy* DownstreamProxySessionInit(Config* config, struct ccn_charbuf *uri, struct ccn_pkey *pubkey, struct ccn_charbuf *interest_template, int is_exit)
 {   
     char bail = 0;
     int res = 0;
@@ -28,7 +29,7 @@ DownstreamProxy* ProxySessionInit(Config* config, struct ccn_charbuf *uri, struc
     // Perform circuit establishment handshake, if specified in the config struct
     if (config->circuit_creation == CIRCUIT_CREATION_HANDSHAKE)
     {
-        DEBUG_PRINT("Connecting a session\n");
+        DEBUG_PRINT("Creating a session\n");
 
         struct ccn *sessionh = ccn_create();
         if (sessionh == NULL)
@@ -82,22 +83,30 @@ DownstreamProxy* ProxySessionInit(Config* config, struct ccn_charbuf *uri, struc
         // Generate the session - hash of the randomness
         SHA256(session_id, SHA256_DIGEST_LENGTH, randomness);
 
-        // Lastly, generate the session index
-        unsigned char tempBuffer[SHA256_DIGEST_LENGTH + SHA256_DIGEST_LENGTH];
-        memcpy(tempBuffer, session_id, SHA256_DIGEST_LENGTH);
-        memcpy(tempBuffer + SHA256_DIGEST_LENGTH, session_iv, SHA256_DIGEST_LENGTH);
-        SHA256(session_index, SHA256_DIGEST_LENGTH + SHA256_DIGEST_LENGTH, tempBuffer);
-
-        DEBUG_PRINT("Storing state in local state table\n");
+        // Compute the session index (to check as the ACK)
+        BOB bob;
+        bob.blob = (uint8_t*)malloc(SHA256_DIGEST_LENGTH * sizeof(uint8_t));
+        bob.len = SHA256_DIGEST_LENGTH;
+        XOR(session_id, session_iv, bob.blob, bob.len);
+        BOB* out;
+        res = Hash(&out, bob.blob, bob.len);
+        if (res < 0)
+        {
+            DEBUG_PRINT("Failed to create the session index\n");
+            return NULL;
+        }
+        assert(bob.len == SHA256_DIGEST_LENGTH);
+        memcpy(session_index, out->blob, bob.len);
 
         // Persist the state information in the node
+        // Consumer computes session_index every time an interest is sent - ARs will check result against state table
+        DEBUG_PRINT("Storing state in local state table\n");
         ProxySessionTableEntry* stateEntry = (ProxySessionTableEntry*)malloc(sizeof(ProxySessionTableEntry));
         memcpy(stateEntry->encryption_key, encryption_key, KEYLEN);
         memcpy(stateEntry->mac_key, mac_key, MACKLEN);
         memcpy(stateEntry->counter_iv, counter_iv, SHA256_DIGEST_LENGTH);
         memcpy(stateEntry->session_iv, session_iv, SHA256_DIGEST_LENGTH);
         memcpy(stateEntry->session_id, session_id, SHA256_DIGEST_LENGTH);
-        // memcpy(stateEntry->session_index, session_index, SHA256_DIGEST_LENGTH);
         stateEntry->nonce = 0xDEADBEEF; // for debugging purposes
         node->stateTable = (ProxyStateTable*)malloc(sizeof(ProxyStateTable));
         node->stateTable->head = NULL;
@@ -113,49 +122,22 @@ DownstreamProxy* ProxySessionInit(Config* config, struct ccn_charbuf *uri, struc
         DEBUG_PRINT("Appending new state table entry\n");
         AddStateEntry(node->sessionTable, stateEntry);
 
-        // Total length of the payload
-        unsigned payloadSize = KEYLEN + MACKLEN + SHA256_DIGEST_LENGTH + SHA256_DIGEST_LENGTH + SHA256_DIGEST_LENGTH + SHA256_DIGEST_LENGTH;
-
         DEBUG_PRINT("Packing the interest\n");
-
-        // Pack in the state information
-        // struct ccn_charbuf *encryption_key_payload = ccn_charbuf_create();
-        // ccn_name_init(encryption_key_payload);
         ccn_name_append(int_name, encryption_key, KEYLEN);
-
-        // struct ccn_charbuf *mac_key_payload = ccn_charbuf_create();
-        // ccn_name_init(mac_key_payload);
         ccn_name_append(int_name, mac_key, MACKLEN);
-
-        // struct ccn_charbuf *counter_iv_payload = ccn_charbuf_create();
-        // ccn_name_init(counter_iv_payload);
         ccn_name_append(int_name, counter_iv, SHA256_DIGEST_LENGTH);
-
-        // struct ccn_charbuf *session_iv_payload = ccn_charbuf_create();
-        // ccn_name_init(session_iv_payload);
         ccn_name_append(int_name, session_iv, SHA256_DIGEST_LENGTH);
-
-        // struct ccn_charbuf *session_id_payload = ccn_charbuf_create();
-        // ccn_name_init(session_id_payload);
         ccn_name_append(int_name, session_id, SHA256_DIGEST_LENGTH);
-
-        // struct ccn_charbuf *session_index_payload = ccn_charbuf_create();
-        // ccn_name_init(session_index_payload);
-        // ccn_name_append(int_name, session_index, SHA256_DIGEST_LENGTH);
-
-        // struct ccn_charbuf *nonce_payload = ccn_charbuf_create();
-        // ccn_name_init(nonce_payload);
         ccn_name_append(int_name, &(stateEntry->nonce), sizeof(unsigned int));
 
         // Send the interest out and wait for the response
-        DEBUG_PRINT("Sending nonce: %x\n", stateEntry->nonce);
         struct ccn_parsed_ContentObject response_pco = { 0, 0, 0, 0, 0, 0, 0, 0 };
         struct ccn_charbuf *response = ccn_charbuf_create();
         struct ccn_indexbuf *response_comps = ccn_indexbuf_create();
         res = ccn_get(sessionh, int_name, NULL, 3000, response, &response_pco, response_comps, 0);
         if (res < 0) 
         {
-            fprintf(stderr, "%d %s Unable to create new session\n", __LINE__,__func__);
+            DEBUG_PRINT("%d %s Unable to create new session\n", __LINE__,__func__);
             return NULL;
         }
 
@@ -167,28 +149,16 @@ DownstreamProxy* ProxySessionInit(Config* config, struct ccn_charbuf *uri, struc
         res = ccn_content_get_value(response->buf, response->length, &response_pco, &const_payload, &payload_length);
 
         // Verify the the ack'd message was correct
-        if (payload_length != sizeof(unsigned int)) 
+        if (payload_length != SHA256_DIGEST_LENGTH) 
         {
-            fprintf(stderr, "%d %s differing session id sizes: got %lu expected %d\n", __LINE__, __func__, payload_length, SHA256_DIGEST_LENGTH);
+            DEBUG_PRINT("%d %s differing session index sizes: got %lu expected %d\n", __LINE__, __func__, payload_length, SHA256_DIGEST_LENGTH);
             return NULL;
         }
-
-        // Store a local copy of the response payload
-        payload = calloc(payload_length, sizeof(unsigned char));
-        memcpy(payload, const_payload, payload_length);
-
-        DEBUG_PRINT("Trying to parse the returned response of length: %lu\n", payload_length);
-
-        unsigned int nonce_ack = 0;
-        memcpy(&nonce_ack, payload, sizeof(unsigned int));
-        DEBUG_PRINT("Retrieved nonce: %x\n", nonce_ack);
-
-        // if (memcmp(payload, session_index, sizeof(unsigned int)) != 0)
-        // {
-        //     fprintf(stderr, "%d %s invalid session index ACK'd back\n", __LINE__, __func__);
-        //     bail = 1;
-        //     return NULL;
-        // }
+        if (memcmp(session_index, const_payload, SHA256_DIGEST_LENGTH) != 0)
+        {
+            DEBUG_PRINT("Returned session index didn't match\n");
+            return NULL;
+        }
 
         DEBUG_PRINT("Session created successfully.\n");
     }
@@ -218,8 +188,8 @@ DownstreamProxy* DownstreamProxyInit(const char *key_uri, const char *filter_uri
 {
     DownstreamProxy *server = (DownstreamProxy*)malloc(sizeof(DownstreamProxy));
     server->stateTable = (ProxyStateTable*)malloc(sizeof(ProxyStateTable));
-    // server->sessionTable = (ProxySessionTable*)malloc(sizeof(ProxySessionTable));
-    server->sessionTable->head = NULL;
+    server->sessionTable = (ProxySessionTable*)malloc(sizeof(ProxySessionTable));
+    server->sessionTable->head = NULL; // it will be allocated in the listener for new sessions
 
     DEBUG_PRINT("%d %s DownstreamProxyInit invoked\n", __LINE__, __func__);
 
@@ -346,7 +316,6 @@ enum ccn_upcall_res DownstreamSessionListener(struct ccn_closure *selfp, enum cc
     DEBUG_PRINT("Server received an interest - extracting the session information.\n");
 
     // Allocate space for the state/session tables
-    // sessionEntry = (ProxySessionTableEntry*)malloc(sizeof(ProxySessionTableEntry));
     ProxySessionTableEntry* sessionEntry = AllocateNewSessionEntry(server->sessionTable);
     DEBUG_PRINT("server->sessionTable = %p\n", server->sessionTable);
     DEBUG_PRINT("Done: %p\n", sessionEntry);
@@ -440,17 +409,7 @@ enum ccn_upcall_res DownstreamSessionListener(struct ccn_closure *selfp, enum cc
     // memcpy(session_id, compBuffer, SHA256_DIGEST_LENGTH);
     memcpy(sessionEntry->session_id, compBuffer, SHA256_DIGEST_LENGTH);
 
-    // res = ccn_name_comp_get(request_name->buf, request_comps, (unsigned int)request_comps->n - 3, &compBuffer, &compSize);
-    // if (res < 0) 
-    // {
-    //     DEBUG_PRINT("%d %s Failed to extract session creation data\n", __LINE__, __func__);
-    //     ccn_charbuf_destroy(&request_name);
-    //     ccn_indexbuf_destroy(&request_comps);
-    //     return CCN_UPCALL_RESULT_ERR;
-    // }
-    // memcpy(session_index, compBuffer, SHA256_DIGEST_LENGTH);
-
-    // Compute the initial session index
+    // Compute the initial session index = H(ID XOR IV)
     BOB bob;
     bob.blob = (uint8_t*)malloc(SHA256_DIGEST_LENGTH * sizeof(uint8_t));
     bob.len = SHA256_DIGEST_LENGTH;
@@ -462,9 +421,9 @@ enum ccn_upcall_res DownstreamSessionListener(struct ccn_closure *selfp, enum cc
         DEBUG_PRINT("Failed to create the session index\n");
         return CCN_UPCALL_RESULT_ERR;
     }
-    // memcpy(session_index, out->blob, bob.len);
     assert(bob.len == SHA256_DIGEST_LENGTH);
     memcpy(sessionEntry->session_index, out->blob, SHA256_DIGEST_LENGTH);
+    memcpy(session_index, out->blob, bob.len);
 
     // Use the encryption key to populate the seed (from the session ID)
     RandomSeed(sessionEntry->session_id, SHA256_DIGEST_LENGTH);

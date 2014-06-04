@@ -24,7 +24,7 @@ typedef struct
 /**
  * TODO
  */
-DownstreamProxy* ProxySessionInit(Config* config, struct ccn_charbuf *uri, struct ccn_pkey *pubkey, struct ccn_charbuf *interest_template, int is_exit);
+DownstreamProxy* DownstreamProxySessionInit(Config* config, struct ccn_charbuf *uri, struct ccn_pkey *pubkey, struct ccn_charbuf *interest_template, int is_exit);
 
 /**
  * TODO

@@ -3,7 +3,7 @@
 #include "UpstreamProxy.h"
 
 /**
- * TODO
+ * Wrap an incoming interest from the consumer.
  */
 enum ccn_upcall_res WrapInterest(struct ccn_closure *selfp, enum ccn_upcall_kind kind, struct ccn_upcall_info *info)
 {

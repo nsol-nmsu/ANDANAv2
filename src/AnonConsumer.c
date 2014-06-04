@@ -122,7 +122,12 @@ int main(int argc, char** argv)
 		struct ccn_charbuf *uri = ccn_charbuf_create();
 		ccn_name_from_uri(uri, argv[pIndex + 2]);
         int isExit = pIndex == numProxies - 1;
-		proxies[pIndex] = ProxySessionInit(config, uri, pubkey, NULL, isExit);
+		proxies[pIndex] = DownstreamProxySessionInit(config, uri, pubkey, NULL, isExit);
+        if (proxies[pIndex] == NULL)
+        {
+            DEBUG_PRINT("Failed to initialize proxy %d in the circuit\n", pIndex);
+            return -1;
+        }
 	}
 
     DEBUG_PRINT("Sessions established - setting up the interest/content handlers now\n");
