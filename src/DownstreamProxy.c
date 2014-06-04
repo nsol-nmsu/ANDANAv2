@@ -155,6 +155,7 @@ DownstreamProxy* DownstreamProxySessionInit(Config* config, struct ccn_charbuf *
             return NULL;
         }
         print_hex(session_index, SHA256_DIGEST_LENGTH);
+        printf("\n");
         print_hex(const_payload, SHA256_DIGEST_LENGTH);
         if (memcmp(session_index, const_payload, SHA256_DIGEST_LENGTH) != 0)
         {
