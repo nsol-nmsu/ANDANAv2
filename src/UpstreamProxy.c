@@ -93,6 +93,9 @@ struct ccn_charbuf* EncryptInterest(UpstreamProxy* client, UpstreamProxyStateTab
             BOB bob;
             bob.blob = (uint8_t*)malloc(SHA256_DIGEST_LENGTH * sizeof(uint8_t));
             bob.len = SHA256_DIGEST_LENGTH;
+            printf("First hop ID/IV\n");
+            print_hex(client->pathProxies[i]->sessionTable->head->session_id, SHA256_DIGEST_LENGTH);
+            print_hex(client->pathProxies[i]->sessionTable->head->session_iv, SHA256_DIGEST_LENGTH);
             XOR(client->pathProxies[i]->sessionTable->head->session_id, client->pathProxies[i]->sessionTable->head->session_iv, bob.blob, bob.len);
             BOB* out;
             res = Hash(&out, bob.blob, bob.len);
@@ -121,9 +124,6 @@ struct ccn_charbuf* EncryptInterest(UpstreamProxy* client, UpstreamProxyStateTab
 
             // append session ID
             ccn_name_append(innerName, (void*)session_index, SHA256_DIGEST_LENGTH);
-            DEBUG_PRINT("\nsession index\n");
-            print_hex(session_index, SHA256_DIGEST_LENGTH);
-            DEBUG_PRINT("\n\n");
             DEBUG_PRINT("innerName = %s\n", ccn_charbuf_as_string(innerName)); // e.g. ccnx:/proxy
             DEBUG_PRINT("name = %s\n", ccn_charbuf_as_string(origInterest)); // e.g. ccnx:/test
 

@@ -431,6 +431,10 @@ enum ccn_upcall_res DownstreamSessionListener(struct ccn_closure *selfp, enum cc
     printf("Stored session index: ");
     print_hex(session_index, SHA256_DIGEST_LENGTH);
 
+    printf("Stored session ID/IV\n");
+    print_hex(session_id, SHA256_DIGEST_LENGTH);
+    print_hex(session_iv, SHA256_DIGEST_LENGTH);
+
     // Use the encryption key to populate the seed (from the session ID)
     RandomSeed(sessionEntry->session_id, SHA256_DIGEST_LENGTH);
     RandomBytes(sessionEntry->rand_seed, SHA256_DIGEST_LENGTH);
