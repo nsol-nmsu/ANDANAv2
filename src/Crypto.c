@@ -105,7 +105,7 @@ int Hash(BOB** out, unsigned char* buffer, int len)
     // sha256_update(&ctx, buffer, len);
     // sha256_final(&ctx, (*out)->blob);
 
-    return 0;
+    return result;
 }
 
 /**

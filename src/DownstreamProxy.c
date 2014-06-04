@@ -8,6 +8,7 @@ DownstreamProxy* DownstreamProxySessionInit(Config* config, struct ccn_charbuf *
 {   
     char bail = 0;
     int res = 0;
+    int i;
 
     Proxy* baseNode = InitProxyBase(uri, pubkey, interest_template, is_exit);
     DownstreamProxy* node = (DownstreamProxy*)malloc(sizeof(DownstreamProxy));
@@ -75,19 +76,24 @@ DownstreamProxy* DownstreamProxySessionInit(Config* config, struct ccn_charbuf *
         if(!RandomBytes(session_id, SHA256_DIGEST_LENGTH)) return NULL;
 
         // Compute the session index (to check as the ACK)
-        BOB bob;
-        bob.blob = (uint8_t*)malloc(SHA256_DIGEST_LENGTH * sizeof(uint8_t));
-        bob.len = SHA256_DIGEST_LENGTH;
-        XOR(session_id, session_iv, bob.blob, bob.len);
-        BOB* out;
-        res = Hash(&out, bob.blob, bob.len);
-        if (res < 0)
+        for (i = 0; i < 10; i++)
         {
-            DEBUG_PRINT("Failed to create the session index\n");
-            return NULL;
-        }
-        assert(bob.len == SHA256_DIGEST_LENGTH);
-        memcpy(session_index, out->blob, bob.len);
+            BOB bob;
+            bob.blob = (uint8_t*)malloc(SHA256_DIGEST_LENGTH * sizeof(uint8_t));
+            bob.len = SHA256_DIGEST_LENGTH;
+            XOR(session_id, session_iv, bob.blob, bob.len);
+            BOB* out;
+            res = Hash(&out, bob.blob, bob.len);
+            if (res < 0)
+            {
+                DEBUG_PRINT("Failed to create the session index\n");
+                return NULL;
+            }
+            assert(out->len == SHA256_DIGEST_LENGTH);
+            memcpy(session_index, out->blob, bob.len);
+            printf("Iteration %d index: ", i);
+            print_hex(session_index, SHA256_DIGEST_LENGTH);
+        }   
 
         // Persist the state information in the node
         // Consumer computes session_index every time an interest is sent - ARs will check result against state table

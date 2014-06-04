@@ -104,8 +104,8 @@ struct ccn_charbuf* EncryptInterest(UpstreamProxy* client, UpstreamProxyStateTab
                 DEBUG_PRINT("Failed to compute the session index\n");
                 return CCN_UPCALL_RESULT_ERR;
             }
-            assert(bob.len == SHA256_DIGEST_LENGTH);
-            memcpy(session_index, out->blob, bob.len);
+            assert(out->len == SHA256_DIGEST_LENGTH);
+            memcpy(session_index, out->blob, out->len);
             printf("Session index being sent: ");
             print_hex(session_index, SHA256_DIGEST_LENGTH);
 
