@@ -128,7 +128,7 @@ int AESInit(unsigned char *key_data, int key_data_len, unsigned char *salt, EVP_
    * nrounds is the number of times the we hash the material. More rounds are more secure but
    * slower.
    */
-  i = EVP_BytesToKey(EVP_aes_256_cbc(), EVP_sha1(), salt, key_data, key_data_len, nrounds, key, iv);
+  i = EVP_BytesToKey(EVP_aes_256_ecb(), EVP_sha1(), salt, key_data, key_data_len, nrounds, key, iv);
   if (i != 32) {
     printf("Key size is %d bits - should be 256 bits\n", i);
     return -1;
@@ -137,12 +137,12 @@ int AESInit(unsigned char *key_data, int key_data_len, unsigned char *salt, EVP_
   if (e_ctx != 0)
   {
     EVP_CIPHER_CTX_init(e_ctx);
-    EVP_EncryptInit_ex(e_ctx, EVP_aes_256_cbc(), NULL, key, iv);    
+    EVP_EncryptInit_ex(e_ctx, EVP_aes_256_ecb(), NULL, key, iv);    
   }
   if (d_ctx != 0)
   {
     EVP_CIPHER_CTX_init(d_ctx);
-    EVP_DecryptInit_ex(d_ctx, EVP_aes_256_cbc(), NULL, key, iv);
+    EVP_DecryptInit_ex(d_ctx, EVP_aes_256_ecb(), NULL, key, iv);
   }
 
   return 0;
@@ -387,7 +387,7 @@ int SKEncrypt(BOB** out, unsigned char* key, unsigned char* pt, int len)
     * nrounds is the number of times the we hash the material. More rounds are more secure but
     * slower.
     */
-    i = EVP_BytesToKey(EVP_aes_256_cbc(), EVP_sha1(), NULL, key, KEYLEN, nrounds, raw_key, iv);
+    i = EVP_BytesToKey(EVP_aes_256_ecb(), EVP_sha1(), NULL, key, KEYLEN, nrounds, raw_key, iv);
     if (i != 32) 
     {
         printf("Key size is %d bits - should be 256 bits\n", i);
@@ -396,7 +396,7 @@ int SKEncrypt(BOB** out, unsigned char* key, unsigned char* pt, int len)
 
     EVP_CIPHER_CTX e_ctx;
     EVP_CIPHER_CTX_init(&e_ctx);
-    EVP_EncryptInit_ex(&e_ctx, EVP_aes_256_cbc(), NULL, raw_key, iv);
+    EVP_EncryptInit_ex(&e_ctx, EVP_aes_256_ecb(), NULL, raw_key, iv);
 
     /* max ciphertext len for a n bytes of plaintext is n + AES_BLOCK_SIZE -1 bytes */
     int c_len = len + AES_BLOCK_SIZE, f_len = 0;
@@ -454,7 +454,7 @@ int SKDecrypt(BOB** out, uint8_t* key, uint8_t* ct, int len)
     * nrounds is the number of times the we hash the material. More rounds are more secure but
     * slower.
     */
-    i = EVP_BytesToKey(EVP_aes_256_cbc(), EVP_sha1(), NULL, key, KEYLEN, nrounds, raw_key, iv);
+    i = EVP_BytesToKey(EVP_aes_256_ecb(), EVP_sha1(), NULL, key, KEYLEN, nrounds, raw_key, iv);
     if (i != 32) 
     {
         printf("Key size is %d bits - should be 256 bits\n", i);
@@ -463,7 +463,7 @@ int SKDecrypt(BOB** out, uint8_t* key, uint8_t* ct, int len)
 
     EVP_CIPHER_CTX e_ctx;
     EVP_CIPHER_CTX_init(&e_ctx);
-    EVP_DecryptInit_ex(&e_ctx, EVP_aes_256_cbc(), NULL, raw_key, iv);
+    EVP_DecryptInit_ex(&e_ctx, EVP_aes_256_ecb(), NULL, raw_key, iv);
 
     int p_len = len, f_len = 0;
     unsigned char *plaintext = malloc(p_len + AES_BLOCK_SIZE);
