@@ -1,7 +1,6 @@
 /**
  * File: TestCrypto.cpp
  * Description: Simple unit test for the crypto functions.
- * Author: Christopher A. Wood, woodc1@uci.edu
  */
 
 #include <stdio.h>
