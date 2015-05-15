@@ -43,7 +43,7 @@ static int ConfigParseHandler(void* user, const char* section, const char* name,
  */
 int main(int argc, char** argv)
 {
-    int i;
+    int i = 0;
 
 	if (argc < 3)
 	{
@@ -134,6 +134,7 @@ int main(int argc, char** argv)
     // Hookup the wrapping/unwrapping handlers and then start the client
     UpstreamProxy* client = (UpstreamProxy*)malloc(sizeof(UpstreamProxy));
     client->upstreamStateTable = (UpstreamProxyStateTable*)malloc(sizeof(UpstreamProxyStateTable));
+    memset(client->upstreamStateTable, 0, sizeof(UpstreamProxyStateTable));
 
     // ProxySessionTable* sessionTable;
     // ProxyStateTable* stateTable;
@@ -166,7 +167,8 @@ int main(int argc, char** argv)
     else 
     {
         // Kick it...
-        ProxyRun(baseProxy);
+        //baseProxy->handle = 0;
+	ProxyRun(baseProxy);
     }
 
 	return 0;

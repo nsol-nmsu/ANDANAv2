@@ -79,6 +79,7 @@ Proxy* InitProxyBase(struct ccn_charbuf *uri, struct ccn_pkey *pubkey, struct cc
 
     // Allocate space for the node
     node = malloc(sizeof(Proxy));
+    memset(node, 0, sizeof(Proxy));
 
     // Parse the URI namespace for the node
     node->uri = ccn_charbuf_create();
