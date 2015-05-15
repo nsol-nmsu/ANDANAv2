@@ -174,6 +174,7 @@ void AddUpstreamStateEntry(UpstreamProxyStateTable* table, UpstreamProxyStateTab
 UpstreamProxyStateTableEntry* AllocateNewUpstreamStateEntry(UpstreamProxyStateTable* table)
 {
 	UpstreamProxyStateTableEntry* newEntry = (UpstreamProxyStateTableEntry*)malloc(sizeof(UpstreamProxyStateTableEntry));
+	memset(newEntry, 0, sizeof(UpstreamProxyStateTableEntry));
 	UpstreamProxyStateTableEntry* curr = table->head;
 	DEBUG_PRINT("curr = %p\n", curr);
 	if (curr == NULL)

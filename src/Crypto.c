@@ -372,7 +372,8 @@ int PKDecrypt(unsigned char* out, RSA* sk, BOB* in)
 int SKEncrypt(BOB** out, unsigned char* key, unsigned char* pt, int len)
 {
     // Allocate the BOB for the encrypted session key, IV, and ciphertext
-    (*out) = (BOB*)malloc(sizeof(BOB));
+    (*out) = (BOB*)malloc(sizeof(BOB)+16);
+    memset(*out, 0, sizeof(BOB)+16);
     // (*out)->len = len;
 
     int i, nrounds = 5;
