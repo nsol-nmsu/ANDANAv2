@@ -472,7 +472,7 @@ int SKDecrypt(BOB** out, uint8_t* key, uint8_t* ct, int len)
     EVP_DecryptUpdate(&e_ctx, plaintext, &p_len, ct, len);
     EVP_DecryptFinal_ex(&e_ctx, plaintext + p_len, &f_len);
 
-    (*out)->blob = (unsigned char*)malloc(sizeof(unsigned char) * p_len);
+    (*out)->blob = (unsigned char*)malloc(sizeof(unsigned char) * (p_len + 1));
     memcpy((*out)->blob, plaintext, p_len);
     (*out)->len = p_len;
 
